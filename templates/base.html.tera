@@ -1,0 +1,60 @@
+
+<html>
+	<head>
+		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+	</head>
+	<body>
+<h2>
+{% block heading %}
+{% endblock heading %}
+</h2>
+		<div class="container">
+			<div class="row">
+			<div class="col">
+{% block instructions %}
+{% endblock instructions %}
+			</div>
+			<div class="col">
+				<form method="post">
+					<textarea name="sql_to_run" id="sql_to_run" rows="10" cols="50">{{sql_to_run}}</textarea>
+					<button type="submit">Run Query</button>
+				</form>	
+			</div>
+			</div>
+			
+			<div class="row">
+				<div class="col">
+{% block correct_answer %}
+{% endblock correct_answer %}
+				</div>
+				<div class="col">
+
+<table class="table table-inverse table-striped table-bordered ">
+					{% for row in sql_result %}
+<tr>
+{% for val in row %}
+<td>{{val}}</td>
+{% endfor %}
+</tr>
+					{% endfor %}
+</table>
+
+				</div>
+			</div>
+		</div>
+
+	</body>
+<script>
+$("#sql_to_run").keypress(function (e) {
+    if(e.which == 13 && !e.shiftKey) {        
+        $(this).closest("form").submit();
+        e.preventDefault();
+        return false;
+    }
+});
+</script>
+</html>
+

@@ -1,0 +1,14 @@
+{% extends "base" %}
+
+{% block heading %}
+Question 1
+{% endblock heading %}
+
+{% block question %}
+Select n cats
+{% endblock question %}
+
+{% block correct_answer %}
+The correct answer
+{% endblock correct_answer %}
+
