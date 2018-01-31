@@ -1,14 +1,15 @@
 {% extends "base" %}
 
 {% block heading %}
-Question 1
+SQL Window Function Question 1: Use Over
 {% endblock heading %}
 
 {% block question %}
-Select n cats
-{% endblock question %}
 
-{% block correct_answer %}
-The correct answer
-{% endblock correct_answer %}
+The cats are ordered by name and enter one by one.
+We would like to know what the running total weight of each group of cats is. 
+<br/>
+Return: cat name and total weight of this group of cats
+
+{% endblock question %}
 

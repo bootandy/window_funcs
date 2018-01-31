@@ -11,8 +11,12 @@ extern crate serde_json;
 #[cfg(test)]
 mod tests;
 
+use std::path::{Path, PathBuf};
+
 use rocket_contrib::Template;
 use rocket::request::{Form};
+use rocket::response::NamedFile;
+
 
 mod db;
 
@@ -23,14 +27,21 @@ struct FormInput {
     sql_to_run: String,
 }
 
+static Q1_SQL :&'static str = "select name, sum(weight) 
+over (order by name) as running_total_weight 
+from cats order by name";
+
+
 #[derive(Serialize)]
 struct TemplateContext {
     sql_to_run : String, 
     sql_result: Vec<Vec<String>>,
+    sql_answer: Vec<Vec<String>>,
 }
 
-fn _context_builder(sql_result: Vec<Vec<String>>, sql_to_run: String) -> TemplateContext {
+fn _context_builder(correct_result: Vec<Vec<String>>, sql_result: Vec<Vec<String>>, sql_to_run: String) -> TemplateContext {
     TemplateContext {
+        sql_answer: correct_result,
         sql_result: sql_result,
         sql_to_run: sql_to_run
     }
@@ -44,10 +55,8 @@ fn _run_sql(conn: &db::DbConn, sql_command: &str) -> Vec<Vec<String>> {
             result.push(query_results.columns().into_iter().map(|c| {c.name().to_string()}).collect());
 
             for row in query_results.into_iter() { 
-                let mut result_row :Vec<String> = vec![];
-
-                for (i, col) in row.columns().into_iter().enumerate() {
-                    let res :String = match col.type_().name() {
+                let result_row = row.columns().into_iter().enumerate().map(|(i, col)| {
+                    match col.type_().name() {
                         "int8" => {
                             let temp: i64 = row.get(i);
                             temp.to_string()
@@ -64,9 +73,8 @@ fn _run_sql(conn: &db::DbConn, sql_command: &str) -> Vec<Vec<String>> {
                             row.get(i)
                         },
                         x => format!("Add conversion for {:?}", x)
-                    };
-                    result_row.push(res);
-                }
+                    }
+                }).collect();
                 result.push(result_row);
             }
         },
@@ -79,19 +87,20 @@ fn _run_sql(conn: &db::DbConn, sql_command: &str) -> Vec<Vec<String>> {
 
 #[post("/", data = "<sink>")]
 fn post_db(conn: db::DbConn, sink: Result<Form<FormInput>, Option<String>>) -> Template {
+    let correct_result = _run_sql(&conn, Q1_SQL);
     match sink {
         Ok(form) => {
             let sql_command = &form.get().sql_to_run;
             let result = _run_sql(&conn, sql_command.as_ref());
-            Template::render("q1", &_context_builder(result, sql_command.to_string()))
+            Template::render("q1", &_context_builder(correct_result, result, sql_command.to_string()))
         },
         Err(Some(f)) => {
             let sql_command = "";
             let result = vec![vec![f.to_string()]];
-            Template::render("q1", &_context_builder(result, sql_command.to_string()))
+            Template::render("q1", &_context_builder(correct_result, result, sql_command.to_string()))
         },
         Err(None) => {
-            Template::render("q1", &_context_builder(vec![], format!("total Error ")))
+            Template::render("q1", &_context_builder(correct_result, vec![], format!("total Error ")))
         }
     }
 }
@@ -99,13 +108,21 @@ fn post_db(conn: db::DbConn, sink: Result<Form<FormInput>, Option<String>>) -> T
 
 #[get("/")]
 fn get_db(conn: db::DbConn) ->  Template {
-    Template::render("q1", &_context_builder(vec![], "select * from cats ".to_string()))
+    let correct_result = _run_sql(&conn, Q1_SQL);
+    Template::render("q1", &_context_builder(correct_result, vec![], "select * from cats ".to_string()))
+}
+
+
+#[get("/static/<file..>")]
+fn static_files(file: PathBuf) -> Option<NamedFile> {
+    println!("Getting base.css");
+        NamedFile::open(Path::new("static/").join(file)).ok()
 }
 
 fn rocket() -> rocket::Rocket {
         rocket::ignite()
             .manage(db::init_pool())
-            .mount("/", routes![post_db, get_db ])
+            .mount("/", routes![static_files, post_db, get_db ])
             .attach(Template::fairing())
 }
 
