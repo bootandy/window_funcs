@@ -6,8 +6,8 @@ SQL Window Function Question 2: Use Partition by
 
 {% block question %}
 
-The cats are ordered first by breed and then by name and enter one by one. When all the
-cats of the same breed have entered they leave. 
+The cats have lined up ordered by first breed and second by name and are about to enter an elevator one by one.
+When all the cats of the same breed have entered they leave. 
 We would like to know what the running total weight of each group of cats is. 
 <br/>
 Return: name, breed and total weight of this group of cats

@@ -1,0 +1,16 @@
+{% extends "base" %}
+
+{% block heading %}
+SQL Window Function Question 4: Use rank
+{% endblock heading %}
+
+{% block question %}
+
+We would like to find the fattest (and 2nd, 3rd etc) cat of each breed
+<br/>
+We must order all the cats by weight grouped by their breed. The heaviest cat must be first.
+<br/>
+Return: ranking, name, breed, weight 
+
+{% endblock question %}
+

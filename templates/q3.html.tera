@@ -1,0 +1,14 @@
+{% extends "base" %}
+
+{% block heading %}
+SQL Window Function Question 3: Use ROW_NUMBER
+{% endblock heading %}
+
+{% block question %}
+The cats have lined up ordered by name and are about to enter an elevator one by one.
+We would like to know what the running total of the last kind of breed of cat that entered is.
+<br/>
+Return: num_cats_with_this_breed, name, breed 
+
+{% endblock question %}
+

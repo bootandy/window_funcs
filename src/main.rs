@@ -27,18 +27,63 @@ struct FormInput {
     sql_to_run: String,
 }
 
+static Q0_SQL :&'static str = "
+select
+ age, sum(weight) as total_weight
+from cats group by age having sum(weight) > 12;";
+
 static Q1_SQL :&'static str = "select name, sum(weight) 
 over (order by name) as running_total_weight 
 from cats order by name";
 
 static Q2_SQL :&'static str = "
 select name, breed, 
-sum(weight) over (partition by breed order by name) from cats ";
+sum(weight) over (partition by breed order by name) as running_total_weight
+from cats ";
+
+static Q3_SQL :&'static str = "
+select ROW_NUMBER() 
+over (partition by breed order by name) as num_cats_of_breed, 
+name ,breed from cats order by name";
+
+static Q4_SQL :&'static str = "
+select 
+rank() over (partition by breed order by weight DESC) as ranking,
+name, breed, weight
+from cats order by ranking, weight DESC";
+
+static Q5_SQL :&'static str = "
+select
+ name, weight, NTILE(4) over ( order by weight) as weight_quartile
+       from  cats 
+       ";
+
+static Q6_SQL :&'static str = "
+select 
+DENSE_RANK() over (order by age DESC) as r, name,age
+ from cats order by r";
+
+static Q7_SQL :&'static str = "
+select name, weight, 
+      lag(weight, 1) over (order by weight) - weight as target_weight
+      from cats order by weight";
+
+static Q8_SQL :&'static str = "
+    select name, breed, weight,
+lag(weight, 1) over (partition by breed order by weight) - weight as target_weight
+from cats order by weight ";
 
 fn _get_sql_for_q(s: &String) -> &str {
     match s.as_ref() {
+        "q0" => Q0_SQL,
         "q1" => Q1_SQL,
         "q2" => Q2_SQL,
+        "q3" => Q3_SQL,
+        "q4" => Q4_SQL,
+        "q5" => Q5_SQL,
+        "q6" => Q6_SQL,
+        "q7" => Q7_SQL,
+        "q8" => Q8_SQL,
         _ => "select 1 from cats"
     }
 }
@@ -59,6 +104,13 @@ fn _context_builder(correct_result: Vec<Vec<String>>, sql_result: Vec<Vec<String
     }
 }
 
+fn _format_type<T: ToString>(t: Option<T>) -> String {
+    match t {
+        None => "Null".to_string(),
+        Some(x) => x.to_string()
+    }
+}
+
 fn _run_sql(conn: &db::DbConn, sql_command: &str) -> Vec<Vec<String>> {
     let mut result = vec![];
     let query_result = conn.query(sql_command, &[]);
@@ -70,27 +122,35 @@ fn _run_sql(conn: &db::DbConn, sql_command: &str) -> Vec<Vec<String>> {
                 let result_row = row.columns().into_iter().enumerate().map(|(i, col)| {
                     match col.type_().name() {
                         "int8" => {
-                            let temp: i64 = row.get(i);
-                            temp.to_string()
+                            let temp: Option<i64> = row.get(i);
+                            _format_type(temp)
                         },
                         "int4" => {
-                            let temp: i32 = row.get(i);
-                            temp.to_string()
+                            let temp: Option<i32> = row.get(i);
+                            _format_type(temp)
                         },
                         "float8" => {
-                            let temp: f64 = row.get(i);
-                            format!("{:.1}", temp)
+                            let temp: Option<f64> = row.get(i);
+                            match temp {
+                                None => "Null".to_string(),
+                                Some(x) => format!("{:.1}", x)
+                            }
                         },
                         "varchar" => {
-                            row.get(i)
+                            let temp: Option<String> = row.get(i);
+                            _format_type(temp)
                         },
-                        x => format!("Add conversion for {:?}", x)
+                        x => {
+                            println!("BOOM! {:?}", x);
+                            format!("Add conversion for {:?}", x)
+                        }
                     }
                 }).collect();
                 result.push(result_row);
             }
         },
         Err(error) => {
+            println!(">>> {:?}", error);
             result.push(vec![error.to_string()])
         }
     }
@@ -122,7 +182,8 @@ fn post_db(question: String, conn: db::DbConn, sink: Result<Form<FormInput>, Opt
 #[get("/<question>")]
 fn get_db(question : String, conn: db::DbConn) ->  Template {
     let correct_result = _run_sql(&conn, _get_sql_for_q(&question));
-    Template::render(question.clone(), &_context_builder(correct_result, vec![], "select * from cats ".to_string()))
+    // try question.into_string()
+    Template::render(question.clone(), &_context_builder(correct_result, vec![], "select \n*\n from cats ".to_string()))
 }
 
 

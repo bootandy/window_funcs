@@ -1,0 +1,18 @@
+{% extends "base" %}
+
+{% block heading %}
+SQL Window Function Question 7: Use lag
+{% endblock heading %}
+
+{% block question %}
+
+The cats now want to lose weight according to their breed.
+<br/>
+Each cat would like to lose weight to be the equivalent weight of the cat in the same breed weighing just less than it.
+<br/>
+Print a list of cats, their breeds, weights and the weight difference between them and the nearest lighter cat of the same breed.
+<br/>
+Return: name, breed, weight, target_weight
+
+{% endblock question %}
+

@@ -6,7 +6,7 @@ SQL Window Function Question 1: Use Over
 
 {% block question %}
 
-The cats are ordered by name and enter one by one.
+The cats have lined up ordered by name are about to enter an elevator one by one.
 We would like to know what the running total weight of each group of cats is. 
 <br/>
 Return: cat name and total weight of this group of cats

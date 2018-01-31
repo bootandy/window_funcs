@@ -1,0 +1,16 @@
+{% extends "base" %}
+
+{% block heading %}
+SQL Window Function Question 5: Use ntile 
+{% endblock heading %}
+
+{% block question %}
+
+We are worried our cats are too fat.
+<br/>
+We would like to group the cats into quartiles by their weight.
+<br/>
+Return: name, weight, weight_quartile
+
+{% endblock question %}
+

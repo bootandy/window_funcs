@@ -1,0 +1,14 @@
+{% extends "base" %}
+
+{% block heading %}
+SQL Window Function Question 0: Group by / having
+{% endblock heading %}
+
+{% block question %}
+
+We would like to find the total weight of cats by age. But only return those cat-weights larger than 12.
+<br/>
+Return: age, total_weight 
+
+{% endblock question %}
+
