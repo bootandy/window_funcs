@@ -1,0 +1,14 @@
+{% macro sql_table(sql_data) %}
+
+<table class="table table-inverse table-striped table-bordered ">
+{% for row in sql_data %}
+<tr>
+{% for val in row %}
+<td>{{val}}</td>
+{% endfor %}
+</tr>
+{% endfor %}
+</table>
+
+{% endmacro sql_table %}
+

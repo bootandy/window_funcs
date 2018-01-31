@@ -31,6 +31,18 @@ static Q1_SQL :&'static str = "select name, sum(weight)
 over (order by name) as running_total_weight 
 from cats order by name";
 
+static Q2_SQL :&'static str = "
+select name, breed, 
+sum(weight) over (partition by breed order by name) from cats ";
+
+fn _get_sql_for_q(s: &String) -> &str {
+    match s.as_ref() {
+        "q1" => Q1_SQL,
+        "q2" => Q2_SQL,
+        _ => "select 1 from cats"
+    }
+}
+
 
 #[derive(Serialize)]
 struct TemplateContext {
@@ -85,38 +97,38 @@ fn _run_sql(conn: &db::DbConn, sql_command: &str) -> Vec<Vec<String>> {
     result
 }
 
-#[post("/", data = "<sink>")]
-fn post_db(conn: db::DbConn, sink: Result<Form<FormInput>, Option<String>>) -> Template {
-    let correct_result = _run_sql(&conn, Q1_SQL);
-    match sink {
+#[post("/<question>", data = "<sink>")]
+fn post_db(question: String, conn: db::DbConn, sink: Result<Form<FormInput>, Option<String>>) -> Template {
+    let correct_result = _run_sql(&conn, _get_sql_for_q(&question));
+    let (sql_command, result) = match sink {
         Ok(form) => {
-            let sql_command = &form.get().sql_to_run;
-            let result = _run_sql(&conn, sql_command.as_ref());
-            Template::render("q1", &_context_builder(correct_result, result, sql_command.to_string()))
+            let sql_command1 = form.get().sql_to_run.to_string();
+            let result1 = _run_sql(&conn, sql_command1.as_ref());
+            (sql_command1, result1)
         },
         Err(Some(f)) => {
-            let sql_command = "";
-            let result = vec![vec![f.to_string()]];
-            Template::render("q1", &_context_builder(correct_result, result, sql_command.to_string()))
+            let sql_command1 = "".to_string();
+            let result1 = vec![vec![f.to_string()]];
+            (sql_command1, result1)
         },
         Err(None) => {
-            Template::render("q1", &_context_builder(correct_result, vec![], format!("total Error ")))
+            ("".to_string(), vec![])
         }
-    }
+    };
+    Template::render(question.clone(), &_context_builder(correct_result, result, sql_command))
 }
 
 
-#[get("/")]
-fn get_db(conn: db::DbConn) ->  Template {
-    let correct_result = _run_sql(&conn, Q1_SQL);
-    Template::render("q1", &_context_builder(correct_result, vec![], "select * from cats ".to_string()))
+#[get("/<question>")]
+fn get_db(question : String, conn: db::DbConn) ->  Template {
+    let correct_result = _run_sql(&conn, _get_sql_for_q(&question));
+    Template::render(question.clone(), &_context_builder(correct_result, vec![], "select * from cats ".to_string()))
 }
 
 
 #[get("/static/<file..>")]
 fn static_files(file: PathBuf) -> Option<NamedFile> {
-    println!("Getting base.css");
-        NamedFile::open(Path::new("static/").join(file)).ok()
+    NamedFile::open(Path::new("static/").join(file)).ok()
 }
 
 fn rocket() -> rocket::Rocket {

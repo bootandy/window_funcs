@@ -57,6 +57,7 @@ $("#sql_to_run").keypress(function (e) {
         return false;
     }
 });
+$("#sql_to_run").focus();
 </script>
 </html>
 

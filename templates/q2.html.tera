@@ -1,0 +1,16 @@
+{% extends "base" %}
+
+{% block heading %}
+SQL Window Function Question 2: Use Partition by
+{% endblock heading %}
+
+{% block question %}
+
+The cats are ordered first by breed and then by name and enter one by one. When all the
+cats of the same breed have entered they leave. 
+We would like to know what the running total weight of each group of cats is. 
+<br/>
+Return: name, breed and total weight of this group of cats
+
+{% endblock question %}
+
