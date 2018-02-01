@@ -1,7 +1,7 @@
-{% extends "base" %}
+{% extends "all_questions" %}
 
 {% block heading %}
-SQL Window Function Question 7: Use lag
+SQL Window Function Question 8: Use lag
 {% endblock heading %}
 
 {% block question %}

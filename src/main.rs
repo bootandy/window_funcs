@@ -8,9 +8,10 @@ extern crate r2d2_postgres;
 extern crate serde_json;
 #[macro_use] extern crate serde_derive;
 
-#[cfg(test)]
+/*#[cfg(test)]
 mod tests;
-
+*/
+use std::{cmp};
 use std::path::{Path, PathBuf};
 
 use rocket_contrib::Template;
@@ -75,7 +76,7 @@ from cats order by weight ";
 
 static Q9_SQL :&'static str = "
 select name, weight, 
-       ntile(2) over ntile_window as in_half,
+       ntile(2) over ntile_window as by_half,
        ntile(3) over ntile_window as thirds,
        ntile(4) over ntile_window as quart
               from cats
@@ -83,36 +84,59 @@ select name, weight,
                        ( ORDER BY weight)
      order by weight";
 
+static Q10_SQL :&'static str = "
+select name, color,
+first_value(weight) over (partition by color order by weight) as lowest_weight_by_color
+from cats ";
 
-fn _get_sql_for_q(s: &String) -> &str {
+
+fn _get_sql_for_q(s: &String) -> (&str, &str) {
     match s.as_ref() {
-        "q0" => Q0_SQL,
-        "q1" => Q1_SQL,
-        "q2" => Q2_SQL,
-        "q3" => Q3_SQL,
-        "q4" => Q4_SQL,
-        "q5" => Q5_SQL,
-        "q6" => Q6_SQL,
-        "q7" => Q7_SQL,
-        "q8" => Q8_SQL,
-        "q9" => Q9_SQL,
-        _ => "select 1 from cats"
+        "q0" => (Q0_SQL, "group by"),
+        "q1" => (Q1_SQL, "over"),
+        "q2" => (Q2_SQL, "partition by"),
+        "q3" => (Q3_SQL, "row_number"),
+        "q4" => (Q4_SQL, "rank"),
+        "q5" => (Q5_SQL, "ntile"),
+        "q6" => (Q6_SQL, "dense_rank"),
+        "q7" => (Q7_SQL, "lag"),
+        "q8" => (Q8_SQL, "lag"),
+        "q9" => (Q9_SQL, "window"),
+        "q10" => (Q10_SQL, "first_value"),
+        _ => ("select 1 from cats", "")
     }
 }
 
+fn _get_next_and_prev(s: &str) -> (String, String) {
+    let i = s[1..].parse::<i32>().unwrap();
+    let prev = cmp::max(i - 1, 0);
+    let next = cmp::min(i + 1, 10);
+    return (format!("q{}", prev), (format!("q{}", next)))
+}
 
 #[derive(Serialize)]
 struct TemplateContext {
+    query_requires: String, 
+    sql_correct: String, 
     sql_to_run : String, 
     sql_result: Vec<Vec<String>>,
     sql_answer: Vec<Vec<String>>,
+    next_q: String,
+    prev_q: String,
 }
 
-fn _context_builder(correct_result: Vec<Vec<String>>, sql_result: Vec<Vec<String>>, sql_to_run: String) -> TemplateContext {
+fn _context_builder(conn: &db::DbConn, question: &String, sql_result: Vec<Vec<String>>, sql_to_run: String) -> TemplateContext {
+    let (sql_correct, keyword) = _get_sql_for_q(question);
+    let correct_result = _run_sql(conn, sql_correct);
+    let (prev, next) = _get_next_and_prev(question);
     TemplateContext {
+        query_requires: keyword.to_string(),
+        sql_correct:  sql_correct.to_string(),
         sql_answer: correct_result,
         sql_result: sql_result,
-        sql_to_run: sql_to_run
+        sql_to_run: sql_to_run,
+        next_q: next,
+        prev_q: prev,
     }
 }
 
@@ -171,7 +195,6 @@ fn _run_sql(conn: &db::DbConn, sql_command: &str) -> Vec<Vec<String>> {
 
 #[post("/<question>", data = "<sink>")]
 fn post_db(question: String, conn: db::DbConn, sink: Result<Form<FormInput>, Option<String>>) -> Template {
-    let correct_result = _run_sql(&conn, _get_sql_for_q(&question));
     let (sql_command, result) = match sink {
         Ok(form) => {
             let sql_command1 = form.get().sql_to_run.to_string();
@@ -187,17 +210,21 @@ fn post_db(question: String, conn: db::DbConn, sink: Result<Form<FormInput>, Opt
             ("".to_string(), vec![])
         }
     };
-    Template::render(question.clone(), &_context_builder(correct_result, result, sql_command))
+    Template::render(question.clone(), &_context_builder(&conn, &question, result, sql_command))
 }
 
 
 #[get("/<question>")]
 fn get_db(question : String, conn: db::DbConn) ->  Template {
-    let correct_result = _run_sql(&conn, _get_sql_for_q(&question));
-    // try question.into_string()
-    Template::render(question.clone(), &_context_builder(correct_result, vec![], "select \n*\n from cats ".to_string()))
+    let base_sql = "select \n*\n from cats ";
+    let result1 = _run_sql(&conn, base_sql);
+    Template::render(question.clone(), &_context_builder(&conn, &question, result1, base_sql.to_string()))
 }
 
+#[get("/favicon.ico")]
+fn get_favicon() -> Option<NamedFile> {
+    NamedFile::open(Path::new("static/favicon.ico")).ok()
+}
 
 #[get("/static/<file..>")]
 fn static_files(file: PathBuf) -> Option<NamedFile> {
@@ -207,7 +234,7 @@ fn static_files(file: PathBuf) -> Option<NamedFile> {
 fn rocket() -> rocket::Rocket {
         rocket::ignite()
             .manage(db::init_pool())
-            .mount("/", routes![static_files, post_db, get_db ])
+            .mount("/", routes![static_files, get_favicon, post_db, get_db ])
             .attach(Template::fairing())
 }
 
@@ -215,4 +242,10 @@ fn main() {
         rocket().launch();
 }
 
+
+#[test]
+fn test_get_next_and_prev() {
+    assert_eq!(_get_next_and_prev("q4"), (String::from("q3"), String::from("q5")));
+    assert_eq!(_get_next_and_prev("q0"), (String::from("q0"), String::from("q1")));
+}
 

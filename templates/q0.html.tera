@@ -1,12 +1,13 @@
-{% extends "base" %}
+{% extends "all_questions" %}
 
 {% block heading %}
-SQL Window Function Question 0: Group by / having
+SQL Window Function Question 0: Group by / Having
 {% endblock heading %}
 
 {% block question %}
-
-We would like to find the total weight of cats by age. But only return those cat-weights larger than 12.
+A refresher on aggregate functions. You should know aggregate functions before attempting the other questions.
+<br/>
+We would like to find the total weight of cats grouped by age. But only return those cat group weights larger than 12.
 <br/>
 Return: age, total_weight 
 

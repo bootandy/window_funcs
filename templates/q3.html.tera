@@ -1,4 +1,4 @@
-{% extends "base" %}
+{% extends "all_questions" %}
 
 {% block heading %}
 SQL Window Function Question 3: Use ROW_NUMBER

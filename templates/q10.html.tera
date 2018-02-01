@@ -1,0 +1,16 @@
+{% extends "all_questions" %}
+
+{% block heading %}
+SQL Window Function Question 10: Use first value
+{% endblock heading %}
+
+{% block question %}
+
+Cats are vain. Each cat would like to pretend it has the lowest weight for its color.
+<br/>
+Print cat name, color and the minimum weight of cats with that color.
+<br/>
+Return: name, color, lowest_weight_by_color
+
+{% endblock question %}
+

@@ -5,8 +5,9 @@ extern crate r2d2;
 extern crate r2d2_postgres;
 extern crate serde_json;
 
-#[cfg(test)]
+/*#[cfg(test)]
 mod tests;
+*/
 
 use std::ops::Deref;
 
