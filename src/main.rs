@@ -73,6 +73,17 @@ static Q8_SQL :&'static str = "
 lag(weight, 1) over (partition by breed order by weight) - weight as target_weight
 from cats order by weight ";
 
+static Q9_SQL :&'static str = "
+select name, weight, 
+       ntile(2) over ntile_window as in_half,
+       ntile(3) over ntile_window as thirds,
+       ntile(4) over ntile_window as quart
+              from cats
+              WINDOW ntile_window AS
+                       ( ORDER BY weight)
+     order by weight";
+
+
 fn _get_sql_for_q(s: &String) -> &str {
     match s.as_ref() {
         "q0" => Q0_SQL,
@@ -84,6 +95,7 @@ fn _get_sql_for_q(s: &String) -> &str {
         "q6" => Q6_SQL,
         "q7" => Q7_SQL,
         "q8" => Q8_SQL,
+        "q9" => Q9_SQL,
         _ => "select 1 from cats"
     }
 }

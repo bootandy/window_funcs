@@ -1,0 +1,16 @@
+{% extends "base" %}
+
+{% block heading %}
+SQL Window Function Question 9: Use window
+{% endblock heading %}
+
+{% block question %}
+
+This SQL function can be made simpler by using the WINDOW command. Although the output will not check this please use the WINDOW command.
+<br/>
+Each cat would like to see what half, third and quartile they are in for their weight.
+<br/>
+Return: name, weight, by_half, thirds, quartile
+
+{% endblock question %}
+
