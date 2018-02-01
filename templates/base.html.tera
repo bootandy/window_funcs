@@ -4,8 +4,8 @@
   <head>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
-    <link rel="stylesheet" href="static/base.css">
-    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="/static/base.css">
+    <link rel="stylesheet" href="/static/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     {% block headers %}
@@ -13,7 +13,7 @@
   </head>
   <body>
 
-    <header class="b-header ">
+    <header class="b-header {% block special_header_class %} {% endblock special_header_class %} ">
       <div class="b-header_flex">
         <a class="b-header_logo" href="/">SQL Window Functions <!--<img src="static/logo.png" alt="Logo"/>--></a>
         <nav class="b-header_nav">
@@ -22,17 +22,17 @@
             </li>
             <li class="nav_block"><a>Questions<i class="fa fa-angle-down"></i></a>
               <ul>
-                <li><a href="/q0">Question 0</a></li>
-                <li><a href="/q1">Question 1</a></li>
-                <li><a href="/q2">Question 2</a></li>
-                <li><a href="/q3">Question 3</a></li>
-                <li><a href="/q4">Question 4</a></li>
-                <li><a href="/q5">Question 5</a></li>
-                <li><a href="/q6">Question 6</a></li>
-                <li><a href="/q7">Question 7</a></li>
-                <li><a href="/q8">Question 8</a></li>
-                <li><a href="/q9">Question 9</a></li>
-                <li><a href="/q10">Question 10</a></li>
+                <li><a href="/questions/q0">Question 0</a></li>
+                <li><a href="/questions/q1">Question 1</a></li>
+                <li><a href="/questions/q2">Question 2</a></li>
+                <li><a href="/questions/q3">Question 3</a></li>
+                <li><a href="/questions/q4">Question 4</a></li>
+                <li><a href="/questions/q5">Question 5</a></li>
+                <li><a href="/questions/q6">Question 6</a></li>
+                <li><a href="/questions/q7">Question 7</a></li>
+                <li><a href="/questions/q8">Question 8</a></li>
+                <li><a href="/questions/q9">Question 9</a></li>
+                <li><a href="/questions/q10">Question 10</a></li>
               </ul>
             </li>
             <li class="nav_block"><a href="/about">About</a>
@@ -41,8 +41,24 @@
       </div>
     </header>
 
+    <main>
     {% block containers %}
     {% endblock containers %}
+    </main>
+<footer class="b-footer">
+      <div class="container d-flex flex-wrap">
+
+        <nav class="b-footer_navigation">
+          SQL Window Functions tutorial. 
+        </nav>
+        <div class="b-footer_social-list">
+        </div>
+      </div>
+      <div class="container">
+        <div class="row"></div>
+      </div>
+    </footer>
+    
   </body>
 </html>
 

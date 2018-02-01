@@ -39,18 +39,18 @@ $( document ).ready(function() {
     </div>
   </div>
 
-  <h2>
+  <h1>
     {% block heading %}
     {% endblock heading %}
-  </h2>
+  </h1>
+      <h2>Question:</h2>
   <div class="row">
     <div class="col">
-      <h3>Question:</h3>
       <p>
       {% block question %}
       {% endblock question %}
       </p>
-      <h5> Cat table: </h5>
+      <h4> Cat table: </h4>
       <table class="table table-striped table-bordered table-sm">
         <tr><td>Name<td><td>varchar</td></tr>
         <tr><td>Breed<td><td>varchar</td></tr>
@@ -71,14 +71,14 @@ $( document ).ready(function() {
 
   <div class="row">
     <div class="col">
-      <h5>Desired output:</h5>
+      <h4>Desired output:</h4>
       {{ macros::sql_table(sql_data=sql_answer) }}
 
       <a class="unhider" href="#"> view answer </a>
       <p class="hidden"> {{sql_correct}} </p>
     </div>
     <div class="col">
-      <h5>Your output:</h5>
+      <h4>Your output:</h4>
       {{ macros::sql_table(sql_data=sql_result) }}
 
     </div>

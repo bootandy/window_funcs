@@ -5,7 +5,7 @@ extern crate rocket;
 extern crate rocket_contrib;
 extern crate r2d2;
 extern crate r2d2_postgres;
-extern crate serde_json;
+extern crate tera;
 #[macro_use] extern crate serde_derive;
 
 /*#[cfg(test)]
@@ -17,7 +17,7 @@ use std::path::{Path, PathBuf};
 use rocket_contrib::Template;
 use rocket::request::{Form};
 use rocket::response::NamedFile;
-
+use tera::Context;
 
 mod db;
 
@@ -193,7 +193,7 @@ fn _run_sql(conn: &db::DbConn, sql_command: &str) -> Vec<Vec<String>> {
     result
 }
 
-#[post("/<question>", data = "<sink>")]
+#[post("/questions/<question>", data = "<sink>")]
 fn post_db(question: String, conn: db::DbConn, sink: Result<Form<FormInput>, Option<String>>) -> Template {
     let (sql_command, result) = match sink {
         Ok(form) => {
@@ -214,7 +214,7 @@ fn post_db(question: String, conn: db::DbConn, sink: Result<Form<FormInput>, Opt
 }
 
 
-#[get("/<question>")]
+#[get("/questions/<question>")]
 fn get_db(question : String, conn: db::DbConn) ->  Template {
     let base_sql = "select \n*\n from cats ";
     let result1 = _run_sql(&conn, base_sql);
@@ -231,10 +231,20 @@ fn static_files(file: PathBuf) -> Option<NamedFile> {
     NamedFile::open(Path::new("static/").join(file)).ok()
 }
 
+#[get("/about")]
+fn get_about() -> Template {
+    Template::render("about", Context::new())
+}
+
+#[get("/")]
+fn get_home() -> Template {
+    Template::render("home", Context::new())
+}
+
 fn rocket() -> rocket::Rocket {
         rocket::ignite()
             .manage(db::init_pool())
-            .mount("/", routes![static_files, get_favicon, post_db, get_db ])
+            .mount("/", routes![static_files, get_favicon, get_home, get_about, post_db, get_db ])
             .attach(Template::fairing())
 }
 

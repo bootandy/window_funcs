@@ -1,0 +1,26 @@
+{% extends "base" %}
+
+{% block containers %}
+<div class="container py-2">
+  <div class="col-12">
+    <h2 id="intro">About</h2>
+    <p> 
+    This site is a logical extention to <a href="https://pgexercises.com/">PG Exercises </a>
+    While there are several websites similar to PG Exercises that allow you to interact with SQL interactivly
+    none of them focus on the post sql-92 window functions. Most databases got these awesome powerfull functions
+    a long time ago and most of us don't use them
+    </p>
+    <p> The code is on <a href="https://github.com/bootandy/window_funcs">github</a> It is written in Rust and uses 
+    Rocket, Tera. I wrote it partially to learn Rust.
+    </p> 
+    <p> Made with love at <a href="https://www.recurse.com"> Recurse Center</a>
+
+    <p> Links to learn about window functions: 
+    <a href="https://community.modeanalytics.com/sql/tutorial/sql-window-functions/">Modeanalytics</a>
+    <a href="https://www.postgresql.org/docs/current/static/functions-window.html">Postgres</a>
+    <a href="https://use-the-index-luke.com/sql/partial-results/window-functions">Use The Index Luke</a>
+    </p>
+  </div>
+</div>
+{% endblock containers %}
+

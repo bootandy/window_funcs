@@ -1,0 +1,31 @@
+{% extends "base" %}
+
+{% block headers %}
+<script src="assets/js/tether.min.js"></script>
+{% endblock headers %}
+
+{% block special_header_class %}
+b-header__absolute-top b-header__white
+{% endblock special_header_class %}
+
+{% block containers %}
+  <div class="b-hero b-hero__light" style="background-image:url(static/db.jpg);" >
+    <div class="container pl-sm-5 py-sm-5 my-sm-5">
+      <h3 class="display-5 ml-sm-5 text-italic"> <i>Think you Know SQL?</i></h3>
+      <h2 class="display-4"> <strong>Modern SQL Window Function Questions</strong></h2>
+    </div>
+  </div>
+
+  <div class="container py-2">
+    <div class="col-12">
+      <p> 
+        Modern SQL Encompasses many query commands beyond aggregation queries
+      </p>
+      <p>
+      These interactive tutorials will test your knowledge of window functions
+      </p>
+
+    </div>
+  </div>
+{% endblock containers %}
+

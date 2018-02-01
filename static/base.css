@@ -14,3 +14,14 @@
 .show {
 	visibility: show;
 }
+.b-header_logo {
+	font-size:xx-large;
+}
+
+.b-footer{
+	border-color:#d54b68;
+	border-top-style: solid;
+}
+.b-footer_navigation{
+	font-style: italic;
+}
