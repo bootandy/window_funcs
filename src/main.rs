@@ -43,7 +43,7 @@ sum(weight) over (partition by breed order by name) as running_total_weight
 from cats ";
 
 static Q3_SQL :&'static str = "
-select ROW_NUMBER() 
+select row_number() 
 over (partition by breed order by name) as num_cats_of_breed, 
 name ,breed from cats order by name";
 
@@ -55,13 +55,13 @@ from cats order by ranking, weight DESC";
 
 static Q5_SQL :&'static str = "
 select
- name, weight, NTILE(4) over ( order by weight) as weight_quartile
+ name, weight, ntile(4) over ( order by weight) as weight_quartile
        from  cats 
        ";
 
 static Q6_SQL :&'static str = "
 select 
-DENSE_RANK() over (order by age DESC) as r, name,age
+dense_rank() over (order by age DESC) as r, name,age
  from cats order by r";
 
 static Q7_SQL :&'static str = "
@@ -80,7 +80,7 @@ select name, weight,
        ntile(3) over ntile_window as thirds,
        ntile(4) over ntile_window as quart
               from cats
-              WINDOW ntile_window AS
+              window ntile_window AS
                        ( ORDER BY weight)
      order by weight";
 
@@ -119,24 +119,31 @@ struct TemplateContext {
     query_requires: String, 
     sql_correct: String, 
     sql_to_run : String, 
-    sql_result: Vec<Vec<String>>,
-    sql_answer: Vec<Vec<String>>,
+    sql_to_run_result: Vec<Vec<String>>,
+    sql_correct_result: Vec<Vec<String>>,
     next_q: String,
     prev_q: String,
+    is_correct: bool,
+    used_correct_word: bool,
 }
 
 fn _context_builder(conn: &db::DbConn, question: &String, sql_result: Vec<Vec<String>>, sql_to_run: String) -> TemplateContext {
     let (sql_correct, keyword) = _get_sql_for_q(question);
     let correct_result = _run_sql(conn, sql_correct);
     let (prev, next) = _get_next_and_prev(question);
+    let is_correct = sql_result[1..] == correct_result[1..];
+    let used_correct_word = sql_to_run.to_lowercase().contains(keyword);
+        
     TemplateContext {
         query_requires: keyword.to_string(),
         sql_correct:  sql_correct.to_string(),
-        sql_answer: correct_result,
-        sql_result: sql_result,
+        sql_correct_result: correct_result,
         sql_to_run: sql_to_run,
+        sql_to_run_result: sql_result,
         next_q: next,
         prev_q: prev,
+        is_correct: is_correct,
+        used_correct_word: used_correct_word,
     }
 }
 
@@ -172,7 +179,7 @@ fn _run_sql(conn: &db::DbConn, sql_command: &str) -> Vec<Vec<String>> {
                                 Some(x) => format!("{:.1}", x)
                             }
                         },
-                        "varchar" => {
+                        "varchar" | "text" => {
                             let temp: Option<String> = row.get(i);
                             _format_type(temp)
                         },
@@ -217,8 +224,8 @@ fn post_db(question: String, conn: db::DbConn, sink: Result<Form<FormInput>, Opt
 #[get("/questions/<question>")]
 fn get_db(question : String, conn: db::DbConn) ->  Template {
     let base_sql = "select \n*\n from cats ";
-    let result1 = _run_sql(&conn, base_sql);
-    Template::render(question.clone(), &_context_builder(&conn, &question, result1, base_sql.to_string()))
+    let result = _run_sql(&conn, base_sql);
+    Template::render(question.clone(), &_context_builder(&conn, &question, result, base_sql.to_string()))
 }
 
 #[get("/favicon.ico")]

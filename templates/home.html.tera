@@ -10,7 +10,7 @@ b-header__absolute-top b-header__white
 
 {% block containers %}
   <div class="b-hero b-hero__light" style="background-image:url(static/db.jpg);" >
-    <div class="container pl-sm-5 py-sm-5 my-sm-5">
+    <div class="container pl-sm-2 py-sm-2 my-sm-2">
       <h3 class="display-5 ml-sm-5 text-italic"> <i>Think you Know SQL?</i></h3>
       <h2 class="display-4"> <strong>Modern SQL Window Function Questions</strong></h2>
     </div>
@@ -19,12 +19,16 @@ b-header__absolute-top b-header__white
   <div class="container py-2">
     <div class="col-12">
       <p> 
-        Modern SQL Encompasses many query commands beyond aggregation queries
+        Modern SQL encompasses many query commands beyond aggregation queries.
+      </p>
+      <p> 
+        'Normal' SQL is based of SQL:92. Nearly all databases support SQL:2003 which 
+        adds many interesting and powerful functions.
       </p>
       <p>
-      These interactive tutorials will test your knowledge of window functions
+      These interactive tutorials will test your knowledge of window functions (postgres) by quizing you on cat data.
       </p>
-
+      <p> Test your <a href="/questions/q0">knowledge </a>
     </div>
   </div>
 {% endblock containers %}

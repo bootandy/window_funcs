@@ -1,7 +1,7 @@
 {% extends "all_questions" %}
 
 {% block heading %}
-SQL Window Function Question 3: Use ROW_NUMBER
+Q3: Counting
 {% endblock heading %}
 
 {% block question %}

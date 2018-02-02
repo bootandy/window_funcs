@@ -1,7 +1,7 @@
 {% extends "all_questions" %}
 
 {% block heading %}
-SQL Window Function Question 0: Group by / Having
+Q0: Refresher on Aggregates
 {% endblock heading %}
 
 {% block question %}

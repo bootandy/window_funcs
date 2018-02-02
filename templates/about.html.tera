@@ -5,20 +5,53 @@
   <div class="col-12">
     <h2 id="intro">About</h2>
     <p> 
-    This site is a logical extention to <a href="https://pgexercises.com/">PG Exercises </a>
+    This site was built after doing the exercises in <a href="https://pgexercises.com/">PG Exercises </a> 
+    It was made by <a href="http://www.nuclearcarrot.co.uk">Andy Boot</a> while at <a href="https://www.recurse.com"> Recurse Center</a>
+    <ul>
+      <li><a href="#why"> Why did you create this?</a></li>
+      <li><a href="#tech"> What technologies did you use?</a></li>
+      <li><a href="#win_func"> How can I learn about SQL window functions?</a></li>
+      <li><a href="#db"> Does my database support this?</a></li>
+    </ul>
+    <a name="why"></a>
+    <h3>Why did you create this?</h3>
+    <p>
     While there are several websites similar to PG Exercises that allow you to interact with SQL interactivly
-    none of them focus on the post sql-92 window functions. Most databases got these awesome powerfull functions
+    none of them focus on the post sql-92 window functions. Most databases got these awesome powerful functions
     a long time ago and most of us don't use them
     </p>
-    <p> The code is on <a href="https://github.com/bootandy/window_funcs">github</a> It is written in Rust and uses 
-    Rocket, Tera. I wrote it partially to learn Rust.
+    
+    <a name="tech"></a>
+    <h3> What technologies did you use?</h3>
+    <p> Rust &amp; Postgres. </p>
+    <p>The code is on <a href="https://github.com/bootandy/window_funcs">github</a> 
+    It is written in Rust and uses Rocket, Tera. I wrote it partially to learn Rust.
     </p> 
-    <p> Made with love at <a href="https://www.recurse.com"> Recurse Center</a>
 
+    <a href="#win_func"> </a>
+    <h3>How can I learn about SQL window functions?</h3>
     <p> Links to learn about window functions: 
-    <a href="https://community.modeanalytics.com/sql/tutorial/sql-window-functions/">Modeanalytics</a>
-    <a href="https://www.postgresql.org/docs/current/static/functions-window.html">Postgres</a>
-    <a href="https://use-the-index-luke.com/sql/partial-results/window-functions">Use The Index Luke</a>
+    <ul>
+      <li>
+        <a href="https://community.modeanalytics.com/sql/tutorial/sql-window-functions/">Modeanalytics</a>
+      </li><li>
+        <a href="https://www.postgresql.org/docs/current/static/functions-window.html">Postgres</a>
+      </li><li>
+        <a href="https://use-the-index-luke.com/sql/partial-results/window-functions">Use The Index Luke</a>
+      </li><li>
+        <a href="https://blog.jooq.org/2013/11/03/probably-the-coolest-sql-feature-window-functions/">What are window functions (JooQ ORM)k</a>
+      </li><li>
+        <a href="https://tapoueh.org/blog/2013/08/understanding-window-functions/">Understanding window functions</a>
+      </li>
+    </ul>
+    </p>
+
+    <a href="db"> </a>
+    <h3>Does my database support window functions?</h3>
+    <p> 
+    Probably, the only major one that doesn't is MySQL (which is superseded by Maria DB which does). 
+    </p><p>
+    Try it and see!
     </p>
   </div>
 </div>

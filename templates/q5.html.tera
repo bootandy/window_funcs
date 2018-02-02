@@ -1,7 +1,7 @@
 {% extends "all_questions" %}
 
 {% block heading %}
-SQL Window Function Question 5: Use ntile 
+Q5: Quartiles
 {% endblock heading %}
 
 {% block question %}

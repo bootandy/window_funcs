@@ -24,6 +24,24 @@ $( document ).ready(function() {
     })
   });
 
+  $("#hint").click(function(e) {
+    e.preventDefault();
+    var correct_word = "{{query_requires}}";
+    var level = parseInt($("#hint_box").attr('level'));
+
+    if (level == 0) {
+      var text = "This query requires: <em>" + correct_word + "</em>";
+      $("#hint").text("More hints");
+    } else {
+      var tmp = $("#correct_answer").text();
+      var start_point = Math.max(tmp.indexOf(correct_word) - level * 3, 0);
+      var end_point = correct_word.length + level * 6;
+      var text = tmp.substr(start_point, end_point);
+    }
+    $("#hint_box").attr('level', level + 1);
+    $("#hint_box").html(text);
+  });
+
   $("#sql_to_run").focus();
 });
 </script>
@@ -43,44 +61,67 @@ $( document ).ready(function() {
     {% block heading %}
     {% endblock heading %}
   </h1>
-      <h2>Question:</h2>
+  <h2>Question:</h2>
   <div class="row">
     <div class="col">
       <p>
       {% block question %}
       {% endblock question %}
       </p>
-      <h4> Cat table: </h4>
-      <table class="table table-striped table-bordered table-sm">
-        <tr><td>Name<td><td>varchar</td></tr>
-        <tr><td>Breed<td><td>varchar</td></tr>
-        <tr><td>Weight<td><td>float</td></tr>
-        <tr><td>Color<td><td>varchar</td></tr>
-        <tr><td>Age<td><td>int</td></tr>
-      </table>
+        <a class="unhider" href="#" >Show Table Definition</a>
+        <span class="hidden">
+          <table class="table table-striped table-bordered table-sm">
+            <tr><td>Name<td><td>varchar</td></tr>
+            <tr><td>Breed<td><td>varchar</td></tr>
+            <tr><td>Weight<td><td>float</td></tr>
+            <tr><td>Color<td><td>varchar</td></tr>
+            <tr><td>Age<td><td>int</td></tr>
+          </table>
+        </span>
     </div>
     <div class="col">
       <form method="post">
         <textarea name="sql_to_run" id="sql_to_run" rows="10" >{{sql_to_run}}</textarea>
         <button style='float:right' class="btn btn-primary" type="submit">Run Query</button>
-        <button style='float:right' class="unhider btn btn-primary" href="#" >Show Hint</button>
-        <p class="hidden"> This query requires: <em>{{query_requires}}</em> </p>
+        <button style='float:right' id="hint" class="btn btn-primary" href="#" >Show Hint</button>
+        <p id="hint_box" level=0>  </p>
+      {% if is_correct and used_correct_word %}
+          <img src="/static/tick.png" />
+      {% endif %}
       </form>	
+      {% if is_correct and not used_correct_word %}
+          <img src="/static/question.png"/>
+          <p>  
+            Correct output but can you use '{{query_requires}}'?
+          </p>
+      {% endif %}
     </div>
   </div>
 
   <div class="row">
     <div class="col">
       <h4>Desired output:</h4>
-      {{ macros::sql_table(sql_data=sql_answer) }}
-
+      <table class="table table-striped table-bordered">
+        {{ macros::sql_table(sql_data=sql_correct_result) }}
+      </table>
       <a class="unhider" href="#"> view answer </a>
-      <p class="hidden"> {{sql_correct}} </p>
+      <p id="correct_answer" class="hidden"> {{sql_correct}} </p>
     </div>
     <div class="col">
       <h4>Your output:</h4>
-      {{ macros::sql_table(sql_data=sql_result) }}
-
+      <table class="table table-striped table-bordered 
+      {% if is_correct %}
+        {% if used_correct_word %}
+          answer-correct
+        {% else %}
+          answer-half-correct
+        {% endif %}
+      {% else %}
+        answer-wrong
+      {% endif %}
+      ">
+        {{ macros::sql_table(sql_data=sql_to_run_result) }}
+      </table>
     </div>
   </div>
 </div>

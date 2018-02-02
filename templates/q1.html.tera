@@ -1,7 +1,7 @@
 {% extends "all_questions" %}
 
 {% block heading %}
-SQL Window Function Question 1: Use Over
+Q1: Running Totals
 {% endblock heading %}
 
 {% block question %}

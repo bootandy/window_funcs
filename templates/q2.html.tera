@@ -1,14 +1,15 @@
 {% extends "all_questions" %}
 
 {% block heading %}
-SQL Window Function Question 2: Use Partition by
+Q2: Partitioned Running Totals
 {% endblock heading %}
 
 {% block question %}
 
-The cats are now ordered by first breed and second by name and are about to enter an elevator one by one.
+The cats are ordered by first breed and second by name and are about to enter an elevator one by one.
 When all the cats of the same breed have entered they leave. 
-We would like to know what the running total weight of each group of cats is. 
+<br/>
+We would like to know what the running total weight of the cats is. 
 <br/>
 Return: name, breed and total weight of this group of cats
 

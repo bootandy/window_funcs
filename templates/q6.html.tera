@@ -1,12 +1,12 @@
 {% extends "all_questions" %}
 
 {% block heading %}
-SQL Window Function Question 6: Use dense_rank
+Q6: Ranking
 {% endblock heading %}
 
 {% block question %}
 
-We would like to rank the cats by age (youngest first). However we would like their ranking to be sequentially increasing.
+We would like to rank the cats by age (oldest first). However we would like their ranking to be sequentially increasing.
 <br/>
 Return: ranking, name, age
 

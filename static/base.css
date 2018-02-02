@@ -1,3 +1,7 @@
+h1 {
+	text-align: center;
+}
+
 #sql_to_run {
   -webkit-box-sizing: border-box;
        -moz-box-sizing: border-box;
@@ -5,9 +9,22 @@
   width: 100%;
   margin-bottom: .5em;
 }
+main {
+	min-height: 40em;
+}
 .btn-primary {
 	margin-left: 0.5em;
 }
+.answer-correct {
+    border: 3px solid #2cda00;
+}
+.answer-half-correct {
+    border: 3px solid #ffff00;
+}
+.answer-wrong {
+    border: 3px solid #dc3545;
+}
+
 .hidden {
 	visibility: hidden;
 }

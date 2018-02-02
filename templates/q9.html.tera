@@ -1,16 +1,16 @@
 {% extends "all_questions" %}
 
 {% block heading %}
-SQL Window Function Question 9: Use window
+Q10: First of each Group
 {% endblock heading %}
 
 {% block question %}
 
-This SQL function can be made simpler by using the WINDOW command. Although the output will not check this please use the WINDOW command.
+Cats are vain. Each cat would like to pretend it has the lowest weight for its color.
 <br/>
-Each cat would like to see what half, third and quartile they are in for their weight.
+Print cat name, color and the minimum weight of cats with that color.
 <br/>
-Return: name, weight, by_half, thirds, quartile
+Return: name, color, lowest_weight_by_color
 
 {% endblock question %}
 

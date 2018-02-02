@@ -1,7 +1,7 @@
 {% extends "all_questions" %}
 
 {% block heading %}
-SQL Window Function Question 7: Use lag
+Q7 Compare to Previous Row
 {% endblock heading %}
 
 {% block question %}
