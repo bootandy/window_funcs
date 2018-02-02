@@ -49,9 +49,10 @@
       <div class="container d-flex flex-wrap">
 
         <nav class="b-footer_navigation">
-          SQL Window Functions tutorial. 
+          SQL Window Functions tutorial 
         </nav>
-        <div class="b-footer_social-list">
+        <div class="b-footer-right">
+          A lot has changed since SQL-92
         </div>
       </div>
       <div class="container">
