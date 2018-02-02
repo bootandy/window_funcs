@@ -61,8 +61,8 @@ select name, weight,
      order by weight";
 
 
-pub fn get_sql_for_q(s: &String) -> (&str, &str) {
-    match s.as_ref() {
+pub fn get_sql_for_q(s: &str) -> (&str, &str) {
+    match s {
         "q0" => (Q0_SQL, "group by"),
         "q1" => (Q1_SQL, "over"),
         "q2" => (Q2_SQL, "partition by"),

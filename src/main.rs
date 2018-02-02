@@ -30,7 +30,7 @@ fn _get_next_and_prev(s: &str) -> (String, String) {
     let i = s[1..].parse::<i32>().unwrap();
     let prev = cmp::max(i - 1, 0);
     let next = cmp::min(i + 1, 10);
-    return (format!("q{}", prev), (format!("q{}", next)))
+    (format!("q{}", prev), (format!("q{}", next)))
 }
 
 #[derive(Serialize)]
@@ -46,7 +46,7 @@ struct TemplateContext {
     used_correct_word: bool,
 }
 
-fn _context_builder(conn: &db::DbConn, question: &String, sql_result: Vec<Vec<String>>, sql_to_run: String) -> TemplateContext {
+fn _context_builder(conn: &db::DbConn, question: &str, sql_result: Vec<Vec<String>>, sql_to_run: String) -> TemplateContext {
     let (sql_correct, keyword) = sql::get_sql_for_q(question);
     let correct_result = _run_sql(conn, sql_correct);
     let (prev, next) = _get_next_and_prev(question);
@@ -80,7 +80,7 @@ fn _run_sql(conn: &db::DbConn, sql_command: &str) -> Vec<Vec<String>> {
         Ok(query_results) => {
             result.push(query_results.columns().into_iter().map(|c| {c.name().to_string()}).collect());
 
-            for row in query_results.into_iter() { 
+            for row in &query_results { 
                 let result_row = row.columns().into_iter().enumerate().map(|(i, col)| {
                     match col.type_().name() {
                         "int8" => {
@@ -136,7 +136,7 @@ fn post_db(question: String, conn: db::DbConn, sink: Result<Form<FormInput>, Opt
             ("".to_string(), vec![])
         }
     };
-    Template::render(question.clone(), &_context_builder(&conn, &question, result, sql_command))
+    Template::render(question.to_string(), &_context_builder(&conn, question.as_ref(), result, sql_command))
 }
 
 
@@ -144,7 +144,7 @@ fn post_db(question: String, conn: db::DbConn, sink: Result<Form<FormInput>, Opt
 fn get_db(question : String, conn: db::DbConn) ->  Template {
     let base_sql = "select \n*\n from cats ";
     let result = _run_sql(&conn, base_sql);
-    Template::render(question.clone(), &_context_builder(&conn, &question, result, base_sql.to_string()))
+    Template::render(question.to_string(), &_context_builder(&conn, question.as_ref(), result, base_sql.to_string()))
 }
 
 #[get("/favicon.ico")]
