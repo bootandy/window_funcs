@@ -5,11 +5,12 @@ Q1: Running Totals
 {% endblock heading %}
 
 {% block question %}
-
+<p>
 The cats are ordered by name and have lined up and are about to enter an elevator one by one.
 We would like to know what the running total weight of each group of cats is. 
-<br/>
+</p><p>
 Return: cat name and total weight of this group of cats
+</p>
 
 {% endblock question %}
 

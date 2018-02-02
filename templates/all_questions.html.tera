@@ -31,7 +31,7 @@ $( document ).ready(function() {
 
     if (level == 0) {
       var text = "This query requires: <em>" + correct_word + "</em>";
-      $("#hint").text("More hints");
+      $("#hint").text("MORE hints");
     } else {
       var tmp = $("#correct_answer").text();
       var start_point = Math.max(tmp.indexOf(correct_word) - level * 3, 0);
@@ -68,8 +68,9 @@ $( document ).ready(function() {
       {% block question %}
       {% endblock question %}
       </p>
-        <a class="unhider" href="#" >Show Table Definition</a>
+        <a class="unhider" href="#">Show Table Schema</a>
         <span class="hidden">
+          <h6>Cats:</h6>
           <table class="table table-striped table-bordered table-sm">
             <tr><td>Name<td><td>varchar</td></tr>
             <tr><td>Breed<td><td>varchar</td></tr>
@@ -82,12 +83,17 @@ $( document ).ready(function() {
     <div class="col">
       <form method="post">
         <textarea name="sql_to_run" id="sql_to_run" rows="10" >{{sql_to_run}}</textarea>
-        <button style='float:right' class="btn btn-primary" type="submit">Run Query</button>
+        {% if draw_attention %}
+          {% set cls = "look_at_me" %}
+        {% else %}
+          {% set cls = "" %}
+        {% endif %}
+        <button style='float:right' id="run_query" class="btn btn-primary {{cls}}" type="submit">Run Query</button>
         <button style='float:right' id="hint" class="btn btn-primary" href="#" >Show Hint</button>
-        <p id="hint_box" level=0>  </p>
       {% if is_correct and used_correct_word %}
           <img src="/static/tick.png" />
       {% endif %}
+        <p id="hint_box" level=0>  </p>
       </form>	
       {% if is_correct and not used_correct_word %}
           <img src="/static/question.png"/>

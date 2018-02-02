@@ -5,12 +5,13 @@ Q5: Quartiles
 {% endblock heading %}
 
 {% block question %}
-
+<p>
 We are worried our cats are too fat.
-<br/>
+</p><p>
 We would like to group the cats into quartiles by their weight.
-<br/>
+</p><p>
 Return: name, weight, weight_quartile
+</p>
 
 {% endblock question %}
 

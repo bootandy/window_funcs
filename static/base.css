@@ -1,16 +1,18 @@
 h1 {
 	text-align: center;
 }
-
+main {
+	min-height: 40em;
+}
+#hint_box {
+	min-height: 3em;
+}
 #sql_to_run {
   -webkit-box-sizing: border-box;
        -moz-box-sizing: border-box;
             box-sizing: border-box;
   width: 100%;
   margin-bottom: .5em;
-}
-main {
-	min-height: 40em;
 }
 .btn-primary {
 	margin-left: 0.5em;
@@ -26,15 +28,17 @@ main {
 }
 
 .hidden {
-	visibility: hidden;
+	display: none;
 }
 .show {
-	visibility: show;
+	display:block ;
 }
 .b-header_logo {
 	font-size:xx-large;
 }
-
+.table-sm {
+	font-size:small;
+}
 .b-footer{
 	border-color:#d54b68;
 	border-top-style: solid;
@@ -45,3 +49,19 @@ main {
 .b-footer-right{
 	font-style: italic;
 }
+
+/* Lets try some animations shall we*/
+@keyframes look_at_me {
+  0% {
+    transform: scale(1,1);
+  }
+  50% {
+    transform: scale(1.5,1.5);
+  }
+  100% {
+    transform: scale(1,1);
+  }
+}
+.look_at_me {
+   animation: .5s ease-out 0s 1 look_at_me;
+}	 

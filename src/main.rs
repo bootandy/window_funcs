@@ -44,9 +44,10 @@ struct TemplateContext {
     prev_q: String,
     is_correct: bool,
     used_correct_word: bool,
+    draw_attention: bool,
 }
 
-fn _context_builder(conn: &db::DbConn, question: &str, sql_result: Vec<Vec<String>>, sql_to_run: String) -> TemplateContext {
+fn _context_builder(conn: &db::DbConn, question: &str, sql_result: Vec<Vec<String>>, sql_to_run: String, draw_attention :bool) -> TemplateContext {
     let (sql_correct, keyword) = sql::get_sql_for_q(question);
     let correct_result = _run_sql(conn, sql_correct);
     let (prev, next) = _get_next_and_prev(question);
@@ -63,6 +64,7 @@ fn _context_builder(conn: &db::DbConn, question: &str, sql_result: Vec<Vec<Strin
         prev_q: prev,
         is_correct: is_correct,
         used_correct_word: used_correct_word,
+        draw_attention: draw_attention,
     }
 }
 
@@ -136,15 +138,16 @@ fn post_db(question: String, conn: db::DbConn, sink: Result<Form<FormInput>, Opt
             ("".to_string(), vec![])
         }
     };
-    Template::render(question.to_string(), &_context_builder(&conn, question.as_ref(), result, sql_command))
+    Template::render(question.to_string(), &_context_builder(&conn, question.as_ref(), result, sql_command, false))
 }
 
 
 #[get("/questions/<question>")]
 fn get_db(question : String, conn: db::DbConn) ->  Template {
     let base_sql = "select \n*\n from cats ";
-    let result = _run_sql(&conn, base_sql);
-    Template::render(question.to_string(), &_context_builder(&conn, question.as_ref(), result, base_sql.to_string()))
+    // Forcing an empty result encourages people to click run the first time to help engagement.
+    let result = vec![vec![]]; //_run_sql(&conn, base_sql);
+    Template::render(question.to_string(), &_context_builder(&conn, question.as_ref(), result, base_sql.to_string(), true))
 }
 
 #[get("/favicon.ico")]

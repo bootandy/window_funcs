@@ -6,9 +6,11 @@ Q6: Ranking
 
 {% block question %}
 
+<p>
 We would like to rank the cats by age (oldest first). However we would like their ranking to be sequentially increasing.
-<br/>
+</p><p>
 Return: ranking, name, age
+</p>
 
 {% endblock question %}
 

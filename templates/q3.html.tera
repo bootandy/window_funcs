@@ -5,10 +5,12 @@ Q3: Counting
 {% endblock heading %}
 
 {% block question %}
+<p>
 The cats are ordered by name and are about to enter an elevator one by one.
+</p><p>
 We would like to know what the running total of the last kind of breed of cat that entered is.
-<br/>
+</p><p>
 Return: num_cats_with_this_breed, name, breed 
-
+</p>
 {% endblock question %}
 

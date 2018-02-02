@@ -6,13 +6,15 @@ Q8: Compare to Previous Row2
 
 {% block question %}
 
+</p><p>
 The cats now want to lose weight according to their breed.
-<br/>
+</p><p>
 Each cat would like to lose weight to be the equivalent weight of the cat in the same breed weighing just less than it.
-<br/>
+</p><p>
 Print a list of cats, their breeds, weights and the weight difference between them and the nearest lighter cat of the same breed.
-<br/>
+</p><p>
 Return: name, breed, weight, target_weight
+</p>
 
 {% endblock question %}
 

@@ -5,11 +5,13 @@ Q0: Refresher on Aggregates
 {% endblock heading %}
 
 {% block question %}
+<p>
 A refresher on aggregate functions. You should know aggregate functions before attempting the other questions.
-<br/>
+</p><p>
 We would like to find the total weight of cats grouped by age. But only return those cat group weights larger than 12.
-<br/>
+</p><p>
 Return: age, total_weight 
+</p>
 
 {% endblock question %}
 

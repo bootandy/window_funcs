@@ -6,11 +6,12 @@ Q4: Orderring
 
 {% block question %}
 
+<p>
 We would like to find the fattest (and 2nd, 3rd etc) cat of each breed
-<br/>
+</p><p>
 We must order all the cats by weight grouped by their breed. The heaviest cat must be first.
-<br/>
+</p><p>
 Return: ranking, name, breed, weight 
-
+</p>
 {% endblock question %}
 
