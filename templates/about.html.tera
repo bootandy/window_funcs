@@ -33,15 +33,13 @@
     <p> Links to learn about window functions: 
     <ul>
       <li>
-        <a href="https://community.modeanalytics.com/sql/tutorial/sql-window-functions/">Modeanalytics</a>
-      </li><li>
         <a href="https://www.postgresql.org/docs/current/static/functions-window.html">Postgres</a>
+      </li><li>
+        <a href="https://community.modeanalytics.com/sql/tutorial/sql-window-functions/">Mode Analytics</a>
       </li><li>
         <a href="https://use-the-index-luke.com/sql/partial-results/window-functions">Use The Index Luke</a>
       </li><li>
-        <a href="https://blog.jooq.org/2013/11/03/probably-the-coolest-sql-feature-window-functions/">What are window functions (JooQ ORM)k</a>
-      </li><li>
-        <a href="https://tapoueh.org/blog/2013/08/understanding-window-functions/">Understanding window functions</a>
+        <a href="http://tapoueh.org/blog/2013/08/understanding-window-functions/">Understanding window functions</a>
       </li>
     </ul>
     </p>

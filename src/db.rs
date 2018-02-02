@@ -5,10 +5,6 @@ extern crate r2d2;
 extern crate r2d2_postgres;
 extern crate serde_json;
 
-/*#[cfg(test)]
-mod tests;
-*/
-
 use std::ops::Deref;
 
 use rocket::request::{self, FromRequest, Request, State};
@@ -23,7 +19,7 @@ type Pool = r2d2::Pool<PostgresConnectionManager>;
 
 pub fn init_pool() -> Pool {
     let manager = PostgresConnectionManager::new(
-        "postgres://rusty@localhost", TlsMode::None
+        "rusty://rusty@localhost", TlsMode::None
     ).unwrap();
     r2d2::Pool::new(manager).unwrap()
 }

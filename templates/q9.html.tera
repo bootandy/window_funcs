@@ -1,7 +1,7 @@
 {% extends "all_questions" %}
 
 {% block heading %}
-Q10: First of each Group
+Q9: First of each Group
 {% endblock heading %}
 
 {% block question %}
