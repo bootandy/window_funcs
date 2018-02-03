@@ -14,3 +14,6 @@ Return: cat name and total weight of this group of cats
 
 {% endblock question %}
 
+{% block on_correct %}
+Over allows us to break down our aggregate functions, it is often used for running totals
+{% endblock on_correct %}

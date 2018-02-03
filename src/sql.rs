@@ -14,9 +14,10 @@ sum(weight) over (partition by breed order by name) as running_total_weight
 from cats ";
 
 static Q3_SQL :&'static str = "
-select row_number() 
-over (partition by breed order by name) as num_cats_of_breed, 
-name ,breed from cats order by name";
+select 
+row_number() over (order by color,name) as unique,
+name, color 
+from cats";
 
 static Q4_SQL :&'static str = "
 select 
@@ -37,12 +38,12 @@ dense_rank() over (order by age DESC) as r, name,age
 
 static Q7_SQL :&'static str = "
 select name, weight, 
-      lag(weight, 1) over (order by weight) - weight as target_weight
+      weight - lag(weight, 1) over (order by weight) as target_weight
       from cats order by weight";
 
 static Q8_SQL :&'static str = "
     select name, breed, weight,
-lag(weight, 1) over (partition by breed order by weight) - weight as target_weight
+weight - lag(weight, 1) over (partition by breed order by weight) as target_weight
 from cats order by weight ";
 
 static Q9_SQL :&'static str = "

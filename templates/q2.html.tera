@@ -7,7 +7,7 @@ Q2: Partitioned Running Totals
 {% block question %}
 
 <p>
-The cats are ordered by first breed and second by name and are about to enter an elevator one by one.
+The cats are ordered first by breed and second by name and are about to enter an elevator one by one.
 When all the cats of the same breed have entered they leave. 
 </p><p>
 We would like to know what the running total weight of the cats is. 
@@ -16,3 +16,6 @@ Return: name, breed and total weight of this group of cats
 </p>
 {% endblock question %}
 
+{% block on_correct %}
+Over coupled with partition by allows us to further break down our aggregate functions, it is often used for running totals of types or classes of items.
+{% endblock on_correct %}

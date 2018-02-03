@@ -1,7 +1,7 @@
 {% extends "all_questions" %}
 
 {% block heading %}
-Q8: Compare to Previous Row2
+Q8: Compare to Previous Row Part 2
 {% endblock heading %}
 
 {% block question %}
@@ -18,3 +18,6 @@ Return: name, breed, weight, target_weight
 
 {% endblock question %}
 
+{% block on_correct %}
+lag() can also work with partition by
+{% endblock on_correct %}

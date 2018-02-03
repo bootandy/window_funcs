@@ -1,7 +1,7 @@
 {% extends "all_questions" %}
 
 {% block heading %}
-Q4: Orderring
+Q4: Ordering
 {% endblock heading %}
 
 {% block question %}
@@ -15,3 +15,6 @@ Return: ranking, name, breed, weight
 </p>
 {% endblock question %}
 
+{% block on_correct %}
+rank lets us index the ordered items.  Unlike row_number it allows duplicate numbers.
+{% endblock on_correct %}

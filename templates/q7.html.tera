@@ -15,3 +15,8 @@ Return: name, weight, target_weight
 </p>
 {% endblock question %}
 
+{% block on_correct %}
+lag() lets us compare to the previous rows [and lead() the next rows]
+<br/>
+It is useful for looking for strange step ups/downs in data
+{% endblock on_correct %}

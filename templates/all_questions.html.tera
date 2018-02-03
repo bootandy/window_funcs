@@ -42,6 +42,15 @@ $( document ).ready(function() {
     $("#hint_box").html(text);
   });
 
+
+  $("#summary_box > .close").click(function(e) {
+    $("#summary_box").hide();
+  });
+
+  {% if is_correct and used_correct_word %}
+    $("#summary_box").show();
+  {% endif %}
+
   $("#sql_to_run").focus();
 });
 </script>
@@ -72,11 +81,11 @@ $( document ).ready(function() {
         <span class="hidden">
           <h6>Cats:</h6>
           <table class="table table-striped table-bordered table-sm">
-            <tr><td>Name<td><td>varchar</td></tr>
-            <tr><td>Breed<td><td>varchar</td></tr>
-            <tr><td>Weight<td><td>float</td></tr>
-            <tr><td>Color<td><td>varchar</td></tr>
-            <tr><td>Age<td><td>int</td></tr>
+            <tr><td>name<td><td>varchar</td></tr>
+            <tr><td>breed<td><td>varchar</td></tr>
+            <tr><td>weight<td><td>float</td></tr>
+            <tr><td>color<td><td>varchar</td></tr>
+            <tr><td>age<td><td>int</td></tr>
           </table>
         </span>
     </div>
@@ -102,6 +111,13 @@ $( document ).ready(function() {
           </p>
       {% endif %}
     </div>
+  </div>
+
+  <div class="row " id="summary_box">
+    <span class="close">&times;</span>
+    Good work! 
+    {% block on_correct %}
+    {% endblock on_correct %}
   </div>
 
   <div class="row">

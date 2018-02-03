@@ -6,12 +6,16 @@ Q0: Refresher on Aggregates
 
 {% block question %}
 <p>
-A refresher on aggregate functions. You should know aggregate functions before attempting the other questions.
+A refresher on aggregate functions. You will need to know aggregate functions before attempting the other questions.
 </p><p>
-We would like to find the total weight of cats grouped by age. But only return those cat group weights larger than 12.
+We would like to find the total weight of cats grouped by age. But only return those group with a total weight larger than 12.
 </p><p>
 Return: age, total_weight 
 </p>
 
 {% endblock question %}
+
+{% block on_correct %}
+Group by and Having are commonly used aggregate functions. They are good for finding sums and averages.
+{% endblock on_correct %}
 

@@ -7,10 +7,16 @@ Q6: Ranking
 {% block question %}
 
 <p>
-We would like to rank the cats by age (oldest first). However we would like their ranking to be sequentially increasing.
+For cats age means seniority, we would like to rank the cats by age (oldest first). 
+</p><p>
+However we would like their ranking to be sequentially increasing.
 </p><p>
 Return: ranking, name, age
 </p>
 
 {% endblock question %}
 
+{% block on_correct %}
+dense_rank() differs from rank() as it increases sequentially.<br/>
+Consider a race where 2 people finished first. Dense_rank assigns the next person 2nd. Rank assigns them 3rd.
+{% endblock on_correct %}

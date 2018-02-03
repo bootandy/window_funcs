@@ -15,3 +15,6 @@ Return: name, weight, by_half, thirds, quartile
 </p>
 {% endblock question %}
 
+{% block on_correct %}
+Use of Window can simplify some of our complex queries
+{% endblock on_correct %}

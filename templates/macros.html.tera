@@ -1,14 +1,12 @@
 {% macro sql_table(sql_data) %}
 
-
 {% for row in sql_data %}
 <tr>
-{% for val in row %}
-<td>{{val}}</td>
-{% endfor %}
+  {% for val in row %}
+    <td>{{val}}</td>
+  {% endfor %}
 </tr>
 {% endfor %}
-
 
 {% endmacro sql_table %}
 

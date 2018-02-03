@@ -6,11 +6,15 @@ Q3: Counting
 
 {% block question %}
 <p>
-The cats are ordered by name and are about to enter an elevator one by one.
+The cats form a line grouped by color. Inside each color group the cats order themselves by name.
+Every cat must have a unique number for its place in the line.
 </p><p>
-We would like to know what the running total of the last kind of breed of cat that entered is.
+We must assign each cat a unique number while maintaining their color &amp; name ordering.
 </p><p>
-Return: num_cats_with_this_breed, name, breed 
+Return: unique_number, name, color 
 </p>
 {% endblock question %}
 
+{% block on_correct %}
+row_number() lets us index the ordered items. Each number is unique 
+{% endblock on_correct %}

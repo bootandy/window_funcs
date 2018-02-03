@@ -6,7 +6,7 @@ Q5: Quartiles
 
 {% block question %}
 <p>
-We are worried our cats are too fat.
+We are worried our cats are too fat and need to diet.
 </p><p>
 We would like to group the cats into quartiles by their weight.
 </p><p>
@@ -15,3 +15,6 @@ Return: name, weight, weight_quartile
 
 {% endblock question %}
 
+{% block on_correct %}
+ntile() lets us divide our data into percentiles/quartiles. If we only need to see the lowest X% this is done via ntile()
+{% endblock on_correct %}

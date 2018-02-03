@@ -15,3 +15,8 @@ Return: name, color, lowest_weight_by_color
 </p>
 {% endblock question %}
 
+
+{% block on_correct %}
+first_value() [and nth_value()] allow us to select the first value of a subgroup
+{% endblock on_correct %}
+
