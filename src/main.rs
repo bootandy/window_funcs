@@ -133,7 +133,7 @@ fn post_db(question: String, conn: db::DbConn, sink: Result<Form<FormInput>, Opt
             (sql_command1, result1)
         },
         Err(None) => {
-            ("".to_string(), vec![])
+            ("".to_string(), vec![vec!["".to_string()]])
         }
     };
     Template::render(question.to_string(), &_context_builder(&conn, question.as_ref(), result, sql_command))
