@@ -44,7 +44,7 @@
     </ul>
     </p>
 
-    <a href="db"> </a>
+    <a href="#db"> </a>
     <h3>Does my database support window functions?</h3>
     <p> 
     Probably, the only major one that doesn't is MySQL (which is superseded by Maria DB which does). 
