@@ -64,17 +64,17 @@ select name, weight,
 
 pub fn get_sql_for_q(s: &str) -> (&str, &str) {
     match s {
-        "q0" => (Q0_SQL, "group by"),
-        "q1" => (Q1_SQL, "over"),
-        "q2" => (Q2_SQL, "partition by"),
-        "q3" => (Q3_SQL, "row_number"),
-        "q4" => (Q4_SQL, "rank"),
-        "q5" => (Q5_SQL, "ntile"),
-        "q6" => (Q6_SQL, "dense_rank"),
-        "q7" => (Q7_SQL, "lag"),
-        "q8" => (Q8_SQL, "lag"),
-        "q9" => (Q9_SQL, "first_value"),
-        "q10" => (Q10_SQL, "window"),
+        "0" => (Q0_SQL, "group by"),
+        "1" => (Q1_SQL, "over"),
+        "2" => (Q2_SQL, "partition by"),
+        "3" => (Q3_SQL, "row_number"),
+        "4" => (Q4_SQL, "rank"),
+        "5" => (Q5_SQL, "ntile"),
+        "6" => (Q6_SQL, "dense_rank"),
+        "7" => (Q7_SQL, "lag"),
+        "8" => (Q8_SQL, "lag"),
+        "9" => (Q9_SQL, "first_value"),
+        "10" => (Q10_SQL, "window"),
         _ => ("select 1 from cats", "")
     }
 }

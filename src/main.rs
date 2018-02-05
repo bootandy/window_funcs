@@ -27,10 +27,10 @@ struct FormInput {
 }
 
 fn _get_next_and_prev(s: &str) -> (String, String) {
-    let i = s[1..].parse::<i32>().unwrap();
+    let i = s.parse::<i32>().unwrap_or(0);
     let prev = cmp::max(i - 1, 0);
     let next = cmp::min(i + 1, 10);
-    (format!("q{}", prev), (format!("q{}", next)))
+    (format!("{}", prev), (format!("{}", next)))
 }
 
 #[derive(Serialize)]
@@ -38,8 +38,8 @@ struct TemplateContext {
     keyword: String, 
     sql_correct: String, 
     sql_to_run : String, 
-    sql_to_run_result: Vec<Vec<String>>,
     sql_correct_result: Vec<Vec<String>>,
+    sql_to_run_result: Vec<Vec<String>>,
     next_q: String,
     prev_q: String,
     is_correct: bool,
@@ -48,21 +48,21 @@ struct TemplateContext {
 
 fn _context_builder(conn: &db::DbConn, question: &str, sql_result: Vec<Vec<String>>, sql_to_run: String) -> TemplateContext {
     let (sql_correct, keyword) = sql::get_sql_for_q(question);
-    let correct_result = _run_sql(conn, sql_correct);
-    let (prev, next) = _get_next_and_prev(question);
-    let is_correct = sql_result[1..] == correct_result[1..];
+    let sql_correct_result = _run_sql(conn, sql_correct);
+    let (prev_q, next_q) = _get_next_and_prev(question);
+    let is_correct = sql_result[1..] == sql_correct_result[1..];
     let used_correct_word = sql_to_run.to_lowercase().contains(keyword);
         
     TemplateContext {
         keyword: keyword.to_string(),
         sql_correct:  sql_correct.to_string(),
-        sql_correct_result: correct_result,
-        sql_to_run: sql_to_run,
+        sql_to_run,
+        sql_correct_result,
         sql_to_run_result: sql_result,
-        next_q: next,
-        prev_q: prev,
-        is_correct: is_correct,
-        used_correct_word: used_correct_word,
+        next_q,
+        prev_q,
+        is_correct,
+        used_correct_word,
     }
 }
 
@@ -182,7 +182,10 @@ fn main() {
 
 #[test]
 fn test_get_next_and_prev() {
-    assert_eq!(_get_next_and_prev("q4"), (String::from("q3"), String::from("q5")));
-    assert_eq!(_get_next_and_prev("q0"), (String::from("q0"), String::from("q1")));
+    assert_eq!(_get_next_and_prev("4"), (String::from("3"), String::from("5")));
+    assert_eq!(_get_next_and_prev("0"), (String::from("0"), String::from("1")));
+    // check it doesn't crash
+    _get_next_and_prev("qa");
+    _get_next_and_prev("");
 }
 

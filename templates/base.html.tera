@@ -2,6 +2,11 @@
 
 <html>
   <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Free Advanced SQL Tutorial for Window Functions">
+    <meta name="keywords" content="sql,window functions,advanced sql,sql tutorial,sql quiz">
+
+    <title>Advnaced SQL window function quiz</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="/static/style.css">
@@ -22,17 +27,17 @@
             </li>
             <li class="nav_block"><a>Questions<i class="fa fa-angle-down"></i></a>
               <ul>
-                <li><a href="/questions/q0">Question 0</a></li>
-                <li><a href="/questions/q1">Question 1</a></li>
-                <li><a href="/questions/q2">Question 2</a></li>
-                <li><a href="/questions/q3">Question 3</a></li>
-                <li><a href="/questions/q4">Question 4</a></li>
-                <li><a href="/questions/q5">Question 5</a></li>
-                <li><a href="/questions/q6">Question 6</a></li>
-                <li><a href="/questions/q7">Question 7</a></li>
-                <li><a href="/questions/q8">Question 8</a></li>
-                <li><a href="/questions/q9">Question 9</a></li>
-                <li><a href="/questions/q10">Question 10</a></li>
+                <li><a href="/questions/0">Question 0</a></li>
+                <li><a href="/questions/1">Question 1</a></li>
+                <li><a href="/questions/2">Question 2</a></li>
+                <li><a href="/questions/3">Question 3</a></li>
+                <li><a href="/questions/4">Question 4</a></li>
+                <li><a href="/questions/5">Question 5</a></li>
+                <li><a href="/questions/6">Question 6</a></li>
+                <li><a href="/questions/7">Question 7</a></li>
+                <li><a href="/questions/8">Question 8</a></li>
+                <li><a href="/questions/9">Question 9</a></li>
+                <li><a href="/questions/10">Question 10</a></li>
               </ul>
             </li>
             <li class="nav_block"><a href="/about">About</a>

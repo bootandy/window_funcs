@@ -28,7 +28,7 @@ b-header__absolute-top b-header__white
       <p>
       These interactive tutorials will test your knowledge of window functions (postgres) by quizing you on cat data.
       </p>
-      <p> Test your <a href="/questions/q0">knowledge </a>
+      <p> Test your <a href="/questions/0">knowledge </a>
     </div>
   </div>
 {% endblock containers %}
