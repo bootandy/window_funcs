@@ -16,5 +16,5 @@ Return: name, weight, weight_quartile
 {% endblock question %}
 
 {% block on_correct %}
-ntile() lets us divide our data into percentiles/quartiles. If we only need to see the lowest X% this is done via ntile()
+ntile() lets us divide our data into percentiles/quartiles. If we only need to see the lowest X% this can be done via ntile()
 {% endblock on_correct %}

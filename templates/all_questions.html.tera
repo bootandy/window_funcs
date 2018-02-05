@@ -1,63 +1,30 @@
 {% extends "base" %}
 
 {% block headers %}
+<script src="/static/all_questions.js"></script>
 <script>
 $( document ).ready(function() {
-
-  $("#sql_to_run").keypress(function (e) {
-    if(e.which == 13 && !e.shiftKey) {        
-      $(this).closest("form").submit();
-      e.preventDefault();
-      return false;
-    }
-  });
-  $(".unhider").click(function (e) {
-    e.preventDefault();
-    $(this).siblings().each(function () {
-      if ($(this).hasClass("hidden")) {
-        $(this).addClass("show");
-        $(this).removeClass("hidden");
-      } else if ($(this).hasClass("show")) {
-        $(this).addClass("hidden");
-        $(this).removeClass("show");
-      } 
-    })
-  });
-
-  $("#hint").click(function(e) {
-    e.preventDefault();
-    var correct_word = "{{query_requires}}";
-    var level = parseInt($("#hint_box").attr('level'));
-
-    if (level == 0) {
-      var text = "This query requires: <em>" + correct_word + "</em>";
-      $("#hint").text("MORE hints");
-    } else {
-      var tmp = $("#correct_answer").text();
-      var start_point = Math.max(tmp.indexOf(correct_word) - level * 3, 0);
-      var end_point = correct_word.length + level * 6;
-      var text = tmp.substr(start_point, end_point);
-    }
-    $("#hint_box").attr('level', level + 1);
-    $("#hint_box").html(text);
-  });
-
-
-  $("#summary_box > .close").click(function(e) {
-    $("#summary_box").hide();
-  });
-
   {% if is_correct and used_correct_word %}
     $("#summary_box").show();
   {% endif %}
-
-  $("#sql_to_run").focus();
 });
 </script>
+<span id="keyword" class="hidden">{{keyword}}</span>
 {% endblock headers %}
 
 
 {% block containers %}
+<div class="first_time">
+  <div class="modal-content modal_thing">
+  <span class="close">&times;</span>
+  <h1>Welcome!</h1>
+  <ul>
+  <li>If you get stuck: Keep pressing the hint button</li>
+  <li>But next: Click the 'Run Query' button</li>
+  </ul>
+  </div>
+</div>
+
 <div class="container py-2">
   <div class="row">
     <div class="col">
@@ -92,28 +59,23 @@ $( document ).ready(function() {
     <div class="col">
       <form method="post">
         <textarea name="sql_to_run" id="sql_to_run" rows="10" >{{sql_to_run}}</textarea>
-        {% if draw_attention %}
-          {% set cls = "look_at_me" %}
-        {% else %}
-          {% set cls = "" %}
+        <button style='float:right' id="run_query" class="btn btn-primary" type="submit">Run Query</button>
+        <button style='float:right' id="hint" class="btn btn-primary" href="#">Show Hint</button>
+        {% if is_correct and used_correct_word %}
+            <img src="/static/tick.png" />
         {% endif %}
-        <button style='float:right' id="run_query" class="btn btn-primary {{cls}}" type="submit">Run Query</button>
-        <button style='float:right' id="hint" class="btn btn-primary" href="#" >Show Hint</button>
-      {% if is_correct and used_correct_word %}
-          <img src="/static/tick.png" />
-      {% endif %}
         <p id="hint_box" level=0>  </p>
       </form>	
       {% if is_correct and not used_correct_word %}
           <img src="/static/question.png"/>
           <p>  
-            Correct output but can you use '{{query_requires}}'?
+          Correct output but can you use '<span id="keyword">{{keyword}}<span>'?
           </p>
       {% endif %}
     </div>
   </div>
 
-  <div class="row " id="summary_box">
+  <div class="row modal_thing" id="summary_box">
     <span class="close">&times;</span>
     Good work! 
     {% block on_correct %}

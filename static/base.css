@@ -8,49 +8,70 @@ main {
 	min-height: 3em;
 }
 #sql_to_run {
-  -webkit-box-sizing: border-box;
-       -moz-box-sizing: border-box;
-            box-sizing: border-box;
-  width: 100%;
-  margin-bottom: .5em;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	width: 100%;
+	margin-bottom: .5em;
 }
 #summary_box{
-    display: none;
-    position: relative;
-    top: -3em;
-    z-index: 1; /* Sit on top */
-    background-color: #ffffff;
-    margin: auto;
-    padding: 1em;
-    border: 1px solid #d54b68;
-    width: 80%;
-    font-weight: bold;
+	display: none;
+	position: relative;
+	top: -3em;
+	z-index: 1; /* Sit on top */
+	background-color: #ffffff;
+	margin: auto;
+	padding: 1em;
+	border: 1px solid #d54b68;
+	width: 80%;
+	font-weight: bold;
 }
-#summary_box .close {
-    color: #aaaaaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
+.close {
+	color: #aaaaaa;
+	float: right;
+	text-align: right;
+	font-size: 28px;
+	font-weight: bold;
+}
+.close:hover,
+.close:focus {
+	color: #000;
+	text-decoration: none;
+	cursor: pointer;
+}
+.first_time {
+	display: none; 
+	position: fixed;
+	z-index: 2000; 
+	padding-top: 300px; 
+	left: 0;
+	top: 0;
+	width: 100%; 
+	height: 100%;
+	overflow: auto;
+	background-color: rgb(0,0,0);
+	background-color: rgba(0,0,0,0.4);
 }
 
-#summary_box .close:hover,
-#summary_box .close:focus {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
+.modal-content {
+	background-color: #fefefe;
+	margin: auto;
+	padding: 20px;
+	border: 2px solid #d54b68;
+	width: 80%;
 }
 
 .btn-primary {
 	margin-left: 0.5em;
 }
 .answer-correct {
-    border: 3px solid #2cda00;
+	border: 3px solid #2cda00;
 }
 .answer-half-correct {
-    border: 3px solid #ffff00;
+	border: 3px solid #ffff00;
 }
 .answer-wrong {
-    border: 3px solid #dc3545;
+	border: 3px solid #dc3545;
 }
 
 .hidden {
@@ -78,16 +99,16 @@ main {
 
 /* Lets try some animations shall we*/
 @keyframes look_at_me {
-  0% {
-    transform: scale(1,1);
-  }
-  50% {
-    transform: scale(1.5,1.5);
-  }
-  100% {
-    transform: scale(1,1);
-  }
+	0% {
+		transform: scale(1,1);
+	}
+	50% {
+		transform: scale(1.5,1.5);
+	}
+	100% {
+		transform: scale(1,1);
+	}
 }
 .look_at_me {
-   animation: 1s ease-out 0s 1 look_at_me;
+	animation: 1s ease-out 0s 1 look_at_me;
 }	 

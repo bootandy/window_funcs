@@ -35,7 +35,7 @@ fn _get_next_and_prev(s: &str) -> (String, String) {
 
 #[derive(Serialize)]
 struct TemplateContext {
-    query_requires: String, 
+    keyword: String, 
     sql_correct: String, 
     sql_to_run : String, 
     sql_to_run_result: Vec<Vec<String>>,
@@ -44,10 +44,9 @@ struct TemplateContext {
     prev_q: String,
     is_correct: bool,
     used_correct_word: bool,
-    draw_attention: bool,
 }
 
-fn _context_builder(conn: &db::DbConn, question: &str, sql_result: Vec<Vec<String>>, sql_to_run: String, draw_attention :bool) -> TemplateContext {
+fn _context_builder(conn: &db::DbConn, question: &str, sql_result: Vec<Vec<String>>, sql_to_run: String) -> TemplateContext {
     let (sql_correct, keyword) = sql::get_sql_for_q(question);
     let correct_result = _run_sql(conn, sql_correct);
     let (prev, next) = _get_next_and_prev(question);
@@ -55,7 +54,7 @@ fn _context_builder(conn: &db::DbConn, question: &str, sql_result: Vec<Vec<Strin
     let used_correct_word = sql_to_run.to_lowercase().contains(keyword);
         
     TemplateContext {
-        query_requires: keyword.to_string(),
+        keyword: keyword.to_string(),
         sql_correct:  sql_correct.to_string(),
         sql_correct_result: correct_result,
         sql_to_run: sql_to_run,
@@ -64,7 +63,6 @@ fn _context_builder(conn: &db::DbConn, question: &str, sql_result: Vec<Vec<Strin
         prev_q: prev,
         is_correct: is_correct,
         used_correct_word: used_correct_word,
-        draw_attention: draw_attention,
     }
 }
 
@@ -138,7 +136,7 @@ fn post_db(question: String, conn: db::DbConn, sink: Result<Form<FormInput>, Opt
             ("".to_string(), vec![])
         }
     };
-    Template::render(question.to_string(), &_context_builder(&conn, question.as_ref(), result, sql_command, false))
+    Template::render(question.to_string(), &_context_builder(&conn, question.as_ref(), result, sql_command))
 }
 
 
@@ -147,7 +145,7 @@ fn get_db(question : String, conn: db::DbConn) ->  Template {
     let base_sql = "select \n*\n from cats ";
     // Forcing an empty result encourages people to click run the first time to help engagement.
     let result = vec![vec![]]; //_run_sql(&conn, base_sql);
-    Template::render(question.to_string(), &_context_builder(&conn, question.as_ref(), result, base_sql.to_string(), true))
+    Template::render(question.to_string(), &_context_builder(&conn, question.as_ref(), result, base_sql.to_string()))
 }
 
 #[get("/favicon.ico")]
