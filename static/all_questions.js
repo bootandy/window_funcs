@@ -1,12 +1,4 @@
 $( document ).ready(function() {
-
-  $("#sql_to_run").keypress(function (e) {
-    if(e.which == 13 && !e.shiftKey) {        
-      $(this).closest("form").submit();
-      e.preventDefault();
-      return false;
-    }
-  });
   $(".unhider").click(function (e) {
     e.preventDefault();
     $(this).siblings().each(function () {
