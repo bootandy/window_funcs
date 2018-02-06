@@ -28,8 +28,12 @@ $( document ).ready(function() {
 <div class="container py-2">
   <div class="row">
     <div class="col">
-      <a href="{{prev_q}}">previous question</a>
-      <a style='float:right' href="{{next_q}}">next question</a>
+      {% if prev_q %}
+        <a href="{{prev_q}}">previous question</a>
+      {% endif %}
+      {% if next_q %}
+        <a style='float:right' href="{{next_q}}">next question</a>
+      {% endif %}
     </div>
   </div>
 
@@ -76,7 +80,9 @@ $( document ).ready(function() {
   </div>
 
   <div class="row modal_thing" id="summary_box">
-    <a style='float:right' href="{{next_q}}">next</a>
+    {% if next_q %}
+      <a style='float:right' href="{{next_q}}">next</a>
+    {% endif %}
     <p style='text-align: center;'>Good work!</p> 
     <p style='text-align: center;'>
     {% block on_correct %}

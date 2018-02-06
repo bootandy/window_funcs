@@ -30,9 +30,21 @@ struct FormInput {
 
 fn _get_next_and_prev(s: &str) -> (String, String) {
     let i = s.parse::<i32>().unwrap_or(0);
-    let prev = cmp::max(i - 1, 0);
-    let next = cmp::min(i + 1, 10);
-    (format!("{}", prev), (format!("{}", next)))
+    let prev = {
+        if i > 0 {
+            format!("{}", cmp::max(i - 1, 0))
+        } else {
+            "".to_string()
+        }
+    };
+    let next = {
+        if i < 10 {
+            format!("{}", cmp::min(i + 1, 10))
+        } else {
+            "".to_string()
+        }
+    };
+    (prev, next)
 }
 
 #[derive(Serialize)]
@@ -239,7 +251,7 @@ fn test_get_next_and_prev() {
     );
     assert_eq!(
         _get_next_and_prev("0"),
-        (String::from("0"), String::from("1"))
+        (String::from(""), String::from("1"))
     );
     // check it doesn't crash
     _get_next_and_prev("qa");
