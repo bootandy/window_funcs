@@ -1,7 +1,6 @@
 {% extends "base" %}
 
 {% block headers %}
-<script src="assets/js/tether.min.js"></script>
 {% endblock headers %}
 
 {% block special_header_class %}
