@@ -62,20 +62,20 @@ select name, weight,
      order by weight";
 
 
-pub fn get_sql_for_q(s: &str) -> (&str, &str) {
+pub fn get_sql_for_q(s: &str) -> Option<(&str, &str)> {
     match s {
-        "0" => (Q0_SQL, "group by"),
-        "1" => (Q1_SQL, "over"),
-        "2" => (Q2_SQL, "partition by"),
-        "3" => (Q3_SQL, "row_number"),
-        "4" => (Q4_SQL, "rank"),
-        "5" => (Q5_SQL, "ntile"),
-        "6" => (Q6_SQL, "dense_rank"),
-        "7" => (Q7_SQL, "lag"),
-        "8" => (Q8_SQL, "lag"),
-        "9" => (Q9_SQL, "first_value"),
-        "10" => (Q10_SQL, "window"),
-        _ => ("select 1 from cats", "")
+        "0" => Some((Q0_SQL, "group by")),
+        "1" => Some((Q1_SQL, "over")),
+        "2" => Some((Q2_SQL, "partition by")),
+        "3" => Some((Q3_SQL, "row_number")),
+        "4" => Some((Q4_SQL, "rank")),
+        "5" => Some((Q5_SQL, "ntile")),
+        "6" => Some((Q6_SQL, "dense_rank")),
+        "7" => Some((Q7_SQL, "lag")),
+        "8" => Some((Q8_SQL, "lag")),
+        "9" => Some((Q9_SQL, "first_value")),
+        "10" => Some((Q10_SQL, "window")),
+        _ => None
     }
 }
 

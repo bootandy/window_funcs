@@ -12,8 +12,10 @@ use std::{cmp};
 use std::path::{Path, PathBuf};
 
 use rocket_contrib::Template;
-use rocket::request::{Form};
-use rocket::response::NamedFile;
+use rocket::http::{Status};
+use rocket::outcome::Outcome::*;
+use rocket::request::{Form, FromRequest, Request, Outcome};
+use rocket::response::{NamedFile};
 use tera::Context;
 
 mod db;
@@ -22,7 +24,6 @@ mod sql;
 //forms
 #[derive(Debug, FromForm )]
 struct FormInput {
-    #[form(field = "sql_to_run")]
     sql_to_run: String,
 }
 
@@ -46,16 +47,40 @@ struct TemplateContext {
     used_correct_word: bool,
 }
 
-fn _context_builder(conn: &db::DbConn, question: &str, sql_result: Vec<Vec<String>>, sql_to_run: String) -> TemplateContext {
-    let (sql_correct, keyword) = sql::get_sql_for_q(question);
-    let sql_correct_result = _run_sql(conn, sql_correct);
-    let (prev_q, next_q) = _get_next_and_prev(question);
+struct TemplateDetails {
+    name: String,
+    sql: String,
+    keyword: String,
+}
+
+impl<'a, 'r> FromRequest<'a, 'r> for TemplateDetails {
+    type Error = ();
+    fn from_request(request: &'a Request<'r>) -> Outcome<Self, ()> {
+        let template_name = request.get_param::<String>(0).unwrap_or("".into());
+
+        match sql::get_sql_for_q(template_name.as_ref()) {
+            Some((sql, keyword)) => {
+                Success(TemplateDetails{
+                    name: template_name.to_string(),
+                    sql: sql.to_string(),
+                    keyword: keyword.to_string()
+                })
+            },
+            None => Failure((Status::BadRequest, ()))
+        }
+    }
+}
+
+fn _context_builder(conn: &db::DbConn, t: &TemplateDetails, sql_result: Vec<Vec<String>>, sql_to_run: String) -> TemplateContext {
+    let sql_correct_result = _run_sql(conn, t.sql.as_ref());
+    let (prev_q, next_q) = _get_next_and_prev(t.name.as_ref());
     let is_correct = sql_result[1..] == sql_correct_result[1..];
-    let used_correct_word = sql_to_run.to_lowercase().contains(keyword);
+    let key_ref :&str = t.keyword.as_ref();
+    let used_correct_word :bool = sql_to_run.to_lowercase().contains(key_ref);
         
     TemplateContext {
-        keyword: keyword.to_string(),
-        sql_correct:  sql_correct.to_string(),
+        keyword: t.keyword.to_string(),
+        sql_correct: t.sql.to_string(),
         sql_to_run,
         sql_correct_result,
         sql_to_run_result: sql_result,
@@ -119,8 +144,8 @@ fn _run_sql(conn: &db::DbConn, sql_command: &str) -> Vec<Vec<String>> {
     result
 }
 
-#[post("/questions/<question>", data = "<sink>")]
-fn post_db(question: String, conn: db::DbConn, sink: Result<Form<FormInput>, Option<String>>) -> Template {
+#[post("/questions/<_question>", data = "<sink>")]
+fn post_db(_question: String, template: TemplateDetails, conn: db::DbConn, sink: Result<Form<FormInput>, Option<String>>) -> Template {
     let (sql_command, result) = match sink {
         Ok(form) => {
             let sql_command1 = form.get().sql_to_run.to_string();
@@ -136,16 +161,18 @@ fn post_db(question: String, conn: db::DbConn, sink: Result<Form<FormInput>, Opt
             ("".to_string(), vec![vec!["".to_string()]])
         }
     };
-    Template::render(question.to_string(), &_context_builder(&conn, question.as_ref(), result, sql_command))
+    let c = &_context_builder(&conn, &template, result, sql_command);
+    Template::render(template.name, &c)
 }
 
 
-#[get("/questions/<question>")]
-fn get_db(question : String, conn: db::DbConn) ->  Template {
-    let base_sql = "select \n*\n from cats ";
+#[get("/questions/<_question>")]
+fn get_db(_question :String, template: TemplateDetails, conn: db::DbConn) -> Template {
+    let sql = "select \n*\n from cats ";
     // Forcing an empty result encourages people to click run the first time to help engagement.
-    let result = vec![vec![]]; //_run_sql(&conn, base_sql);
-    Template::render(question.to_string(), &_context_builder(&conn, question.as_ref(), result, base_sql.to_string()))
+    let result = vec![vec![]]; 
+    let c = _context_builder(&conn, &template, result, sql.to_string());
+    Template::render(template.name, &c)
 }
 
 #[get("/favicon.ico")]
