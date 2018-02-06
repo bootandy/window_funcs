@@ -1,8 +1,7 @@
-
-extern crate rocket;
-extern crate rocket_contrib;
 extern crate r2d2;
 extern crate r2d2_postgres;
+extern crate rocket;
+extern crate rocket_contrib;
 extern crate serde_json;
 
 use std::ops::Deref;
@@ -10,17 +9,14 @@ use std::ops::Deref;
 use rocket::request::{self, FromRequest, Request, State};
 use rocket::outcome::Outcome::*;
 
-use rocket::http::{Status};
-use r2d2_postgres::{TlsMode, PostgresConnectionManager};
-use r2d2::{PooledConnection};
-
+use rocket::http::Status;
+use r2d2_postgres::{PostgresConnectionManager, TlsMode};
+use r2d2::PooledConnection;
 
 type Pool = r2d2::Pool<PostgresConnectionManager>;
 
 pub fn init_pool() -> Pool {
-    let manager = PostgresConnectionManager::new(
-        "rusty://rusty@localhost", TlsMode::None
-    ).unwrap();
+    let manager = PostgresConnectionManager::new("rusty://rusty@localhost", TlsMode::None).unwrap();
     r2d2::Pool::new(manager).unwrap()
 }
 pub struct DbConn(pub PooledConnection<PostgresConnectionManager>);
@@ -35,12 +31,12 @@ impl<'a, 'r> FromRequest<'a, 'r> for DbConn {
         let pool = request.guard::<State<Pool>>()?;
         match pool.get() {
             Ok(conn) => Success(DbConn(conn)),
-            Err(_) => Failure((Status::ServiceUnavailable, ()))
+            Err(_) => Failure((Status::ServiceUnavailable, ())),
         }
     }
 }
 
-// For the convenience of using an &DbConn as an &Connection. So we dont have to do conn.0 
+// For the convenience of using an &DbConn as an &Connection. So we dont have to do conn.0
 impl Deref for DbConn {
     type Target = PooledConnection<PostgresConnectionManager>;
 
@@ -48,4 +44,3 @@ impl Deref for DbConn {
         &self.0
     }
 }
-
