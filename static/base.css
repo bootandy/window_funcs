@@ -4,6 +4,9 @@ h1 {
 main {
 	min-height: 40em;
 }
+hr {
+	border: 1px solid #d54b68;
+}
 #hint_box {
 	min-height: 3em;
 }

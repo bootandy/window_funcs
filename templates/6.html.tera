@@ -10,8 +10,10 @@ Q6: Ranking
 For cats age means seniority, we would like to rank the cats by age (oldest first). 
 </p><p>
 However we would like their ranking to be sequentially increasing.
-</p><p>
+<hr/>
 Return: ranking, name, age
+<br/>
+Order by: ranking, name
 </p>
 
 {% endblock question %}

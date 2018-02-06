@@ -9,9 +9,11 @@ Q7 Compare to Previous Row
 <p>
 Cats are fickle. Each cat would like to lose weight to be the equivalent weight of the cat weighing just less than it.
 </p><p>
-Print a list of cats, their weights and the weight difference between them and the nearest lighter cat.
-</p><p>
-Return: name, weight, target_weight
+Print a list of cats, their weights and the weight difference between them and the nearest lighter cat ordered by weight.
+<hr/>
+Return: name, weight, weight_to_lose 
+<br/>
+Order by: weight
 </p>
 {% endblock question %}
 

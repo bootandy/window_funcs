@@ -10,8 +10,11 @@ Q10: Using Window
 This SQL function can be made simpler by using the WINDOW command. Please try and use the WINDOW command.
 </p><p>
 Each cat would like to see what half, third and quartile they are in for their weight.
-</p><p>
+<hr/>
 Return: name, weight, by_half, thirds, quartile
+<br/>
+Order by: weight
+
 </p>
 {% endblock question %}
 

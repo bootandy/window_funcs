@@ -10,8 +10,10 @@ Q4: Ordering
 We would like to find the fattest (and 2nd, 3rd etc) cat of each breed
 </p><p>
 We must order all the cats by weight grouped by their breed. The heaviest cat must be first.
-</p><p>
+<hr/>
 Return: ranking, name, breed, weight 
+<br/>
+Order by: ranking, weight
 </p>
 {% endblock question %}
 

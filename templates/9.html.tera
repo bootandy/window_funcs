@@ -9,14 +9,16 @@ Q9: First of each Group
 <p>
 Cats are vain. Each cat would like to pretend it has the lowest weight for its color.
 </p><p>
-Print cat name, color and the minimum weight of cats with that color.
-</p><p>
+Print cat name, color and the minimum weight of cats with that color. 
+<hr/>
 Return: name, color, lowest_weight_by_color
+<br/>
+Order by: color, name
 </p>
 {% endblock question %}
 
 
 {% block on_correct %}
-first_value() [and nth_value()] allow us to select the first value of a subgroup
+first_value() [and nth_value() &amp; min()] allow us to select the first value of a subgroup
 {% endblock on_correct %}
 

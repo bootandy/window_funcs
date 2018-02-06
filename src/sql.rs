@@ -37,18 +37,18 @@ dense_rank() over (order by age DESC) as r, name,age
 
 static Q7_SQL: &'static str = "
 select name, weight, 
-      weight - lag(weight, 1) over (order by weight) as target_weight
+      weight - lag(weight, 1) over (order by weight) as weight_to_lose
       from cats order by weight";
 
 static Q8_SQL: &'static str = "
     select name, breed, weight,
-weight - lag(weight, 1) over (partition by breed order by weight) as target_weight
+weight - lag(weight, 1) over (partition by breed order by weight) as weight_to_lose
 from cats order by weight ";
 
 static Q9_SQL: &'static str = "
 select name, color,
 first_value(weight) over (partition by color order by weight) as lowest_weight_by_color
-from cats ";
+from cats order by color, name";
 
 static Q10_SQL: &'static str = "
 select name, weight,
@@ -60,19 +60,19 @@ select name, weight,
                        ( ORDER BY weight)
      order by weight";
 
-pub fn get_sql_for_q(s: &str) -> Option<(&str, &str)> {
+pub fn get_sql_for_q(s: &str) -> Option<(&str, Vec<&str>)> {
     match s {
-        "0" => Some((Q0_SQL, "group by")),
-        "1" => Some((Q1_SQL, "over")),
-        "2" => Some((Q2_SQL, "partition by")),
-        "3" => Some((Q3_SQL, "row_number")),
-        "4" => Some((Q4_SQL, "rank")),
-        "5" => Some((Q5_SQL, "ntile")),
-        "6" => Some((Q6_SQL, "dense_rank")),
-        "7" => Some((Q7_SQL, "lag")),
-        "8" => Some((Q8_SQL, "lag")),
-        "9" => Some((Q9_SQL, "first_value")),
-        "10" => Some((Q10_SQL, "window")),
+        "0" => Some((Q0_SQL, vec!["group by"])),
+        "1" => Some((Q1_SQL, vec!["over"])),
+        "2" => Some((Q2_SQL, vec!["partition by"])),
+        "3" => Some((Q3_SQL, vec!["row_number"])),
+        "4" => Some((Q4_SQL, vec!["rank"])),
+        "5" => Some((Q5_SQL, vec!["ntile"])),
+        "6" => Some((Q6_SQL, vec!["dense_rank"])),
+        "7" => Some((Q7_SQL, vec!["lag", "lead"])),
+        "8" => Some((Q8_SQL, vec!["lag", "lead"])),
+        "9" => Some((Q9_SQL, vec!["first_value", "nth_value", "min"])),
+        "10" => Some((Q10_SQL, vec!["window"])),
         _ => None,
     }
 }

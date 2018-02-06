@@ -10,7 +10,7 @@ The cats form a line grouped by color. Inside each color group the cats order th
 Every cat must have a unique number for its place in the line.
 </p><p>
 We must assign each cat a unique number while maintaining their color &amp; name ordering.
-</p><p>
+<hr/>
 Return: unique_number, name, color 
 </p>
 {% endblock question %}

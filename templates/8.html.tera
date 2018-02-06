@@ -7,17 +7,17 @@ Q8: Compare to Previous Row Part 2
 {% block question %}
 
 </p><p>
-The cats now want to lose weight according to their breed.
+The cats now want to lose weight according to their breed. Each cat would like to lose weight to be the equivalent weight of the cat in the same breed weighing just less than it.
 </p><p>
-Each cat would like to lose weight to be the equivalent weight of the cat in the same breed weighing just less than it.
-</p><p>
-Print a list of cats, their breeds, weights and the weight difference between them and the nearest lighter cat of the same breed.
-</p><p>
-Return: name, breed, weight, target_weight
+Print a list of cats, their breeds, weights and the weight difference between them and the nearest lighter cat of the same breed. 
+<hr/>
+Return: name, breed, weight, weight_to_lose
+<br/>
+Order by: weight
 </p>
 
 {% endblock question %}
 
 {% block on_correct %}
-lag() can also work with partition by
+lag() and lead() can also work with partition by
 {% endblock on_correct %}

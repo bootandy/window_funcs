@@ -76,10 +76,12 @@ $( document ).ready(function() {
   </div>
 
   <div class="row modal_thing" id="summary_box">
-    <span class="close">&times;</span>
-    Good work! 
+    <a style='float:right' href="{{next_q}}">next</a>
+    <p style='text-align: center;'>Good work!</p> 
+    <p style='text-align: center;'>
     {% block on_correct %}
     {% endblock on_correct %}
+    </p>
   </div>
 
   <div class="row">

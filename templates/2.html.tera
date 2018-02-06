@@ -7,12 +7,14 @@ Q2: Partitioned Running Totals
 {% block question %}
 
 <p>
-The cats are ordered first by breed and second by name and are about to enter an elevator one by one.
+The cats must by ordered first by breed and second by name. They are about to enter an elevator one by one.
 When all the cats of the same breed have entered they leave. 
 </p><p>
 We would like to know what the running total weight of the cats is. 
-</p><p>
-Return: name, breed and total weight of this group of cats
+<hr/>
+Return: name, breed, running total weight
+<br/>
+Order by: breed, name
 </p>
 {% endblock question %}
 

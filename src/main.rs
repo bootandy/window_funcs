@@ -51,7 +51,7 @@ struct TemplateContext {
 struct TemplateDetails {
     name: String,
     sql: String,
-    keyword: String,
+    keywords: Vec<String>,
 }
 
 impl<'a, 'r> FromRequest<'a, 'r> for TemplateDetails {
@@ -60,10 +60,10 @@ impl<'a, 'r> FromRequest<'a, 'r> for TemplateDetails {
         let template_name = request.get_param::<String>(0).unwrap_or("".into());
 
         match sql::get_sql_for_q(template_name.as_ref()) {
-            Some((sql, keyword)) => Success(TemplateDetails {
+            Some((sql, keywords)) => Success(TemplateDetails {
                 name: template_name.to_string(),
                 sql: sql.to_string(),
-                keyword: keyword.to_string(),
+                keywords: keywords.into_iter().map(|s| s.to_string()).collect(),
             }),
             None => Failure((Status::BadRequest, ())),
         }
@@ -79,11 +79,12 @@ fn _context_builder(
     let sql_correct_result = _run_sql(conn, t.sql.as_ref());
     let (prev_q, next_q) = _get_next_and_prev(t.name.as_ref());
     let is_correct = sql_result[1..] == sql_correct_result[1..];
-    let key_ref: &str = t.keyword.as_ref();
-    let used_correct_word: bool = sql_to_run.to_lowercase().contains(key_ref);
+    let used_correct_word = t.keywords
+        .iter()
+        .any(|k| sql_to_run.to_lowercase().contains(k));
 
     TemplateContext {
-        keyword: t.keyword.to_string(),
+        keyword: t.keywords[0].to_string(),
         sql_correct: t.sql.to_string(),
         sql_to_run,
         sql_correct_result,

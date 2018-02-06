@@ -9,8 +9,10 @@ Q5: Quartiles
 We are worried our cats are too fat and need to diet.
 </p><p>
 We would like to group the cats into quartiles by their weight.
-</p><p>
+<hr/>
 Return: name, weight, weight_quartile
+<br/>
+Order by: weight
 </p>
 
 {% endblock question %}
