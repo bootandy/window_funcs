@@ -9,7 +9,7 @@ Q0: Refresher on Aggregates
 A refresher on aggregate functions. You will need to know aggregate functions before attempting the other questions.
 </p><p>
 We would like to find the total weight of cats grouped by age. But only return those group with a total weight larger than 12.
-</p><p>
+<hr/>
 Return: age, total_weight 
 </p>
 
