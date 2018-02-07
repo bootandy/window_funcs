@@ -2,53 +2,63 @@ static Q0_SQL: &'static str = "
 select
  age, sum(weight) as total_weight
 from cats group by age having sum(weight) > 12;";
+static Q0_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-sql/queries/select-group-by-transact-sql#d-use-a-group-by-clause-with-a-having-clause";
 
 static Q1_SQL: &'static str = "select name, sum(weight) 
 over (order by name) as running_total_weight 
 from cats order by name";
+static Q1_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-sql/queries/select-over-clause-transact-sql#b-using-the-over-clause-with-aggregate-functions";
 
 static Q2_SQL: &'static str = "
 select name, breed,
 sum(weight) over (partition by breed order by name) as running_total_weight
 from cats ";
+static Q2_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-sql/queries/select-over-clause-transact-sql#b-using-the-over-clause-with-aggregate-functions";
 
 static Q3_SQL: &'static str = "
 select 
 row_number() over (order by color,name) as unique,
 name, color 
 from cats";
+static Q3_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-sql/functions/row-number-transact-sql#b-returning-the-row-number-for-salespeople";
 
 static Q4_SQL: &'static str = "
 select
 rank() over (partition by breed order by weight DESC) as ranking,
 name, breed, weight
 from cats order by ranking, weight DESC";
+static Q4_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-sql/functions/rank-transact-sql#a-ranking-rows-within-a-partition";
 
 static Q5_SQL: &'static str = "
 select
  name, weight, ntile(4) over ( order by weight) as weight_quartile
        from  cats 
        ";
+static Q5_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-sql/functions/ntile-transact-sql#examples";
 
 static Q6_SQL: &'static str = "
 select
 dense_rank() over (order by age DESC) as r, name,age
  from cats order by r";
+static Q6_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-sql/functions/dense-rank-transact-sql#examples";
 
 static Q7_SQL: &'static str = "
 select name, weight, 
       weight - lag(weight, 1) over (order by weight) as weight_to_lose
       from cats order by weight";
+static Q7_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-sql/functions/lag-transact-sql#examples";
 
 static Q8_SQL: &'static str = "
     select name, breed, weight,
 weight - lag(weight, 1) over (partition by breed order by weight) as weight_to_lose
 from cats order by weight ";
+static Q8_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-sql/functions/lag-transact-sql#examples";
 
 static Q9_SQL: &'static str = "
 select name, color,
 first_value(weight) over (partition by color order by weight) as lowest_weight_by_color
 from cats order by color, name";
+static Q9_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-sql/functions/first-value-transact-sql#examples";
 
 static Q10_SQL: &'static str = "
 select name, weight,
@@ -59,20 +69,21 @@ select name, weight,
               window ntile_window AS
                        ( ORDER BY weight)
      order by weight";
+static Q10_HELP: &'static str ="javascript:alert('Sorry, could not find a good link for this');";
 
-pub fn get_sql_for_q(s: &str) -> Option<(&str, Vec<&str>)> {
+pub fn get_sql_for_q(s: &str) -> Option<(&str, &str, Vec<&str>)> {
     match s {
-        "0" => Some((Q0_SQL, vec!["group by"])),
-        "1" => Some((Q1_SQL, vec!["over"])),
-        "2" => Some((Q2_SQL, vec!["partition by"])),
-        "3" => Some((Q3_SQL, vec!["row_number"])),
-        "4" => Some((Q4_SQL, vec!["rank"])),
-        "5" => Some((Q5_SQL, vec!["ntile"])),
-        "6" => Some((Q6_SQL, vec!["dense_rank"])),
-        "7" => Some((Q7_SQL, vec!["lag", "lead"])),
-        "8" => Some((Q8_SQL, vec!["lag", "lead"])),
-        "9" => Some((Q9_SQL, vec!["first_value", "nth_value", "min"])),
-        "10" => Some((Q10_SQL, vec!["window"])),
+        "0" => Some((Q0_SQL, Q0_HELP, vec!["group by"])),
+        "1" => Some((Q1_SQL, Q1_HELP, vec!["over"])),
+        "2" => Some((Q2_SQL, Q2_HELP, vec!["partition by"])),
+        "3" => Some((Q3_SQL, Q3_HELP, vec!["row_number"])),
+        "4" => Some((Q4_SQL, Q4_HELP, vec!["rank"])),
+        "5" => Some((Q5_SQL, Q5_HELP, vec!["ntile"])),
+        "6" => Some((Q6_SQL, Q6_HELP, vec!["dense_rank"])),
+        "7" => Some((Q7_SQL, Q7_HELP, vec!["lag", "lead"])),
+        "8" => Some((Q8_SQL, Q8_HELP, vec!["lag", "lead"])),
+        "9" => Some((Q9_SQL, Q9_HELP, vec!["first_value", "nth_value", "min"])),
+        "10" => Some((Q10_SQL, Q10_HELP, vec!["window"])),
         _ => None,
     }
 }

@@ -18,7 +18,8 @@ $( document ).ready(function() {
     var level = parseInt($("#hint_box").attr('level'));
 
     if (level == 0) {
-      var text = "This query requires: <em>" + correct_word + "</em>";
+      $("#hint_box").show();
+      $("#to_put_keyword").text(correct_word);
       $("#hint").text("MORE hints");
     } else {
       var tmp = $("#correct_answer").text();

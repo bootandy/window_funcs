@@ -50,6 +50,7 @@ fn _get_next_and_prev(s: &str) -> (String, String) {
 #[derive(Serialize)]
 struct TemplateContext {
     keyword: String,
+    keyword_help_link: String,
     sql_correct: String,
     sql_to_run: String,
     sql_correct_result: Vec<Vec<String>>,
@@ -63,6 +64,7 @@ struct TemplateContext {
 struct TemplateDetails {
     name: String,
     sql: String,
+    help_link: String,
     keywords: Vec<String>,
 }
 
@@ -72,9 +74,10 @@ impl<'a, 'r> FromRequest<'a, 'r> for TemplateDetails {
         let template_name = request.get_param::<String>(0).unwrap_or("".into());
 
         match sql::get_sql_for_q(template_name.as_ref()) {
-            Some((sql, keywords)) => Success(TemplateDetails {
+            Some((sql, help_link, keywords)) => Success(TemplateDetails {
                 name: template_name.to_string(),
                 sql: sql.to_string(),
+                help_link: help_link.to_string(),
                 keywords: keywords.into_iter().map(|s| s.to_string()).collect(),
             }),
             None => Failure((Status::BadRequest, ())),
@@ -97,6 +100,7 @@ fn _context_builder(
 
     TemplateContext {
         keyword: t.keywords[0].to_string(),
+        keyword_help_link: t.help_link.to_string(),
         sql_correct: t.sql.to_string(),
         sql_to_run,
         sql_correct_result,

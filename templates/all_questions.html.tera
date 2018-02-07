@@ -9,7 +9,6 @@ $( document ).ready(function() {
   {% endif %}
 });
 </script>
-<span id="keyword" class="hidden">{{keyword}}</span>
 {% endblock headers %}
 
 
@@ -28,9 +27,6 @@ $( document ).ready(function() {
 <div class="container py-2">
   <div class="row">
     <div class="col">
-      {% if prev_q %}
-        <a href="{{prev_q}}">previous question</a>
-      {% endif %}
       {% if next_q %}
         <a style='float:right' href="{{next_q}}">next question</a>
       {% endif %}
@@ -68,14 +64,22 @@ $( document ).ready(function() {
         {% if is_correct and used_correct_word %}
             <img src="/static/tick.png" />
         {% endif %}
-        <p id="hint_box" level=0>  </p>
+        <p id="hint_box" class="hidden" level=0>
+          This query requires:
+          <a target="_blank" href="{{keyword_help_link}}" id="to_put_keyword"></a>
+        </p>
       </form>	
       {% if is_correct and not used_correct_word %}
+        <span>
+      {% else %}
+        <span class="hidden">
+      {% endif %}
           <img src="/static/question.png"/>
           <p>  
-          Correct output but can you use '<span id="keyword">{{keyword}}<span>'?
+          Correct output but can you use '<span id="keyword">{{keyword}}</span>'?
           </p>
-      {% endif %}
+        </span>
+
     </div>
   </div>
 
