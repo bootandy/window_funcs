@@ -24,7 +24,7 @@ $( document ).ready(function() {
       var tmp = $("#correct_answer").text();
       var start_point = Math.max(tmp.indexOf(correct_word) - level * 3, 0);
       var end_point = correct_word.length + level * 6;
-      var text = tmp.substr(start_point, end_point);
+      var text = "<em>Part of this query:</em><br/> " + tmp.substr(start_point, end_point);
     }
     $("#hint_box").attr('level', level + 1);
     $("#hint_box").html(text);
