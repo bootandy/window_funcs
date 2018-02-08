@@ -7,16 +7,16 @@ Q4: Ordering
 {% block question %}
 
 <p>
-We would like to find the fattest (and 2nd, 3rd etc) cat of each breed
+We would like to find the fattest cat. Order all our cats by weight.
 </p><p>
-We must order all the cats by weight grouped by their breed. The heaviest cat must be first.
+The two heaviest cats should both be 1st. The next heaviest should be 3rd.
 <hr/>
-Return: ranking, name, breed, weight 
+Return: position, weight, name
 <br/>
-Order by: ranking, weight
+Order by: ranking
 </p>
 {% endblock question %}
 
 {% block on_correct %}
-rank lets us index the ordered items.  Unlike row_number it allows duplicate numbers.
+rank() lets us index the ordered items.  Unlike row_number() it allows duplicate numbers.
 {% endblock on_correct %}

@@ -68,29 +68,29 @@ $( document ).ready(function() {
           This query requires:
           <a target="_blank" href="{{keyword_help_link}}" id="to_put_keyword"></a>
         </p>
-      </form>	
+      </form>
       {% if is_correct and not used_correct_word %}
         <span>
       {% else %}
         <span class="hidden">
       {% endif %}
           <img src="/static/question.png"/>
-          <p>  
+          <p>
           Correct output but can you use '<span id="keyword">{{keyword}}</span>'?
           </p>
         </span>
-
     </div>
   </div>
 
   <div class="row modal_thing" id="summary_box">
-    {% if next_q %}
-      <a style='float:right' href="{{next_q}}">next</a>
-    {% endif %}
-    <p style='text-align: center;'>Good work!</p> 
+    <span class="close">&times;</span>
+    <p style='text-align: center;'>Good work!</p>
     <p style='text-align: center;'>
     {% block on_correct %}
     {% endblock on_correct %}
+    {% if next_q %}
+      <a style='display:block' href="{{next_q}}">next question</a>
+    {% endif %}
     </p>
   </div>
 

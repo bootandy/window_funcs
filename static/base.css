@@ -20,11 +20,12 @@ hr {
 #summary_box{
 	display: none;
 	position: relative;
-	top: -3em;
 	z-index: 1; /* Sit on top */
 	background-color: #ffffff;
 	margin: auto;
-	padding: 1em;
+	padding-top: 1em;
+	padding-left: 1em;
+	padding-right: 1em;
 	border: 1px solid #d54b68;
 	width: 80%;
 	font-weight: bold;

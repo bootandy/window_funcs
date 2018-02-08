@@ -19,5 +19,6 @@ Order by: breed, name
 {% endblock question %}
 
 {% block on_correct %}
-Over coupled with partition by allows us to further break down our aggregate functions, it is often used for running totals of types or classes of items.
+Over coupled with partition by allows us to further break down our aggregate functions,<br/>
+it is often used for running totals of types or classes of items.
 {% endblock on_correct %}
