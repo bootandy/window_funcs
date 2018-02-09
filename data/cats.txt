@@ -14,6 +14,8 @@ insert into cats values('Puss', 'Maine Coon', 5.1, 'Tortoiseshell', 2);
 insert into cats values('Smokey', 'Maine Coon', 6.1, 'Brown', 4);
 insert into cats values('Charlie', 'British Shorthair', 4.8, 'Black', 4);
 
+
+REVOKE ALL ON schema public FROM public;
 create user rusty;
 GRANT USAGE ON SCHEMA public TO rusty;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO rusty;
