@@ -40,7 +40,7 @@ static Q5_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-sql/funct
 static Q6_SQL: &'static str = "
 select
 dense_rank() over (order by age DESC) as r, name,age
- from cats order by r";
+ from cats order by r, name";
 static Q6_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-sql/functions/dense-rank-transact-sql#examples";
 
 static Q7_SQL: &'static str = "
