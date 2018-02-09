@@ -10,7 +10,7 @@ A refresher on aggregate functions. You will need to know aggregate functions be
 </p><p>
 We would like to find the total weight of cats grouped by age. But only return those group with a total weight larger than 12.
 <hr/>
-Return: age, total_weight 
+Return: age, sum(weight)
 </p>
 
 {% endblock question %}
