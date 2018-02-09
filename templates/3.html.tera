@@ -11,10 +11,10 @@ Every cat must have a unique number for its place in the line.
 </p><p>
 We must assign each cat a unique number while maintaining their color &amp; name ordering.
 <hr/>
-Return: unique_number, name, color 
+Return: unique_number, name, color
 </p>
 {% endblock question %}
 
 {% block on_correct %}
-row_number() lets us index the ordered items. Each number is unique 
+row_number() lets us index the ordered items. Each number is unique
 {% endblock on_correct %}

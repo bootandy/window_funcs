@@ -1,13 +1,13 @@
 {% extends "all_questions" %}
 
 {% block heading %}
-Q10: Using Window
+Q10: Using the Window clause
 {% endblock heading %}
 
 {% block question %}
 
 <p>
-This SQL function can be made simpler by using the WINDOW command. Please try and use the WINDOW command.
+This SQL function can be made simpler by using the WINDOW statement. Please try and use the WINDOW clause.
 </p><p>
 Each cat would like to see what half, third and quartile they are in for their weight.
 <hr/>

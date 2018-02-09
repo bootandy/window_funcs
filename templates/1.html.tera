@@ -6,10 +6,10 @@ Q1: Running Totals
 
 {% block question %}
 <p>
-The cats must by ordered by name and will line up about to enter an elevator one by one.
-We would like to know what the running total weight is. 
+The cats must by ordered by name and will enter an elevator one by one.
+We would like to know what the running total weight is.
 <hr/>
-Return: name, running total weight 
+Return: name, running total weight
 <br/>
 Order by: name
 </p>

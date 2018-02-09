@@ -11,14 +11,14 @@ Cats are fickle. Each cat would like to lose weight to be the equivalent weight 
 </p><p>
 Print a list of cats, their weights and the weight difference between them and the nearest lighter cat ordered by weight.
 <hr/>
-Return: name, weight, weight_to_lose 
+Return: name, weight, weight_to_lose
 <br/>
 Order by: weight
 </p>
 {% endblock question %}
 
 {% block on_correct %}
-lag() lets us compare to the previous rows [and lead() the next rows]
+lag() lets us compare to the previous rows [and lead() the next rows] [min() also works]
 <br/>
 It is useful for looking for strange step ups/downs in data
 {% endblock on_correct %}

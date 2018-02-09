@@ -11,11 +11,13 @@ A refresher on aggregate functions. You will need to know aggregate functions be
 We would like to find the total weight of cats grouped by age. But only return those group with a total weight larger than 12.
 <hr/>
 Return: age, sum(weight)
+Order by: age desc
 </p>
 
 {% endblock question %}
 
 {% block on_correct %}
-Group by and Having are commonly used aggregate functions. They are good for finding sums and averages.
+Group by and Having are required by aggregate functions like sum().
+Aggregate functions are used for finding sums and averages.
 {% endblock on_correct %}
 

@@ -13,7 +13,7 @@ The two heaviest cats should both be 1st. The next heaviest should be 3rd.
 <hr/>
 Return: position, weight, name
 <br/>
-Order by: ranking
+Order by: ranking, name
 </p>
 {% endblock question %}
 
