@@ -11,9 +11,9 @@ We would like to find the fattest cat. Order all our cats by weight.
 </p><p>
 The two heaviest cats should both be 1st. The next heaviest should be 3rd.
 <hr/>
-Return: position, weight, name
+Return: ranking, weight, name
 <br/>
-Order by: ranking, name
+Order by: ranking, name desc
 </p>
 {% endblock question %}
 

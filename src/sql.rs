@@ -17,17 +17,17 @@ static Q2_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-sql/queri
 
 static Q3_SQL: &'static str = "
 select
-row_number() over (order by color,name) as unique,
+row_number() over (order by color,name) as unique_number,
 name, color
 from cats";
 static Q3_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-sql/functions/row-number-transact-sql#b-returning-the-row-number-for-salespeople";
 
 static Q4_SQL: &'static str = "
 select
-rank() over (order by weight desc) as position,
+rank() over (order by weight desc) as ranking,
 weight, name
  from cats
- order by position, name";
+ order by ranking, name DESC";
 static Q4_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-sql/functions/rank-transact-sql#a-ranking-rows-within-a-partition";
 
 static Q5_SQL: &'static str = "
