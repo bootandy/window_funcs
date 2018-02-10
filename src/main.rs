@@ -193,6 +193,9 @@ fn post_db(
         }
         Err(None) => ("".to_string(), vec![vec!["".to_string()]]),
     };
+
+    // log sql to stdout so we can see how people break it.
+    println!("query: {:?}", sql_command);
     let c = &_context_builder(&conn, &template, result, sql_command);
     Template::render(template.name, &c)
 }
