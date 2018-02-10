@@ -6,7 +6,6 @@ insert into windowfunctions.cats values('Ashes', 'Persian', 4.5, 'Black', 5);
 insert into windowfunctions.cats values('Molly', 'Persian', 4.2, 'Black', 1);
 insert into windowfunctions.cats values('Felix', 'Persian', 5.0, 'Tortoiseshell', 2);
 insert into windowfunctions.cats values('Smudge', 'British Shorthair', 4.9, 'Black', 4);
-insert into windowfunctions.cats values('Sooty', 'British Shorthair',  6.1, 'Brown', 2);
 insert into windowfunctions.cats values('Tigger', 'British Shorthair', 3.8, 'Tortoiseshell', 2);
 insert into windowfunctions.cats values('Alfie', 'Siamese', 5.5, 'Brown', 5 );
 insert into windowfunctions.cats values('Oscar', 'Siamese', 6.1, 'Black', 1);
