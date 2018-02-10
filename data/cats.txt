@@ -16,7 +16,8 @@ insert into windowfunctions.cats values('Smokey', 'Maine Coon', 6.1, 'Brown', 4)
 insert into windowfunctions.cats values('Charlie', 'British Shorthair', 4.8, 'Black', 4);
 
 
-REVOKE ALL ON schema public FROM public;
+REVOKE ALL ON schema pg_catalog, public, information_schema from public;
+
 create user rusty;
 GRANT USAGE ON SCHEMA windowfunctions TO rusty;
 GRANT SELECT ON ALL TABLES IN SCHEMA windowfunctions TO rusty;
