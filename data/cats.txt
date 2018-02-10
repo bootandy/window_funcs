@@ -4,7 +4,7 @@ insert into cats values('Ashes', 'Persian', 4.5, 'Black', 5);
 insert into cats values('Molly', 'Persian', 4.2, 'Black', 1);
 insert into cats values('Felix', 'Persian', 5.0, 'Tortoiseshell', 2);
 insert into cats values('Smudge', 'British Shorthair', 4.9, 'Black', 4);
-insert into cats values('Sooty,'British Shorthair'',  6.1, 'Brown', 2);
+insert into cats values('Sooty', 'British Shorthair',  6.1, 'Brown', 2);
 insert into cats values('Tigger', 'British Shorthair', 3.8, 'Tortoiseshell', 2);
 insert into cats values('Alfie', 'Siamese', 5.5, 'Brown', 5 );
 insert into cats values('Oscar', 'Siamese', 6.1, 'Black', 1);
