@@ -1,4 +1,5 @@
 #![feature(plugin, decl_macro, custom_derive)]
+#![feature(nll)]
 #![plugin(rocket_codegen)]
 
 extern crate r2d2;
