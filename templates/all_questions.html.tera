@@ -28,7 +28,10 @@ $( document ).ready(function() {
   <div class="row">
     <div class="col">
       {% if next_q %}
-        <a style='float:right' href="{{next_q}}">next question</a>
+        <a style='float:right' href="{{next_q}}">next question </a>
+      {% endif %}
+      {% if prev_q %}
+        <a style='' href="{{prev_q}}">prev question</a>
       {% endif %}
     </div>
   </div>
