@@ -1,0 +1,20 @@
+{% extends "all_questions" %}
+
+{% block question %}
+<p>
+More complex agreggate functions.
+</p><p>
+We would like to find the average weight of cats grouped by breed.
+Also, in the same query find the average weight of cats grouped by breed whose age is over 1
+<hr/>
+Return: breed, average_weight, average_old_weight
+Order by: breed
+</p>
+
+{% endblock question %}
+
+{% block on_correct %}
+Group by and Having are required by aggregate functions like sum().
+Aggregate functions are used for finding sums and averages.
+{% endblock on_correct %}
+

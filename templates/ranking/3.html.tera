@@ -1,0 +1,17 @@
+{% extends "all_questions" %}
+
+
+{% block question %}
+
+<p>
+Each cat would like to know what percentage of cats weight less than it
+<hr/>
+Return: name, weight, percent
+<br/>
+Order by: weight
+</p>
+{% endblock question %}
+
+{% block on_correct %}
+percent_rank() scores everything from 0 - 1 allowing us to generate distributions or percentiles
+{% endblock on_correct %}

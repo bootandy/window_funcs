@@ -1,8 +1,5 @@
 {% extends "all_questions" %}
 
-{% block heading %}
-Q10: Using the Window clause
-{% endblock heading %}
 
 {% block question %}
 

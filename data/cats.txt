@@ -23,3 +23,6 @@ GRANT USAGE ON SCHEMA windowfunctions TO rusty;
 GRANT SELECT ON ALL TABLES IN SCHEMA windowfunctions TO rusty;
 ALTER user rusty set search_path TO windowfunctions;
 
+GRANT USAGE ON SCHEMA pg_catalog to rusty;
+GRANT SELECT ON pg_catalog.pg_cast TO rusty;
+

@@ -1,0 +1,42 @@
+{% extends "base" %}
+
+{% block headers %}
+{% endblock headers %}
+
+{% block containers %}
+<div class="container py-2">
+  <div class="row">
+    <div class="col">
+      {% if next_q %}
+        <a style='float:right' href="/questions/{{next_q}}">next question </a>
+      {% endif %}
+     {% if prev_q %}
+        <a style='' href="/questions/{{prev_q}}">prev question</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <h1>
+    {% block heading %}
+    {% endblock heading %}
+  </h1>
+  <div class="row">
+      <p>
+      {% block blurb %}
+      {% endblock blurb %}
+      </p>
+  </div>
+  <div class="row">
+      <p>
+      <ul>
+        {% set enum = 0 %}
+        {% for t in titles %}
+          <li><a href='{{enum}}'>{{t}}</a></li>
+          {% set enum = enum + 1 %}
+        {% endfor %}
+      </ul>
+  </div>
+</div>
+
+{% endblock containers %}
+

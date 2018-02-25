@@ -1,8 +1,5 @@
 {% extends "all_questions" %}
 
-{% block heading %}
-Q8: Compare to Previous Row Part 2
-{% endblock heading %}
 
 {% block question %}
 

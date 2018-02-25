@@ -1,8 +1,5 @@
 {% extends "all_questions" %}
 
-{% block heading %}
-Q4: Ordering
-{% endblock heading %}
 
 {% block question %}
 

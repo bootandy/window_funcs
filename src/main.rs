@@ -17,7 +17,7 @@ use rocket_contrib::Template;
 use rocket::http::Status;
 use rocket::outcome::Outcome::*;
 use rocket::request::{Form, FromRequest, Outcome, Request};
-use rocket::response::NamedFile;
+use rocket::response::{{NamedFile}};
 use tera::Context;
 
 mod db;
@@ -29,20 +29,29 @@ struct FormInput {
     sql_to_run: String,
 }
 
-fn _get_next_and_prev(s: &str) -> (String, String) {
-    let i = s.parse::<i32>().unwrap_or(0);
+fn _get_next_and_prev(cat: &str, id: &str) -> (String, String) {
+    let i = id.parse::<i32>().unwrap_or(-1);
     let prev = {
         if i > 0 {
-            format!("{}", cmp::max(i - 1, 0))
+            format!("{}/{}", cat, cmp::max(i - 1, 0))
+        } else if i == 0 {
+            cat.to_string() + "/"
+        } else if i == -1 {
+            let prev_cat = sql::get_prev(cat);
+            format!("{}/{:?}", prev_cat.to_string(), sql::get_titles_for(prev_cat).len() - 1)
         } else {
-            "".to_string()
+            panic!("Impossible number given {}", i);
         }
     };
     let next = {
-        if i < 10 {
-            format!("{}", cmp::min(i + 1, 10))
-        } else {
+        let next_id = (i+1).to_string();
+        // Nasty hack: Indicates we are at the end of our questions:
+        if cat == "other" && i == 0 {
             "".to_string()
+        } else if sql::get_sql_for_q(cat, next_id.as_ref()).is_some() {
+            format!("{}/{}", cat, next_id)
+        } else {
+            format!("{}/", sql::get_next(cat))
         }
     };
     (prev, next)
@@ -52,6 +61,7 @@ fn _get_next_and_prev(s: &str) -> (String, String) {
 struct TemplateContext {
     keyword: String,
     keyword_help_link: String,
+    heading: String,
     sql_correct: String,
     sql_to_run: String,
     sql_correct_result: Vec<Vec<String>>,
@@ -63,22 +73,40 @@ struct TemplateContext {
 }
 
 struct TemplateDetails {
-    name: String,
+    id: String,
+    category: String,
     sql: String,
     help_link: String,
+    title: String,
     keywords: Vec<String>,
+}
+
+#[derive(Serialize)]
+struct TemplateContextHeading<'a> {
+    titles : Vec<&'a str>,
+    next_q :String,
+    prev_q :String,
+}
+
+impl TemplateDetails {
+    fn get_path(&self) -> String {
+        self.category.to_string() + "/" + self.id.as_ref()
+    }
 }
 
 impl<'a, 'r> FromRequest<'a, 'r> for TemplateDetails {
     type Error = ();
     fn from_request(request: &'a Request<'r>) -> Outcome<Self, ()> {
-        let template_name = request.get_param::<String>(0).unwrap_or("".into());
+        let template_category = request.get_param::<String>(0).unwrap_or("".into());
+        let template_id = request.get_param::<String>(1).unwrap_or("".into());
 
-        match sql::get_sql_for_q(template_name.as_ref()) {
-            Some((sql, help_link, keywords)) => Success(TemplateDetails {
-                name: template_name.to_string(),
+        match sql::get_sql_for_q(template_category.as_ref(), template_id.as_ref()) {
+            Some((sql, help_link, title, keywords)) => Success(TemplateDetails {
+                id: template_id.to_string(),
+                category: template_category.to_string(), //idea: move these to str s
                 sql: sql.to_string(),
                 help_link: help_link.to_string(),
+                title: title.to_string(),
                 keywords: keywords.into_iter().map(|s| s.to_string()).collect(),
             }),
             None => Failure((Status::BadRequest, ())),
@@ -93,7 +121,7 @@ fn _context_builder(
     sql_to_run: String,
 ) -> TemplateContext {
     let sql_correct_result = _run_sql(conn, t.sql.as_ref());
-    let (prev_q, next_q) = _get_next_and_prev(t.name.as_ref());
+    let (prev_q, next_q) = _get_next_and_prev(t.category.as_ref(), t.id.as_ref());
     let is_correct = sql_result[1..] == sql_correct_result[1..];
     let used_correct_word = t.keywords
         .iter()
@@ -106,6 +134,7 @@ fn _context_builder(
         sql_to_run,
         sql_correct_result,
         sql_to_run_result: sql_result,
+        heading: t.title.to_string(),
         next_q,
         prev_q,
         is_correct,
@@ -158,7 +187,7 @@ fn _run_sql(conn: &db::DbConn, sql_command: &str) -> Vec<Vec<String>> {
                             _format_type(temp)
                         }
                         x => {
-                            println!("BOOM! {:?}", x);
+                            println!("Got unknown type: {:?}", x);
                             format!("Add conversion for {:?}", x)
                         }
                     })
@@ -174,8 +203,9 @@ fn _run_sql(conn: &db::DbConn, sql_command: &str) -> Vec<Vec<String>> {
     result
 }
 
-#[post("/questions/<_question>", data = "<sink>")]
+#[post("/questions/<_type>/<_question>", data = "<sink>")]
 fn post_db(
+    _type: String,
     _question: String,
     template: TemplateDetails,
     conn: db::DbConn,
@@ -195,19 +225,35 @@ fn post_db(
         Err(None) => ("".to_string(), vec![vec!["".to_string()]]),
     };
 
+    // todo: If query has pg_ or version in kill it.
+
     // log sql to stdout so we can see how people break it.
+    // strip \r\n s
     println!("query: {:?}", sql_command);
     let c = &_context_builder(&conn, &template, result, sql_command);
-    Template::render(template.name, &c)
+    Template::render(template.get_path(), &c)
 }
 
-#[get("/questions/<_question>")]
-fn get_db(_question: String, template: TemplateDetails, conn: db::DbConn) -> Template {
+#[get("/questions/<_type>/<_question>")]
+fn get_db(_type: String, _question: String, template: TemplateDetails, conn: db::DbConn) -> Template {
     let sql = "select \n*\n from cats ";
     // Forcing an empty result encourages people to click run the first time to help engagement.
     let result = vec![vec![]];
     let c = _context_builder(&conn, &template, result, sql.to_string());
-    Template::render(template.name, &c)
+    Template::render(template.get_path(), &c)
+}
+
+#[get("/questions/<category>")]
+fn old_question_link(category: String) -> Template {
+    let real_cat = sql::check_category(category.as_ref());
+    let titles = sql::get_titles_for(real_cat);
+    let (prev_q, next_q) = _get_next_and_prev(real_cat.as_ref(), "");
+    let context = TemplateContextHeading{
+        titles,
+        next_q,
+        prev_q,
+    };
+    Template::render(real_cat.to_string() +"/index", context)
 }
 
 #[get("/favicon.ico")]
@@ -241,7 +287,8 @@ fn rocket() -> rocket::Rocket {
                 get_home,
                 get_about,
                 post_db,
-                get_db
+                get_db,
+                old_question_link,
             ],
         )
         .attach(Template::fairing())
@@ -254,14 +301,23 @@ fn main() {
 #[test]
 fn test_get_next_and_prev() {
     assert_eq!(
-        _get_next_and_prev("4"),
-        (String::from("3"), String::from("5"))
+        _get_next_and_prev("grouping", "1"),
+        (String::from("grouping/0"), String::from("grouping/2"))
     );
     assert_eq!(
-        _get_next_and_prev("0"),
-        (String::from(""), String::from("1"))
+        _get_next_and_prev("over", "0"),
+        (String::from("over/"), String::from("over/1"))
+    );
+    assert_eq!(
+        _get_next_and_prev("intro", "1"),
+        (String::from("intro/0"), String::from("over/"))
+    );
+    assert_eq!(
+        _get_next_and_prev("over", ""),
+        (String::from("intro/1"), String::from("over/0"))
     );
     // check it doesn't crash
-    _get_next_and_prev("qa");
-    _get_next_and_prev("");
+    _get_next_and_prev("qa", "");
+    _get_next_and_prev("", "3");
 }
+

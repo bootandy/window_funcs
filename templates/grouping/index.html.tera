@@ -1,0 +1,11 @@
+{% extends "init" %}
+
+{% block heading %}
+Grouping the output
+{% endblock heading %}
+
+
+ {% block blurb %}
+These questions are all about grouping your data together. To complete them you will need to know
+The following commands: nth_value, lag, lead, nth_value 
+ {% endblock blurb %}

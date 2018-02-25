@@ -1,8 +1,5 @@
 {% extends "all_questions" %}
 
-{% block heading %}
-Q5: Quartiles
-{% endblock heading %}
 
 {% block question %}
 <p>

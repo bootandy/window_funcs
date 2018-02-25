@@ -1,0 +1,17 @@
+{% extends "all_questions" %}
+
+
+{% block question %}
+
+<p>
+Each cat would like to know what weight percentile it is in. This requires casting to an integer
+<hr/>
+Return: name, weight, percent
+<br/>
+Order by: weight
+</p>
+{% endblock question %}
+
+{% block on_correct %}
+cume_dist() is similar to percent_rank(). The difference is the first entry in cume_dist is not 0.
+{% endblock on_correct %}

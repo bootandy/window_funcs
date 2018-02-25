@@ -1,0 +1,22 @@
+{% extends "all_questions" %}
+
+
+{% block question %}
+
+</p><p>
+Each cat would like to see the next heaviest cat's weight when grouped by breed.
+If there is no heavier cat print 'fattest cat'
+</p><p>
+Print a list of cats, their weights and either the next heaviest cat's weight or 'fattest cat'
+<hr/>
+Return: name, weight, next_heaviest
+<br/>
+Order by: weight
+</p>
+
+{% endblock question %}
+
+{% block on_correct %}
+lead() can also work inside a cast
+{% endblock on_correct %}
+

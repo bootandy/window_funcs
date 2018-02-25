@@ -1,14 +1,11 @@
 {% extends "all_questions" %}
 
-{% block heading %}
-Q0: Refresher on Aggregates
-{% endblock heading %}
-
 {% block question %}
 <p>
 A refresher on aggregate functions. You will need to know aggregate functions before attempting the other questions.
 </p><p>
-We would like to find the total weight of cats grouped by age. But only return those group with a total weight larger than 12.
+We would like to find the total weight of cats grouped by age.
+But only return those groups with a total weight larger than 12.
 <hr/>
 Return: age, sum(weight)
 Order by: age desc

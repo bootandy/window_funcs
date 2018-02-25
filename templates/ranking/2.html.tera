@@ -1,8 +1,5 @@
 {% extends "all_questions" %}
 
-{% block heading %}
-Q6: Ranking
-{% endblock heading %}
 
 {% block question %}
 

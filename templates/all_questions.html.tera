@@ -9,6 +9,7 @@ $( document ).ready(function() {
   {% endif %}
 });
 </script>
+<meta name="keywords" content="sql {{heading}}">
 {% endblock headers %}
 
 
@@ -28,17 +29,16 @@ $( document ).ready(function() {
   <div class="row">
     <div class="col">
       {% if next_q %}
-        <a style='float:right' href="{{next_q}}">next question </a>
+        <a style='float:right' href="/questions/{{next_q}}">next question </a>
       {% endif %}
       {% if prev_q %}
-        <a style='' href="{{prev_q}}">prev question</a>
+        <a style='' href="/questions/{{prev_q}}">prev question</a>
       {% endif %}
     </div>
   </div>
 
   <h1>
-    {% block heading %}
-    {% endblock heading %}
+      {{heading}}
   </h1>
   <h2>Question:</h2>
   <div class="row">

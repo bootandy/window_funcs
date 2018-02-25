@@ -1,0 +1,22 @@
+{% extends "all_questions" %}
+
+
+{% block question %}
+
+</p><p>
+The cats have decided the correct weight is the same as the 4rd lightest cat. All cats shall have this weight
+Except in a fit of jealous rage they decide to set the weight of the lightest three to 99.9
+</p><p>
+Print a list of cats, their weights and their imagined weight
+<hr/>
+Return: name, weight, imagined_weight
+<br/>
+Order by: weight
+</p>
+
+{% endblock question %}
+
+{% block on_correct %}
+nth_value() allows us to select the an arbitrary position in a subgroup
+{% endblock on_correct %}
+

@@ -25,19 +25,13 @@
           <ul>
             <li class="nav_block"><a href="/">Home</a>
             </li>
-            <li class="nav_block"><a>Questions<i class="fa fa-angle-down"></i></a>
+            <li class="nav_block"><a>Questions<i class="fa fa-angle-left"></i></a>
               <ul>
-                <li><a href="/questions/0">Question 0</a></li>
-                <li><a href="/questions/1">Question 1</a></li>
-                <li><a href="/questions/2">Question 2</a></li>
-                <li><a href="/questions/3">Question 3</a></li>
-                <li><a href="/questions/4">Question 4</a></li>
-                <li><a href="/questions/5">Question 5</a></li>
-                <li><a href="/questions/6">Question 6</a></li>
-                <li><a href="/questions/7">Question 7</a></li>
-                <li><a href="/questions/8">Question 8</a></li>
-                <li><a href="/questions/9">Question 9</a></li>
-                <li><a href="/questions/10">Question 10</a></li>
+                <li><a href="/questions/intro/">Intro Questions</a></li>
+                <li><a href="/questions/over/">Over Questions</a></li>
+                <li><a href="/questions/ranking/">Ranking Questions</a></li>
+                <li><a href="/questions/grouping/">Grouping Questions</a></li>
+                <li><a href="/questions/other/">Other Questions</a></li>
               </ul>
             </li>
             <li class="nav_block"><a href="/about">About</a>
@@ -54,7 +48,7 @@
       <div class="container d-flex flex-wrap">
 
         <nav class="b-footer_navigation">
-          SQL Window Functions tutorial 
+          SQL Window Functions tutorial
         </nav>
         <div class="b-footer-right">
           A lot has changed since SQL-92
@@ -64,7 +58,7 @@
         <div class="row"></div>
       </div>
     </footer>
-    
+
   </body>
 </html>
 

@@ -1,0 +1,9 @@
+{% extends "init" %}
+
+{% block heading %}
+Other questions
+{% endblock heading %}
+
+ {% block blurb %}
+ These questions are left overs that couldn't easily be categorised.
+ {% endblock blurb %}

@@ -1,0 +1,20 @@
+{% extends "all_questions" %}
+
+
+{% block question %}
+<p>
+The cats must by ordered by weight descending and will enter an elevator one by one.
+We would like to know what the running total weight is.
+<hr/>
+If two cats have the same weight they must enter separately
+<hr/>
+Return: name, running total weight
+<br/>
+Order by: weight desc
+</p>
+
+{% endblock question %}
+
+{% block on_correct %}
+Over coupled with ROWS allows us to be more creative with aggregate functions
+{% endblock on_correct %}

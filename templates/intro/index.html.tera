@@ -1,0 +1,10 @@
+{% extends "init" %}
+
+{% block heading %}
+      Refreshers on pure SQL
+{% endblock heading %}
+
+ {% block blurb %}
+ These questions test your core SQL that will be required before attempting the
+ window function questions
+ {% endblock blurb %}
