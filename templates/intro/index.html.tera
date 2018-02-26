@@ -6,7 +6,14 @@
 
  {% block blurb %}
  These questions test your core SQL that will be required before attempting the window function questions
-<p>
+ </p>
+
+ <p>
+ You will require <a href='https://www.w3schools.com/sql/sql_groupby.asp' target='_blank'>group by</a> and <a href='https://modern-sql.com/feature/filter' target='_blank'>filter</a>
+
+ </p>
+
+ <p>
  All questions are based around a table containing imaginary cats.
 </p>
  {% endblock blurb %}

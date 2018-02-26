@@ -27,7 +27,8 @@
       </p>
   </div>
   <div class="row">
-      <p>
+      <h3>Questions:</h3>
+  </div><div class="row">
       <ul>
         {% set enum = 0 %}
         {% for t in titles %}

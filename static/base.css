@@ -7,6 +7,10 @@ main {
 hr {
 	border: 1px solid #d54b68;
 }
+p {
+	display:block;
+	width:100%;
+}
 #hint_box {
 	min-height: 3em;
 }
