@@ -38,7 +38,11 @@ fn _get_next_and_prev(cat: &str, id: &str) -> (String, String) {
             cat.to_string() + "/"
         } else if i == -1 {
             let prev_cat = sql::get_prev(cat);
-            format!("{}/{:?}", prev_cat.to_string(), sql::get_titles_for(prev_cat).len() - 1)
+            if prev_cat == "" {
+                "".to_string()
+            } else {
+                format!("{}/{:?}", prev_cat.to_string(), sql::get_titles_for(prev_cat).len() - 1)
+            }
         } else {
             panic!("Impossible number given {}", i);
         }
@@ -97,8 +101,8 @@ impl TemplateDetails {
 impl<'a, 'r> FromRequest<'a, 'r> for TemplateDetails {
     type Error = ();
     fn from_request(request: &'a Request<'r>) -> Outcome<Self, ()> {
-        let template_category = request.get_param::<String>(0).unwrap_or("".into());
-        let template_id = request.get_param::<String>(1).unwrap_or("".into());
+        let template_category = request.get_param::<String>(0).unwrap_or_else(|_| "".into());
+        let template_id = request.get_param::<String>(1).unwrap_or_else(|_| "".into());
 
         match sql::get_sql_for_q(template_category.as_ref(), template_id.as_ref()) {
             Some((sql, help_link, title, keywords)) => Success(TemplateDetails {
@@ -229,7 +233,7 @@ fn post_db(
 
     // log sql to stdout so we can see how people break it.
     // strip \r\n s
-    println!("query: {:?}", sql_command);
+    println!("query: {:?}", sql_command.replace("\r\n", " "));
     let c = &_context_builder(&conn, &template, result, sql_command);
     Template::render(template.get_path(), &c)
 }
@@ -247,7 +251,7 @@ fn get_db(_type: String, _question: String, template: TemplateDetails, conn: db:
 fn old_question_link(category: String) -> Template {
     let real_cat = sql::check_category(category.as_ref());
     let titles = sql::get_titles_for(real_cat);
-    let (prev_q, next_q) = _get_next_and_prev(real_cat.as_ref(), "");
+    let (prev_q, next_q) = _get_next_and_prev(real_cat, "");
     let context = TemplateContextHeading{
         titles,
         next_q,

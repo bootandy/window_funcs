@@ -9,7 +9,7 @@ We would like to group the cats into quartiles by their weight.
 <hr/>
 Return: name, weight, weight_quartile
 <br/>
-Order by: weight, name
+Order by: weight
 </p>
 
 {% endblock question %}

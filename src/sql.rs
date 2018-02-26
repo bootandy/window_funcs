@@ -62,7 +62,7 @@ static RANKINGS_3_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-s
 
 static RANKINGS_4_SQL: &'static str = "
 select weight,
-cume_dist() over (order by weight) * 100 as percent
+cast(cume_dist() over (order by weight) * 100 as integer) as percent
 from cats order by weight";
 static RANKINGS_4_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-sql/functions/cume-dist-transact-sql";
 
@@ -70,7 +70,7 @@ static GROUPINGS_0_SQL: &'static str = "
 select
  name, weight, ntile(4) over ( order by weight) as weight_quartile
 from  cats
-order by weight_quartile, name
+order by weight
 ";
 static GROUPINGS_0_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-sql/functions/ntile-transact-sql#examples";
 
@@ -88,7 +88,7 @@ static GROUPINGS_2_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-
 
 static GROUPINGS_3_SQL: &'static str = "
 select name, color,
-first_value(weight) over (partition by color order by weight) as lowest_weight_by_color
+first_value(weight) over (partition by color order by weight) as weight_by_color
 from cats order by color, name";
 static GROUPINGS_3_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-sql/functions/first-value-transact-sql#examples";
 
@@ -100,7 +100,8 @@ static GROUPINGS_4_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-
 
 static GROUPINGS_5_SQL: &'static str = "
 select name, weight,
-coalesce(nth_value(weight, 4) over (order by weight), 99.9) from cats order by weight";
+coalesce(nth_value(weight, 4) over (order by weight), 99.9) as imagined_weight
+from cats order by weight";
 static GROUPINGS_5_HELP: &'static str = "https://docs.oracle.com/cloud/latest/db112/SQLRF/functions114.htm#SQLRF30031";
 
 static OTHER_0_SQL: &'static str = "
@@ -119,7 +120,7 @@ static INTRO_1_TITLE: &'static str = "Limiting Large Results";
 static OVER_0_TITLE: &'static str = "Running Totals";
 static OVER_1_TITLE: &'static str = "Partitioned Running Totals";
 static OVER_2_TITLE: &'static str = "Examining nearby rows";
-static OVER_3_TITLE: &'static str = "Proper Running Total";
+static OVER_3_TITLE: &'static str = "Correct Running Total";
 static RANKINGS_0_TITLE: &'static str = "Unique Numbers";
 static RANKINGS_1_TITLE: &'static str = "Orderring";
 static RANKINGS_2_TITLE: &'static str = "Further Orderring";
@@ -150,7 +151,7 @@ pub fn get_sql_for_q<'a>(folder: &'a str, q: &'a str) -> Option<(&'a str, &'a st
         ("grouping", "1") => Some((GROUPINGS_1_SQL, GROUPINGS_1_HELP, GROUPINGS_1_TITLE, vec!["lag", "lead", "min"])),
         ("grouping", "2") => Some((GROUPINGS_2_SQL, GROUPINGS_2_HELP, GROUPINGS_2_TITLE, vec!["lag", "lead", "min"])),
         ("grouping", "3") => Some((GROUPINGS_3_SQL, GROUPINGS_3_HELP, GROUPINGS_3_TITLE,  vec!["first_value", "nth_value", "min"])),
-        ("grouping", "4") => Some((GROUPINGS_4_SQL, GROUPINGS_4_HELP, GROUPINGS_4_TITLE,  vec!["last_value", "nth_value", "max"])),
+        ("grouping", "4") => Some((GROUPINGS_4_SQL, GROUPINGS_4_HELP, GROUPINGS_4_TITLE,  vec!["lead"])),
         ("grouping", "5") => Some((GROUPINGS_5_SQL, GROUPINGS_5_HELP, GROUPINGS_5_TITLE,  vec!["nth_value"])),
         ("other", "0") => Some((OTHER_0_SQL, OTHER_0_HELP, OTHER_0_TITLE, vec!["window"])),
         (_, _) => None,
@@ -169,9 +170,12 @@ fn _get_next_or_prev(s: &str, index: i32) -> &str {
     match CATEGORIES.iter().position(|&a| a == s) {
         Some(i) => {
             let ii = i as i32 + index;
-            assert!(ii >= 0);
-            let res = CATEGORIES.get(ii as usize);
-            res.unwrap_or_else(|| CATEGORIES.get(0).unwrap())
+            if ii < 0 {
+                ""
+            } else {
+                let res = CATEGORIES.get(ii as usize);
+                res.unwrap_or_else(|| CATEGORIES.get(0).unwrap())
+            }
         },
         None => CATEGORIES.get(0).unwrap()
     }

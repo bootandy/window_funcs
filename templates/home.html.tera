@@ -17,17 +17,17 @@ b-header__absolute-top b-header__white
 
   <div class="container py-2">
     <div class="col-12">
-      <p> 
+      <p>
         Modern SQL encompasses many query commands beyond aggregation queries.
       </p>
-      <p> 
-        'Normal' SQL is based of SQL:92. Nearly all databases support SQL:2003 which 
+      <p>
+        'Normal' SQL is based of SQL:92. Nearly all databases support SQL:2003 which
         adds many interesting and powerful functions.
       </p>
       <p>
       These interactive tutorials will test your knowledge of window functions (postgres) by quizzing you on cat data.
       </p>
-      <p> Test your <a href="/questions/0">knowledge </a>
+      <p> Test your <a href="/questions/intro/">knowledge</a>
     </div>
   </div>
 {% endblock containers %}

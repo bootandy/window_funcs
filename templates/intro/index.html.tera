@@ -5,6 +5,8 @@
 {% endblock heading %}
 
  {% block blurb %}
- These questions test your core SQL that will be required before attempting the
- window function questions
+ These questions test your core SQL that will be required before attempting the window function questions
+<p>
+ All questions are based around a table containing imaginary cats.
+</p>
  {% endblock blurb %}

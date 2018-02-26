@@ -2,7 +2,7 @@
 
 {% block question %}
 <p>
-A refresher on aggregate functions. You will need to know aggregate functions before attempting the other questions.
+You will need to know aggregate functions before attempting the other questions.
 </p><p>
 We would like to find the total weight of cats grouped by age.
 But only return those groups with a total weight larger than 12.

@@ -7,5 +7,5 @@ Grouping the output
 
  {% block blurb %}
 These questions are all about grouping your data together. To complete them you will need to know
-The following commands: nth_value, lag, lead, nth_value 
+The following commands: nth_value, lag, lead
  {% endblock blurb %}

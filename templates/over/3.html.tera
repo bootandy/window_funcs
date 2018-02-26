@@ -5,8 +5,9 @@
 <p>
 The cats must by ordered by weight descending and will enter an elevator one by one.
 We would like to know what the running total weight is.
-<hr/>
+</p><p>
 If two cats have the same weight they must enter separately
+</p>
 <hr/>
 Return: name, running total weight
 <br/>
@@ -16,5 +17,5 @@ Order by: weight desc
 {% endblock question %}
 
 {% block on_correct %}
-Over coupled with ROWS allows us to be more creative with aggregate functions
+Use Unbounded Preceding to make sure you don't include extra rows if 2 rows evaluate to the same thing
 {% endblock on_correct %}

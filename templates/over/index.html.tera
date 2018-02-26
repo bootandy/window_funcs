@@ -6,5 +6,5 @@
 
 
  {% block blurb %}
- These questions test your knowledge of the <a href='https://docs.microsoft.com/en-us/sql/t-sql/queries/select-over-clause-transact-sql'>Over</a> Command. Over is useful in limiting or tweaking the data returned from agreggate functions
+ These questions test your knowledge of the <a target="_blank" href='https://docs.microsoft.com/en-us/sql/t-sql/queries/select-over-clause-transact-sql'>Over</a> Command. Over is useful in limiting or tweaking the data returned from aggregate functions
  {% endblock blurb %}
