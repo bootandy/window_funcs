@@ -72,6 +72,7 @@ struct TemplateContext {
     sql_to_run_result: Vec<Vec<String>>,
     next_q: String,
     prev_q: String,
+    category: String,
     is_correct: bool,
     used_correct_word: bool,
 }
@@ -141,6 +142,7 @@ fn _context_builder(
         heading: t.title.to_string(),
         next_q,
         prev_q,
+        category:t.category.to_string(),
         is_correct,
         used_correct_word,
     }
@@ -265,6 +267,11 @@ fn get_favicon() -> Option<NamedFile> {
     NamedFile::open(Path::new("static/favicon.ico")).ok()
 }
 
+#[get("/robots.txt")]
+fn get_robots() -> Option<NamedFile> {
+    NamedFile::open(Path::new("static/robots.txt")).ok()
+}
+
 #[get("/static/<file..>")]
 fn static_files(file: PathBuf) -> Option<NamedFile> {
     NamedFile::open(Path::new("static/").join(file)).ok()
@@ -288,6 +295,7 @@ fn rocket() -> rocket::Rocket {
             routes![
                 static_files,
                 get_favicon,
+                get_robots,
                 get_home,
                 get_about,
                 post_db,

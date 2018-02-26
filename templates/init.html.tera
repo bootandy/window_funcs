@@ -24,6 +24,8 @@
       <p>
       {% block blurb %}
       {% endblock blurb %}
+      </p><p>
+        <a class="btn btn-primary" href="/questions/{{next_q}}">Begin!</a>
       </p>
   </div>
   <div class="row">

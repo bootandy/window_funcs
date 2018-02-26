@@ -4,8 +4,8 @@
 <div class="container py-2">
   <div class="col-12">
     <h2 id="intro">About</h2>
-    <p> 
-    This site was built after doing the exercises in <a href="https://pgexercises.com/">PG Exercises </a> 
+    <p>
+    This site was built after doing the exercises in <a href="https://pgexercises.com/">PG Exercises </a>
     It was made by <a href="http://www.nuclearcarrot.co.uk">Andy Boot</a> while at <a href="https://www.recurse.com"> Recurse Center</a>
     <ul>
       <li><a href="#why"> Why did you create this?</a></li>
@@ -20,17 +20,17 @@
     none of them focus on the post sql-92 window functions. Most databases got these awesome powerful functions
     a long time ago and most of us don't use them
     </p>
-    
+
     <a name="tech"></a>
     <h3> What technologies did you use?</h3>
     <p> Rust &amp; Postgres. </p>
-    <p>The code is on <a href="https://github.com/bootandy/window_funcs">github</a> 
+    <p>The code is on <a href="https://github.com/bootandy/window_funcs">github</a>
     It is written in Rust and uses Rocket, Tera. I wrote it partially to learn Rust.
-    </p> 
+    </p>
 
     <a href="#win_func"> </a>
     <h3>How can I learn about SQL window functions?</h3>
-    <p> Links to learn about window functions: 
+    <p> Links to learn about window functions:
     <ul>
       <li>
         <a href="https://www.postgresql.org/docs/current/static/functions-window.html">Postgres</a>
@@ -46,8 +46,8 @@
 
     <a href="#db"> </a>
     <h3>Does my database support window functions?</h3>
-    <p> 
-    Probably, the only major one that doesn't is MySQL (which is superseded by Maria DB which does). 
+    <p>
+    Probably, the only major one that doesn't is MySQL (which is superseded by Maria DB which does).
     </p><p>
     Try it and see!
     </p>

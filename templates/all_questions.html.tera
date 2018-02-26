@@ -28,11 +28,16 @@ $( document ).ready(function() {
 <div class="container py-2">
   <div class="row">
     <div class="col">
-      {% if next_q %}
-        <a style='float:right' href="/questions/{{next_q}}">next question </a>
-      {% endif %}
       {% if prev_q %}
         <a style='' href="/questions/{{prev_q}}">prev question</a>
+      {% endif %}
+    </div><div class="col" style="text-align: center; background-color:lightgray; overflow:hidden;height:1.7em">
+      Questions /
+      <a href="/questions/{{category}}/">{{category}}</a>
+      / 
+    </div><div class="col">
+      {% if next_q %}
+        <a style='float:right' href="/questions/{{next_q}}">next question </a>
       {% endif %}
     </div>
   </div>
