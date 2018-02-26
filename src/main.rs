@@ -91,6 +91,7 @@ struct TemplateContextHeading<'a> {
     titles : Vec<&'a str>,
     next_q :String,
     prev_q :String,
+    category: String,
 }
 
 impl TemplateDetails {
@@ -258,6 +259,7 @@ fn old_question_link(category: String) -> Template {
         titles,
         next_q,
         prev_q,
+        category: real_cat.to_string(),
     };
     Template::render(real_cat.to_string() +"/index", context)
 }

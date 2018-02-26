@@ -31,10 +31,10 @@ $( document ).ready(function() {
       {% if prev_q %}
         <a style='' href="/questions/{{prev_q}}">prev question</a>
       {% endif %}
-    </div><div class="col" style="text-align: center; background-color:lightgray; overflow:hidden;height:1.7em">
+    </div><div class="col breadcrumbs">
       Questions /
       <a href="/questions/{{category}}/">{{category}}</a>
-      / 
+      /
     </div><div class="col">
       {% if next_q %}
         <a style='float:right' href="/questions/{{next_q}}">next question </a>
@@ -70,7 +70,7 @@ $( document ).ready(function() {
         <button style='float:right' id="run_query" class="btn btn-primary" type="submit">Run Query</button>
         <button style='float:right' id="hint" class="btn btn-primary" href="#">Show Hint</button>
         {% if is_correct and used_correct_word %}
-            <img src="/static/tick.png" />
+            <img src="/static/tick.png" alt="correct" />
         {% endif %}
         <p id="hint_box" class="hidden" level=0>
           This query requires:
@@ -82,7 +82,7 @@ $( document ).ready(function() {
       {% else %}
         <span class="hidden">
       {% endif %}
-          <img src="/static/question.png"/>
+          <img src="/static/question.png" alt="question_mark" />
           <p>
           Correct output but can you use '<span id="keyword">{{keyword}}</span>'?
           </p>

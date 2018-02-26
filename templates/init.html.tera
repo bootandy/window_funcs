@@ -7,11 +7,15 @@
 <div class="container py-2">
   <div class="row">
     <div class="col">
+      {% if prev_q %}
+        <a style='' href="/questions/{{prev_q}}">prev question</a>
+      {% endif %}
+    </div><div class="col breadcrumbs">
+      Questions /
+      {{category}} /
+    </div><div class="col">
       {% if next_q %}
         <a style='float:right' href="/questions/{{next_q}}">next question </a>
-      {% endif %}
-     {% if prev_q %}
-        <a style='' href="/questions/{{prev_q}}">prev question</a>
       {% endif %}
     </div>
   </div>
@@ -24,9 +28,11 @@
       <p>
       {% block blurb %}
       {% endblock blurb %}
-      </p><p>
+  </div>
+  <div class="row">
+    <div class="col center">
         <a class="btn btn-primary" href="/questions/{{next_q}}">Begin!</a>
-      </p>
+    </div>
   </div>
   <div class="row">
       <h3>Questions:</h3>

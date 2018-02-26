@@ -81,7 +81,9 @@ p {
 .answer-wrong {
 	border: 3px solid #dc3545;
 }
-
+.center {
+    text-align: center;
+}
 .hidden {
 	display: none;
 }
@@ -94,6 +96,14 @@ p {
 .table-sm {
 	font-size:small;
 }
+.breadcrumbs {
+    border-radius: 1em;
+    text-align: center;
+    background-color: lightgray;
+    overflow: hidden;
+    height: 1.7em
+}
+
 .b-footer{
 	border-color:#d54b68;
 	border-top-style: solid;
@@ -119,4 +129,4 @@ p {
 }
 .look_at_me {
 	animation: 1s ease-out 0s 1 look_at_me;
-}	 
+}
