@@ -2,6 +2,7 @@
 #![feature(nll)]
 #![plugin(rocket_codegen)]
 
+extern crate regex;
 extern crate r2d2;
 extern crate r2d2_postgres;
 extern crate rocket;
@@ -22,6 +23,11 @@ use tera::Context;
 
 mod db;
 mod sql;
+
+macro_rules! regex {
+     ($e:expr) => (regex::Regex::new($e).unwrap())
+}
+
 
 //forms
 #[derive(Debug, FromForm)]
@@ -210,6 +216,16 @@ fn _run_sql(conn: &db::DbConn, sql_command: &str) -> Vec<Vec<String>> {
     result
 }
 
+fn _verify_then_run_sql<'a>(s: &'a str, conn: &db::DbConn) -> Vec<Vec<String>> {
+    if regex!(r###"[^\w]pg_"###).is_match(s) {
+        vec![vec!["Do not use pg_".into()]]
+    } else if regex!(r###"[^\w]version[^\w]"###).is_match(s) {
+        vec![vec!["Do not use version".into()]]
+    } else {
+        _run_sql(&conn, s.as_ref())
+    }
+}
+
 #[post("/questions/<_type>/<_question>", data = "<sink>")]
 fn post_db(
     _type: String,
@@ -218,24 +234,18 @@ fn post_db(
     conn: db::DbConn,
     sink: Result<Form<FormInput>, Option<String>>,
 ) -> Template {
+
     let (sql_command, result) = match sink {
         Ok(form) => {
-            let sql_command1 = form.get().sql_to_run.to_string();
-            let result1 = _run_sql(&conn, sql_command1.as_ref());
-            (sql_command1, result1)
-        }
-        Err(Some(f)) => {
-            let sql_command1 = "".to_string();
-            let result1 = vec![vec![f.to_string()]];
-            (sql_command1, result1)
-        }
-        Err(None) => ("".to_string(), vec![vec!["".to_string()]]),
+            let sql_command = form.get().sql_to_run.to_string();
+            let result = _verify_then_run_sql(sql_command.as_ref(), &conn);
+            (sql_command, result)
+        },
+        Err(Some(f)) => ("".into(), vec![vec![f.to_string()]]),
+        Err(None) => ("".into(), vec![vec!["".to_string()]]),
     };
 
-    // todo: If query has pg_ or version in kill it.
-
     // log sql to stdout so we can see how people break it.
-    // strip \r\n s
     println!("query: {:?}", sql_command.replace("\r\n", " "));
     let c = &_context_builder(&conn, &template, result, sql_command);
     Template::render(template.get_path(), &c)
