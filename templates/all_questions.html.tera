@@ -97,7 +97,7 @@ $( document ).ready(function() {
     {% block on_correct %}
     {% endblock on_correct %}
     {% if next_q %}
-      <a style='display:block' href="{{next_q}}">next question</a>
+      <a style='display:block' href="/questions/{{next_q}}">next question</a>
     {% endif %}
     </p>
   </div>
