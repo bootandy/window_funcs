@@ -94,9 +94,9 @@ struct TemplateDetails {
 
 #[derive(Serialize)]
 struct TemplateContextHeading<'a> {
-    titles : Vec<&'a str>,
-    next_q :String,
-    prev_q :String,
+    titles: Vec<&'a str>,
+    next_q: String,
+    prev_q: String,
     category: String,
 }
 
@@ -229,7 +229,7 @@ fn _verify_then_run_sql<'a>(s: &'a str, conn: &db::DbConn) -> Vec<Vec<String>> {
     } else if regex!(r###"[^\w]version[^\w]"###).is_match(s) {
         vec![vec!["Do not use version".into()]]
     } else {
-        _run_sql(&conn, s.as_ref())
+        _run_sql(conn, s)
     }
 }
 
@@ -274,8 +274,8 @@ fn old_question_link(category: String) -> Template {
     let (prev_q, next_q) = _get_next_and_prev(real_cat, "");
     let context = TemplateContextHeading{
         titles,
-        next_q,
-        prev_q,
+        next_q: next_q,
+        prev_q: prev_q,
         category: real_cat.to_string(),
     };
     Template::render(real_cat.to_string() +"/index", context)

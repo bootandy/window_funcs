@@ -183,10 +183,10 @@ fn _get_next_or_prev(s: &str, index: i32) -> &str {
                 ""
             } else {
                 let res = CATEGORIES.get(ii as usize);
-                res.unwrap_or_else(|| CATEGORIES.get(0).unwrap())
+                res.unwrap_or_else(|| &CATEGORIES[0])
             }
         },
-        None => CATEGORIES.get(0).unwrap()
+        None => CATEGORIES[0]
     }
 }
 
@@ -194,7 +194,7 @@ pub fn check_category(s: &str) -> &str {
     if CATEGORIES.contains(&s) {
         s
     } else {
-        CATEGORIES.get(0).unwrap()
+        CATEGORIES[0]
     }
 }
 
