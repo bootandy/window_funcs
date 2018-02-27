@@ -11,6 +11,13 @@ avg(weight) filter (where age > 1) average_old_weight
 from cats group by breed order by breed";
 static INTRO_1_HELP: &'static str = "https://modern-sql.com/feature/filter";
 
+static INTRO_2_SQL: &'static str = "
+select color,
+array_agg(name) as names
+from cats group by color
+order by color desc";
+static INTRO_2_HELP: &'static str = "https://lorenstewart.me/2017/12/03/postgresqls-array_agg-function/";
+
 static OVER_0_SQL: &'static str = "select name, sum(weight)
 over (order by name) as running_total_weight
 from cats order by name";
@@ -117,6 +124,7 @@ static OTHER_0_HELP: &'static str = "http://dcx.sap.com/1200/en/dbreference/wind
 
 static INTRO_0_TITLE: &'static str = "Refresher on Aggregates";
 static INTRO_1_TITLE: &'static str = "Limiting Large Results";
+static INTRO_2_TITLE: &'static str = "Aggregating data";
 static OVER_0_TITLE: &'static str = "Running Totals";
 static OVER_1_TITLE: &'static str = "Partitioned Running Totals";
 static OVER_2_TITLE: &'static str = "Examining nearby rows";
@@ -138,6 +146,7 @@ pub fn get_sql_for_q<'a>(folder: &'a str, q: &'a str) -> Option<(&'a str, &'a st
     match (folder, q) {
         ("intro", "0") => Some((INTRO_0_SQL, INTRO_0_HELP, INTRO_0_TITLE, vec!["group by"])),
         ("intro", "1") => Some((INTRO_1_SQL, INTRO_1_HELP, INTRO_1_TITLE, vec!["filter"])),
+        ("intro", "2") => Some((INTRO_2_SQL, INTRO_2_HELP, INTRO_2_TITLE, vec!["array_agg"])),
         ("over", "0") => Some((OVER_0_SQL, OVER_0_HELP, OVER_0_TITLE, vec!["over"])),
         ("over", "1") => Some((OVER_1_SQL, OVER_1_HELP, OVER_1_TITLE, vec!["partition by"])),
         ("over", "2") => Some((OVER_2_SQL, OVER_2_HELP, OVER_2_TITLE, vec!["preceding", "following"])),
@@ -191,7 +200,7 @@ pub fn check_category(s: &str) -> &str {
 
 pub fn get_titles_for(s: &str) -> Vec<&str> {
     match s {
-        "intro" => [INTRO_0_TITLE, INTRO_1_TITLE].to_vec(),
+        "intro" => [INTRO_0_TITLE, INTRO_1_TITLE, INTRO_2_TITLE].to_vec(),
         "over" => [OVER_0_TITLE, OVER_1_TITLE, OVER_2_TITLE, OVER_3_TITLE].to_vec(),
         "ranking" => [RANKINGS_0_TITLE, RANKINGS_1_TITLE, RANKINGS_2_TITLE, RANKINGS_3_TITLE, RANKINGS_4_TITLE].to_vec(),
         "grouping" => [GROUPINGS_0_TITLE, GROUPINGS_1_TITLE, GROUPINGS_2_TITLE, GROUPINGS_3_TITLE, GROUPINGS_4_TITLE, GROUPINGS_5_TITLE].to_vec(),

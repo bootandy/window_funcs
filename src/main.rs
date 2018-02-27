@@ -195,9 +195,16 @@ fn _run_sql(conn: &db::DbConn, sql_command: &str) -> Vec<Vec<String>> {
                                 Some(x) => format!("{:.1}", x),
                             }
                         }
-                        "varchar" | "text" => {
+                        "varchar" | "text"  => {
                             let temp: Option<String> = row.get(i);
                             _format_type(temp)
+                        }
+                        "_varchar"  => {
+                            let temp: Option<Vec<String>> = row.get(i);
+                            match temp {
+                                None => "Null".to_string(),
+                                Some(x) => x.join(","),
+                            }
                         }
                         x => {
                             println!("Got unknown type: {:?}", x);
@@ -333,12 +340,12 @@ fn test_get_next_and_prev() {
         (String::from("over/"), String::from("over/1"))
     );
     assert_eq!(
-        _get_next_and_prev("intro", "1"),
-        (String::from("intro/0"), String::from("over/"))
+        _get_next_and_prev("intro", "2"),
+        (String::from("intro/1"), String::from("over/"))
     );
     assert_eq!(
         _get_next_and_prev("over", ""),
-        (String::from("intro/1"), String::from("over/0"))
+        (String::from("intro/2"), String::from("over/0"))
     );
     // check it doesn't crash
     _get_next_and_prev("qa", "");

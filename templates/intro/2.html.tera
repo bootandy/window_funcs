@@ -1,0 +1,19 @@
+{% extends "all_questions" %}
+
+{% block question %}
+<p>
+We would like to group our cats by color
+</p>
+<p>
+Return 3 rows, each row containing a color and a list of cat names
+<hr/>
+Return: color, names
+Order by: color DESC
+</p>
+
+{% endblock question %}
+
+{% block on_correct %}
+array_agg allows us to group our data together.
+{% endblock on_correct %}
+
