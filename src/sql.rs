@@ -1,7 +1,7 @@
 static INTRO_0_SQL: &'static str = "
 select
  age, sum(weight) as total_weight
-from cats group by age having sum(weight) > 12 order by age DESC";
+from cats group by age having sum(weight) > 12 order by age";
 static INTRO_0_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-sql/queries/select-group-by-transact-sql#d-use-a-group-by-clause-with-a-having-clause";
 
 static INTRO_1_SQL: &'static str = "

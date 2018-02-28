@@ -8,7 +8,7 @@ We would like to find the total weight of cats grouped by age.
 But only return those groups with a total weight larger than 12.
 <hr/>
 Return: age, sum(weight)
-Order by: age desc
+Order by: age 
 </p>
 
 {% endblock question %}
