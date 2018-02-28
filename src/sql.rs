@@ -31,13 +31,13 @@ static OVER_1_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-sql/q
 
 static OVER_2_SQL: &'static str = "
 select name, weight,
-avg(weight) over (order by weight ROWS between 1 PRECEDING and 1 FOLLOWING) as average_weight
+avg(weight) over (order by weight ROWS between 1 preceding and 1 following) as average_weight
 from cats order by weight";
 static OVER_2_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-sql/queries/select-over-clause-transact-sql#arguments";
 
 static OVER_3_SQL: &'static str = "
 select name,
-sum(weight) over (order by weight DESC ROWS between UNBOUNDED PRECEDING and current row) as running_total_weight
+sum(weight) over (order by weight DESC ROWS between unbounded preceding and current row) as running_total_weight
 from cats order by running_total_weight";
 static OVER_3_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-sql/queries/select-over-clause-transact-sql#arguments";
 
@@ -52,7 +52,7 @@ select
 rank() over (order by weight desc) as ranking,
 weight, name
  from cats
- order by ranking, name DESC";
+ order by ranking, name";
 static RANKINGS_1_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-sql/functions/rank-transact-sql#a-ranking-rows-within-a-partition";
 
 static RANKINGS_2_SQL: &'static str = "
@@ -68,7 +68,7 @@ from cats order by weight";
 static RANKINGS_3_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-sql/functions/percent-rank-transact-sql";
 
 static RANKINGS_4_SQL: &'static str = "
-select weight,
+select name, weight,
 cast(cume_dist() over (order by weight) * 100 as integer) as percent
 from cats order by weight";
 static RANKINGS_4_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-sql/functions/cume-dist-transact-sql";
