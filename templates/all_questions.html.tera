@@ -14,16 +14,6 @@ $( document ).ready(function() {
 
 
 {% block containers %}
-<div class="first_time">
-  <div class="modal-content modal_thing">
-  <span class="close">&times;</span>
-  <h1>Welcome!</h1>
-  <ul>
-  <li>If you get stuck: Keep pressing the hint button</li>
-  <li>But next: Click the 'Run Query' button</li>
-  </ul>
-  </div>
-</div>
 
 <div class="container py-2">
   <div class="row">
@@ -66,7 +56,12 @@ $( document ).ready(function() {
     </div>
     <div class="col">
       <form method="post">
-        <textarea name="sql_to_run" id="sql_to_run" rows="10" >{{sql_to_run}}</textarea>
+        <textarea name="sql_to_run" id="sql_to_run" rows="10">{{sql_to_run}}</textarea>
+        <span style='float:right'>
+          <span class="first_time" style="position: relative;">
+            <p class="click_me"> Click me!</p>
+          </span>
+        </span>
         <button style='float:right' id="run_query" class="btn btn-primary" type="submit">Run Query</button>
         <button style='float:right' id="hint" class="btn btn-primary" href="#">Show Hint</button>
         {% if is_correct and used_correct_word %}

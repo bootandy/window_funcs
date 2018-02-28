@@ -34,6 +34,17 @@ p {
 	width: 80%;
 	font-weight: bold;
 }
+.click_me {
+    position: absolute;
+    top: -40px;
+    padding-left: 35px;
+    background: url(/static/arrow.png);
+    background-repeat:no-repeat;
+    width:150px;
+    height:40px;
+    left:-110px;
+    background-size: 30px 30px;
+}
 .close {
 	color: #aaaaaa;
 	float: right;
