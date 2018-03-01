@@ -18,7 +18,7 @@ use rocket_contrib::Template;
 use rocket::http::Status;
 use rocket::outcome::Outcome::*;
 use rocket::request::{Form, FromRequest, Outcome, Request};
-use rocket::response::{{NamedFile}};
+use rocket::response::{NamedFile};
 use tera::Context;
 
 mod db;
