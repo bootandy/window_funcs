@@ -9,8 +9,8 @@
  </p>
 
  <p>
- You will require <a href='https://www.w3schools.com/sql/sql_groupby.asp' target='_blank'>group by</a> and <a href='https://modern-sql.com/feature/filter' target='_blank'>filter</a>
-
+ You will require <a href='https://www.w3schools.com/sql/sql_groupby.asp' target='_blank'>group by</a>, <a href='https://msdn.microsoft.com/en-us/azure/data-lake-analytics/u-sql/array-agg-u-sql' target='_blank'>array_agg</a> and <a href='https://modern-sql.com/feature/filter' target='_blank'>filter</a>
+ If you are already comfortable with these then feel free to <a href='/questions/over/'>skip ahead</a>
  </p>
 
  <p>
