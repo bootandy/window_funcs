@@ -2,18 +2,16 @@
 
 {% block question %}
 <p>
-We would like to group our cats by color
-</p>
-<p>
-Return 3 rows, each row containing a color and a list of cat names
+We would like to find the average weight of cats grouped by breed.
+Also, in the same query find the average weight of cats grouped by breed whose age is over 1
 <hr/>
-Return: color, names
-Order by: color DESC
+Return: breed, average_weight, average_old_weight
+Order by: breed
 </p>
 
 {% endblock question %}
 
 {% block on_correct %}
-array_agg allows us to group our data together.
+Filter can be used to adjust our aggregate functions
 {% endblock on_correct %}
 
