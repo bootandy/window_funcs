@@ -9,7 +9,6 @@
     <title>Advanced SQL window function quiz</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
-    <link rel="stylesheet" href="/static/style.css">
     <link rel="stylesheet" href="/static/base.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
@@ -28,45 +27,45 @@
   </head>
   <body>
 
-    <header class="b-header {% block special_header_class %} {% endblock special_header_class %} ">
-      <div class="b-header_flex">
-        <a class="b-header_logo" href="/">SQL Window Functions <!--<img src="static/logo.png" alt="Logo"/>--></a>
-        <nav class="b-header_nav">
-          <ul>
-            <li class="nav_block"><a href="/">Home</a>
-            </li>
-            <li class="nav_block"><a>Questions<i class="fa fa-angle-left"></i></a>
-              <ul>
-                <li><a href="/questions/intro/">Intro Questions</a></li>
-                <li><a href="/questions/over/">Over Questions</a></li>
-                <li><a href="/questions/ranking/">Ranking Questions</a></li>
-                <li><a href="/questions/grouping/">Grouping Questions</a></li>
-                <li><a href="/questions/other/">Other Questions</a></li>
-              </ul>
-            </li>
-            <li class="nav_block"><a href="/about">About</a>
-          </ul>
-        </nav>
-      </div>
-    </header>
+  <nav class="{% block special_header_class %}{% endblock special_header_class %} navbar navbar-expand">
+  <div class="container" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="/">
+        Home <span class="sr-only">(current)</span>
+        </a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Questions
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="/questions/intro/">Intro Questions</a>
+          <a class="dropdown-item" href="/questions/over/">Over Questions</a>
+          <a class="dropdown-item" href="/questions/ranking/">Ranking Questions</a>
+          <a class="dropdown-item" href="/questions/grouping/">Grouping Questions</a>
+          <a class="dropdown-item" href="/questions/other/">Other Questions</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/about">About</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
 
     <main>
     {% block containers %}
     {% endblock containers %}
     </main>
-<footer class="b-footer">
-      <div class="container d-flex flex-wrap">
-
-        <nav class="b-footer_navigation">
+    <footer class="b-footer">
+        <span class="b-footer_navigation">
           SQL Window Functions tutorial
-        </nav>
+        </span>
         <div class="b-footer-right">
           A lot has changed since SQL-92
         </div>
-      </div>
-      <div class="container">
-        <div class="row"></div>
-      </div>
     </footer>
 
   </body>

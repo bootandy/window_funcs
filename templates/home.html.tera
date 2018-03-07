@@ -4,14 +4,14 @@
 {% endblock headers %}
 
 {% block special_header_class %}
-b-header__absolute-top b-header__white
+transparent_navbar
 {% endblock special_header_class %}
 
 {% block containers %}
-  <div class="b-hero b-hero__light" style="background-image:url(static/db.jpg);" >
-    <div class="container pl-sm-2 py-sm-2 my-sm-2">
-      <h3 class="display-5 ml-sm-5 text-italic"> <i>Think you Know SQL?</i></h3>
-      <h2 class="display-4"> <strong>Modern SQL Window Function Questions</strong></h2>
+  <div class="b-hero">
+    <div class="container">
+      <h3> Think you Know SQL?</h3>
+      <h2> Modern SQL Window Function Questions</h2>
     </div>
   </div>
 

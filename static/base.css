@@ -1,3 +1,11 @@
+body {
+    font-size: 1rem;
+    font-family: Verdana;
+    font-weight: normal;
+    line-height: 1.61;
+    color: #292b2c;
+    background-color: #eee;
+}
 h1 {
 	text-align: center;
 }
@@ -11,6 +19,110 @@ p {
 	display:block;
 	width:100%;
 }
+a {
+	color: #d44f68;
+	text-decoration: none;
+}
+a:hover {
+	color: #b43f58;
+	text-decoration: underline;
+}
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    margin-bottom: .5rem;
+    font-weight: 300;
+    line-height: 1.2;
+    color: inherit;
+}
+li a {
+	line-height:200%
+}
+
+.b-hero h2{
+    color:white;
+    font-family: Arial Black;
+    text-shadow: #000 0px 1px 1px;
+	-webkit-font-smoothing: antialiased;
+}
+.b-hero h3{
+    color:white;
+    font-style:italic;
+}
+
+@media (min-width: 576px)
+main .b-hero {
+    padding: 6rem 2rem;
+}
+
+main .b-hero {
+    color: #fff;
+   /* position: relative;*/
+    margin-bottom: 0;
+    background-image:url('/static/db.jpg');
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    overflow-x: hidden;
+    /*top:0;*/
+    padding-top: 4rem;
+    padding-bottom: 3rem;
+}
+li.dropdown:hover > .dropdown-menu {
+    display: block;
+}
+.dropdown-toggle {
+  margin-bottom:0px;
+  padding-bottom:0px;
+}
+.dropdown-menu{
+  margin-top:0px;
+  padding-top:0px;
+  border-radius: 20px;
+}
+.dropdown-item {
+  padding: .75rem 1.5rem;
+}
+.dropdown-item:hover, .dropdown-item:focus{
+	border-radius: 20px;
+	background-color: #eee;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #d44f68;
+    border-color: #d44f68;
+}
+.btn-primary:hover,.btn-primary:focus {
+	background-color: #a43f48;
+	border: 1px solid transparent;
+}
+
+.btn {
+    display: inline-block;
+    font-weight: normal;
+    line-height: 1.25;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: .5rem 1.5rem;
+    margin: 0.5;
+    font-size: 1rem;
+    border-radius: 20px;
+    transition: all 0.2s ease-in-out;
+}
+.navbar {
+    height: 4.5rem;
+    font-size: larger;
+    background-color: #fff;
+    z-index: 1000;
+    box-shadow: 0 15px 40px -25px rgba(0,0,0,0.8);
+}
+/*nav.transparent_navbar {
+	background-color: rgba(0,0,0,0.15);
+	box-shadow: none;
+	position: absolute;
+}*/
 #hint_box {
 	min-height: 3em;
 }
@@ -118,12 +230,11 @@ p {
 .b-footer{
 	border-color:#d54b68;
 	border-top-style: solid;
-}
-.b-footer_navigation{
 	font-style: italic;
+	padding: 2rem;
 }
 .b-footer-right{
-	font-style: italic;
+	float: right;
 }
 
 /* Lets try some animations shall we*/
