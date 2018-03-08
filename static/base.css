@@ -118,11 +118,12 @@ li.dropdown:hover > .dropdown-menu {
     z-index: 1000;
     box-shadow: 0 15px 40px -25px rgba(0,0,0,0.8);
 }
-/*nav.transparent_navbar {
-	background-color: rgba(0,0,0,0.15);
-	box-shadow: none;
-	position: absolute;
-}*/
+.navbar .divider-vertical {
+	height: 50px;
+	margin: 0 9px;
+	border-right: 1px solid #ffffff;
+	border-left: 1px solid #f2f2f2;
+}
 #hint_box {
 	min-height: 3em;
 }

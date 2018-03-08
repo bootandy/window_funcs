@@ -35,6 +35,7 @@
         Home <span class="sr-only">(current)</span>
         </a>
       </li>
+      <li role="separator" class="divider-vertical"></li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Questions
@@ -47,6 +48,7 @@
           <a class="dropdown-item" href="/questions/other/">Other Questions</a>
         </div>
       </li>
+      <li role="separator" class="divider-vertical"></li>
       <li class="nav-item">
         <a class="nav-link" href="/about">About</a>
       </li>
