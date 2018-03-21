@@ -20,7 +20,7 @@ lag() lets us compare to the previous rows [and lead() the next rows] [min() als
 It is useful for looking for strange step ups/downs in data
 <br/>
 Fun Fact: The
-<a target="_blank" href="https://www.postgresql.org/docs/current/static/functions-window.html">Postgres docs</a>
+<a target="_blank" rel="noopener" href="https://www.postgresql.org/docs/current/static/functions-window.html">Postgres docs</a>
 say lag can take a default. But it doesn't.
 
 {% endblock on_correct %}

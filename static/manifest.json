@@ -1,0 +1,13 @@
+
+{
+  "short_name": "SQL quiz",
+  "name": "SQL window functions quiz",
+  "theme_color":"#d54b68",
+  "icons": [
+    {
+      "src": "static/question.png",
+      "type": "image/png",
+      "sizes": "48x48"
+    },
+  ]
+}

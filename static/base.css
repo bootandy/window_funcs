@@ -57,7 +57,7 @@ main .b-hero {
     color: #fff;
    /* position: relative;*/
     margin-bottom: 0;
-    background-image:url('/static/db.jpg');
+    background-image:url('/static/db_compress.jpg');
     background-position: center center;
     background-size: cover;
     background-repeat: no-repeat;

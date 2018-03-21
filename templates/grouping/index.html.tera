@@ -10,9 +10,9 @@ These questions are all about grouping your data together.
 </p><p>
 To complete them you will need to know
 The following commands:
-<a target="_blank" href='https://docs.oracle.com/cloud/latest/db112/SQLRF/functions114.htm#SQLRF30031'>nth_value</a>,
-<a target="_blank" href='https://docs.microsoft.com/en-us/sql/t-sql/functions/ntile-transact-sql'>ntile</a>,
-<a target="_blank" href='https://docs.microsoft.com/en-us/sql/t-sql/functions/lag-transact-sql'>lag</a>,
-<a target="_blank" href='https://docs.microsoft.com/en-us/sql/t-sql/functions/lead-transact-sql'>lead</a>,
+<a target="_blank" rel="noopener" href='https://docs.oracle.com/cloud/latest/db112/SQLRF/functions114.htm#SQLRF30031'>nth_value</a>,
+<a target="_blank" rel="noopener" href='https://docs.microsoft.com/en-us/sql/t-sql/functions/ntile-transact-sql'>ntile</a>,
+<a target="_blank" rel="noopener" href='https://docs.microsoft.com/en-us/sql/t-sql/functions/lag-transact-sql'>lag</a>,
+<a target="_blank" rel="noopener" href='https://docs.microsoft.com/en-us/sql/t-sql/functions/lead-transact-sql'>lead</a>,
 </p>
  {% endblock blurb %}
