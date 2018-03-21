@@ -1,7 +1,7 @@
 {% extends "base" %}
 
 {% block headers %}
-<script src="/static/all_questions.js"></script>
+<script defer src="/static/all_questions.js"></script>
 <script>
 $( document ).ready(function() {
   {% if is_correct and used_correct_word %}
