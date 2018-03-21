@@ -6,7 +6,7 @@
     <meta name="description" content="Advanced SQL Tutorial for Window Functions">
     <meta name="keywords" content="sql,window functions,advanced sql,sql window functions,sql tutorial,sql quiz">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="manifest" href="static/manifest.json">
+    <link rel="manifest" href="/static/manifest.json">
     <title>Advanced SQL window function quiz</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
