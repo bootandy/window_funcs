@@ -2,9 +2,9 @@
 #![feature(nll)]
 #![plugin(rocket_codegen)]
 
-extern crate regex;
 extern crate r2d2;
 extern crate r2d2_postgres;
+extern crate regex;
 extern crate rocket;
 extern crate rocket_contrib;
 #[macro_use]
@@ -18,7 +18,7 @@ use rocket_contrib::Template;
 use rocket::http::Status;
 use rocket::outcome::Outcome::*;
 use rocket::request::{Form, FromRequest, Outcome, Request};
-use rocket::response::{NamedFile};
+use rocket::response::NamedFile;
 use tera::Context;
 
 mod db;
@@ -27,7 +27,6 @@ mod sql;
 macro_rules! regex {
      ($e:expr) => (regex::Regex::new($e).unwrap())
 }
-
 
 //forms
 #[derive(Debug, FromForm)]
@@ -47,14 +46,18 @@ fn _get_next_and_prev(cat: &str, id: &str) -> (String, String) {
             if prev_cat == "" {
                 "".to_string()
             } else {
-                format!("{}/{:?}", prev_cat.to_string(), sql::get_titles_for(prev_cat).len() - 1)
+                format!(
+                    "{}/{:?}",
+                    prev_cat.to_string(),
+                    sql::get_titles_for(prev_cat).len() - 1
+                )
             }
         } else {
             panic!("Impossible number given {}", i);
         }
     };
     let next = {
-        let next_id = (i+1).to_string();
+        let next_id = (i + 1).to_string();
         // Nasty hack: Indicates we are at the end of our questions:
         if cat == "other" && i == 0 {
             "".to_string()
@@ -149,7 +152,7 @@ fn _context_builder(
         heading: t.title.to_string(),
         next_q,
         prev_q,
-        category:t.category.to_string(),
+        category: t.category.to_string(),
         is_correct,
         used_correct_word,
     }
@@ -195,11 +198,11 @@ fn _run_sql(conn: &db::DbConn, sql_command: &str) -> Vec<Vec<String>> {
                                 Some(x) => format!("{:.1}", x),
                             }
                         }
-                        "varchar" | "text"  => {
+                        "varchar" | "text" => {
                             let temp: Option<String> = row.get(i);
                             _format_type(temp)
                         }
-                        "_varchar"  => {
+                        "_varchar" => {
                             let temp: Option<Vec<String>> = row.get(i);
                             match temp {
                                 None => "Null".to_string(),
@@ -241,13 +244,12 @@ fn post_db(
     conn: db::DbConn,
     sink: Result<Form<FormInput>, Option<String>>,
 ) -> Template {
-
     let (sql_command, result) = match sink {
         Ok(form) => {
             let sql_command = form.get().sql_to_run.to_string();
             let result = _verify_then_run_sql(sql_command.as_ref(), &conn);
             (sql_command, result)
-        },
+        }
         Err(Some(f)) => ("".into(), vec![vec![f.to_string()]]),
         Err(None) => ("".into(), vec![vec!["".to_string()]]),
     };
@@ -259,7 +261,12 @@ fn post_db(
 }
 
 #[get("/questions/<_type>/<_question>")]
-fn get_db(_type: String, _question: String, template: TemplateDetails, conn: db::DbConn) -> Template {
+fn get_db(
+    _type: String,
+    _question: String,
+    template: TemplateDetails,
+    conn: db::DbConn,
+) -> Template {
     let sql = "select \n*\n from cats ";
     // Forcing an empty result encourages people to click run the first time to help engagement.
     let result = vec![vec![]];
@@ -272,13 +279,13 @@ fn old_question_link(category: String) -> Template {
     let real_cat = sql::check_category(category.as_ref());
     let titles = sql::get_titles_for(real_cat);
     let (prev_q, next_q) = _get_next_and_prev(real_cat, "");
-    let context = TemplateContextHeading{
+    let context = TemplateContextHeading {
         titles,
         next_q: next_q,
         prev_q: prev_q,
         category: real_cat.to_string(),
     };
-    Template::render(real_cat.to_string() +"/index", context)
+    Template::render(real_cat.to_string() + "/index", context)
 }
 
 #[get("/favicon.ico")]
@@ -351,4 +358,3 @@ fn test_get_next_and_prev() {
     _get_next_and_prev("qa", "");
     _get_next_and_prev("", "3");
 }
-
