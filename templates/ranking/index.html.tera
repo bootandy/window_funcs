@@ -11,7 +11,7 @@ Ranking the row output
  The commands used are:
  <a target="_blank" rel="noopener" href='https://docs.microsoft.com/en-us/sql/t-sql/functions/rank-transact-sql'>rank</a>,
  <a target="_blank" rel="noopener" href='https://docs.microsoft.com/en-us/sql/t-sql/functions/row-number-transact-sql'>row_number</a>,
- <a target="_blank" rel="noopener" href='https://docs.microsoft.com/en-us/sql/t-sql/unctions/dense-rank-transact-sql'>dense_rank</a>,
+ <a target="_blank" rel="noopener" href='https://docs.microsoft.com/en-us/sql/t-sql/functions/dense-rank-transact-sql'>dense_rank</a>,
  <a target="_blank" rel="noopener" href='https://docs.microsoft.com/en-us/sql/t-sql/functions/cume-dist-transact-sql'>cume_dist</a>,
  <a target="_blank" rel="noopener" href='https://docs.microsoft.com/en-us/sql/t-sql/functions/percent-rank-transact-sql'>percent_rank</a>,
  </p>
