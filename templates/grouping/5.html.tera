@@ -4,7 +4,7 @@
 {% block question %}
 
 </p><p>
-The cats have decided the correct weight is the same as the 4rd lightest cat. All cats shall have this weight.
+The cats have decided the correct weight is the same as the 4th lightest cat. All cats shall have this weight.
 Except in a fit of jealous rage they decide to set the weight of the lightest three to 99.9
 </p><p>
 Print a list of cats, their weights and their imagined weight
