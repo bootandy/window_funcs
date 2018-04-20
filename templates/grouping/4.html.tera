@@ -9,7 +9,7 @@ If there is no heavier cat print 'fattest cat'
 </p><p>
 Print a list of cats, their weights and either the next heaviest cat's weight or 'fattest cat'
 <hr/>
-Return: name, weight, next_heaviest
+Return: name, weight, breed, next_heaviest
 <br/>
 Order by: weight
 </p>
