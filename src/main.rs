@@ -229,6 +229,8 @@ fn _run_sql(conn: &db::DbConn, sql_command: &str) -> Vec<Vec<String>> {
 fn _verify_then_run_sql<'a>(s: &'a str, conn: &db::DbConn) -> Vec<Vec<String>> {
     if regex!(r###"[^\w]pg_"###).is_match(s) {
         vec![vec!["Do not use pg_".into()]]
+    } else if regex!(r###"[^\w]statement_timeout"###).is_match(s) {
+        vec![vec!["Do not use statement_timeout".into()]]
     } else if regex!(r###"[^\w]version[^\w]"###).is_match(s) {
         vec![vec!["Do not use version".into()]]
     } else {
