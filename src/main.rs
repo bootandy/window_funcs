@@ -59,7 +59,7 @@ fn _get_next_and_prev(cat: &str, id: &str) -> (String, String) {
     let next = {
         let next_id = (i + 1).to_string();
         // Nasty hack: Indicates we are at the end of our questions:
-        if cat == "other" && i == 0 {
+        if cat == "other" && i == 2 {
             "".to_string()
         } else if sql::get_sql_for_q(cat, next_id.as_ref()).is_some() {
             format!("{}/{}", cat, next_id)
@@ -349,12 +349,12 @@ fn test_get_next_and_prev() {
         (String::from("over/"), String::from("over/1"))
     );
     assert_eq!(
-        _get_next_and_prev("intro", "1"),
-        (String::from("intro/0"), String::from("over/"))
+        _get_next_and_prev("intro", "0"),
+        (String::from("intro/"), String::from("over/"))
     );
     assert_eq!(
         _get_next_and_prev("over", ""),
-        (String::from("intro/1"), String::from("over/0"))
+        (String::from("intro/0"), String::from("over/0"))
     );
     // check it doesn't crash
     _get_next_and_prev("qa", "");

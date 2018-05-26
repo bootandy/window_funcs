@@ -5,5 +5,66 @@ Other questions
 {% endblock heading %}
 
  {% block blurb %}
- These questions are left overs that couldn't easily be categorised.
+ <p>
+ These questions are left overs that couldn't easily be categorised. They require the knowledge of the following
+ <a href='http://dcx.sap.com/1200/en/dbreference/window-statement.html' target='_blank' rel="noopener">window</a>
+ <a href='https://msdn.microsoft.com/en-us/azure/data-lake-analytics/u-sql/array-agg-u-sql' target='_blank' rel="noopener">array_agg</a>
+ and <a href='https://modern-sql.com/feature/filter' target='_blank' rel="noopener">filter</a>
+ </p>
  {% endblock blurb %}
+
+ {% block learn %}
+<div class="container">
+<hr style="width:75%"/>
+<h1>Read on to learn Window, array_agg &amp; filter </h1>
+
+<h2> Filter </h2>
+<p>
+Filter is to be used with aggregate functions or window functions. It allows us to filter out values
+</p>
+<p>
+In this example we print average runner time and then filter on the runners weighing less than
+90kg to produce the light_runners_time column which will result in bob (UK) being removed.
+</p>
+<pre>
+select country,
+avg(time) as avg_time,
+avg(time) filter (where weight < 90) as light_runners_time
+from runners group by country
+</pre>
+<table class="table-striped table-bordered table-sm">
+    <tr><th>country</th><th>avg_time</th><th>light_runners_time</th></tr>
+    <tr><td>UK</td><td>102</td><td>101</td></tr>
+    <tr><td>France</td><td>106</td><td>106</td></tr>
+    <tr><td>Germany</td><td>104</td><td>104</td></tr>
+</table>
+
+<hr style="width:75%"/>
+
+<h2> Array Agg </h2>
+<p>
+Array Agg is not a window function but it is interresting
+</p>
+<p>
+Array Agg allows us to select several entries into one. Think of it as compressing the values into an Array object
+</p>
+<pre>
+select array_agg(time) from runners;
+</pre>
+
+<table class="table-striped table-bordered table-sm">
+    <tr><th>array_agg</th></tr>
+    <tr><td>{101,103,104,104,108}</td></tr>
+</table>
+
+
+<hr style="width:75%"/>
+
+<h2> Window </h2>
+<p>
+Window allows us to name an SQL window function so it can be reused easily. It turns out to be very hard to write
+an example for it.
+</p>
+</div>
+
+ {% endblock learn %}

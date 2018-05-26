@@ -16,7 +16,7 @@ use r2d2::PooledConnection;
 type Pool = r2d2::Pool<PostgresConnectionManager>;
 
 pub fn init_pool() -> Pool {
-    let manager = PostgresConnectionManager::new("rusty://rusty@localhost", TlsMode::None).unwrap();
+    let manager = PostgresConnectionManager::new("rusty://rusty:rusty@localhost", TlsMode::None).unwrap();
     r2d2::Pool::new(manager).unwrap()
 }
 pub struct DbConn(pub PooledConnection<PostgresConnectionManager>);

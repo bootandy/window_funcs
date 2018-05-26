@@ -4,21 +4,6 @@ select
 from cats group by age having sum(weight) > 12 order by age";
 static INTRO_0_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-sql/queries/select-group-by-transact-sql#d-use-a-group-by-clause-with-a-having-clause";
 
-static INTRO_2_SQL: &'static str = "
-select breed,
-avg(weight) as average_weight,
-avg(weight) filter (where age > 1) average_old_weight
-from cats group by breed order by breed";
-static INTRO_2_HELP: &'static str = "https://modern-sql.com/feature/filter";
-
-static INTRO_1_SQL: &'static str = "
-select color,
-array_agg(name) as names
-from cats group by color
-order by color desc";
-static INTRO_1_HELP: &'static str =
-    "https://lorenstewart.me/2017/12/03/postgresqls-array_agg-function/";
-
 static OVER_0_SQL: &'static str = "select name, sum(weight)
 over (order by name) as running_total_weight
 from cats order by name";
@@ -123,6 +108,15 @@ from cats order by weight";
 static GROUPINGS_5_HELP: &'static str =
     "https://docs.oracle.com/cloud/latest/db112/SQLRF/functions114.htm#SQLRF30031";
 
+static GROUPINGS_6_SQL: &'static str = "
+select distinct(breed),
+nth_value(weight, 2) over (
+    partition by breed order by weight desc RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+) as imagined_weight
+from cats order by breed;";
+static GROUPINGS_6_HELP: &'static str =
+    "https://docs.oracle.com/cloud/latest/db112/SQLRF/functions114.htm#SQLRF30031";
+
 static OTHER_0_SQL: &'static str = "
 select name, weight,
        ntile(2) over ntile_window as by_half,
@@ -134,9 +128,23 @@ select name, weight,
      order by weight, name";
 static OTHER_0_HELP: &'static str = "http://dcx.sap.com/1200/en/dbreference/window-statement.html";
 
+static OTHER_1_SQL: &'static str = "
+select color,
+array_agg(name) as names
+from cats group by color
+order by color desc";
+static OTHER_1_HELP: &'static str =
+    "https://lorenstewart.me/2017/12/03/postgresqls-array_agg-function/";
+
+static OTHER_2_SQL: &'static str = "
+select breed,
+avg(weight) as average_weight,
+avg(weight) filter (where age > 1) average_old_weight
+from cats group by breed order by breed";
+static OTHER_2_HELP: &'static str = "https://modern-sql.com/feature/filter";
+
+
 static INTRO_0_TITLE: &'static str = "Refresher on Aggregates";
-static INTRO_2_TITLE: &'static str = "Limiting Large Results";
-static INTRO_1_TITLE: &'static str = "Aggregating data";
 static OVER_0_TITLE: &'static str = "Running Totals";
 static OVER_1_TITLE: &'static str = "Partitioned Running Totals";
 static OVER_2_TITLE: &'static str = "Examining nearby rows";
@@ -152,7 +160,11 @@ static GROUPINGS_2_TITLE: &'static str = "Compare to Row Part 2";
 static GROUPINGS_3_TITLE: &'static str = "First of each Group";
 static GROUPINGS_4_TITLE: &'static str = "More Row Comparisons";
 static GROUPINGS_5_TITLE: &'static str = "Special Case Grouping";
+static GROUPINGS_6_TITLE: &'static str = "More Grouping";
 static OTHER_0_TITLE: &'static str = "Using Window Clause";
+static OTHER_1_TITLE: &'static str = "Aggregating data";
+static OTHER_2_TITLE: &'static str = "Limiting Large Results";
+
 
 pub fn get_sql_for_q<'a>(
     folder: &'a str,
@@ -160,8 +172,6 @@ pub fn get_sql_for_q<'a>(
 ) -> Option<(&'a str, &'a str, &'a str, Vec<&'a str>)> {
     match (folder, q) {
         ("intro", "0") => Some((INTRO_0_SQL, INTRO_0_HELP, INTRO_0_TITLE, vec!["group by"])),
-        ("intro", "1") => Some((INTRO_1_SQL, INTRO_1_HELP, INTRO_1_TITLE, vec!["array_agg"])),
-        //("intro", "2") => Some((INTRO_2_SQL, INTRO_2_HELP, INTRO_2_TITLE, vec!["filter"])),
         ("over", "0") => Some((OVER_0_SQL, OVER_0_HELP, OVER_0_TITLE, vec!["over"])),
         ("over", "1") => Some((OVER_1_SQL, OVER_1_HELP, OVER_1_TITLE, vec!["partition by"])),
         ("over", "2") => Some((
@@ -242,7 +252,15 @@ pub fn get_sql_for_q<'a>(
             GROUPINGS_5_TITLE,
             vec!["nth_value"],
         )),
+        ("grouping", "6") => Some((
+            GROUPINGS_6_SQL,
+            GROUPINGS_6_HELP,
+            GROUPINGS_6_TITLE,
+            vec!["nth_value" ],
+        )),
         ("other", "0") => Some((OTHER_0_SQL, OTHER_0_HELP, OTHER_0_TITLE, vec!["window"])),
+        ("other", "1") => Some((OTHER_1_SQL, OTHER_1_HELP, OTHER_1_TITLE, vec!["array_agg"])),
+        ("other", "2") => Some((OTHER_2_SQL, OTHER_2_HELP, OTHER_2_TITLE, vec!["filter"])),
         (_, _) => None,
     }
 }
@@ -280,7 +298,7 @@ pub fn check_category(s: &str) -> &str {
 
 pub fn get_titles_for(s: &str) -> Vec<&str> {
     match s {
-        "intro" => [INTRO_0_TITLE, INTRO_1_TITLE].to_vec(),
+        "intro" => [INTRO_0_TITLE].to_vec(),
         "over" => [OVER_0_TITLE, OVER_1_TITLE, OVER_2_TITLE, OVER_3_TITLE].to_vec(),
         "ranking" => [
             RANKINGS_0_TITLE,
@@ -297,7 +315,7 @@ pub fn get_titles_for(s: &str) -> Vec<&str> {
             GROUPINGS_4_TITLE,
             GROUPINGS_5_TITLE,
         ].to_vec(),
-        "other" => [OTHER_0_TITLE].to_vec(),
+        "other" => [OTHER_0_TITLE, OTHER_1_TITLE, OVER_2_TITLE].to_vec(),
         _ => [].to_vec(),
     }
 }

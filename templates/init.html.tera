@@ -25,23 +25,22 @@
     {% endblock heading %}
   </h1>
   <div class="row">
-      <p>
       {% block blurb %}
       {% endblock blurb %}
   </div>
   <div class="row">
     <div class="col center">
-        <a class="btn btn-primary" href="/questions/{{next_q}}">Begin!</a>
+        <a class="btn btn-primary" href="/questions/{{next_q}}">Show me the Questions</a>
     </div>
   </div>
   <div class="row">
-      <h3>Questions:</h3>
-  </div><div class="row">
-      <ul>
-        {% for t in titles %}
-          <li><a href='{{loop.index0}}'>{{t}}</a></li>
-        {% endfor %}
-      </ul>
+      {% block learn %}
+      {% endblock learn %}
+  </div>
+  <div class="row">
+    <div class="col center">
+        <a class="btn btn-primary" href="/questions/{{next_q}}">Begin!</a>
+    </div>
   </div>
 </div>
 
