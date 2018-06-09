@@ -5,6 +5,7 @@ Ranking the row output
 {% endblock heading %}
 
  {% block blurb %}
+ <p>
  These questions check your knowledge of ranking. Ranking can add an ordered number to each of your
  output rows.
  </p><p>
@@ -16,3 +17,77 @@ Ranking the row output
  <a target="_blank" rel="noopener" href='https://docs.microsoft.com/en-us/sql/t-sql/functions/percent-rank-transact-sql'>percent_rank</a>,
  </p>
  {% endblock blurb %}
+
+ {% block learn %}
+ <div class="container">
+
+ <hr style="width:75%"/>
+ <h1> Read on to Learn about Ranking </h1>
+ <h2>Row_number, Rank and Dense_rank</h2>
+ <p>
+These three functions will number each row. Using row_number gives a result that
+must always be unique. Each row is assigned a different value even if
+ they are equal
+ </p>
+ <p>
+The easiest way to explain rank and dense_rank is to imagine ranking the runners
+of a race. Consider: If 2 runners finish in equal 3rd, is the next
+ runner's place 4th (dense_rank) or 5th (rank).
+ </p>
+ <pre>
+ select name, time,
+ row_number() over (order by time),
+ rank() over (order by time),
+ dense_rank() over (order by time)
+ FROM runners order by time
+ </pre>
+
+<table class="table table-striped table-bordered table-sm">
+    <tr><th>name</th><th>time</th><th>row_number</th><th>rank</th><th>dense_rank</th></tr>
+    <tr> <td>andy</td><td>101</td><td>1</td><td>1</td><td>1</td></tr> </tr>
+    <tr> <td>bob</td><td>103</td><td>2</td><td>2</td><td>2</td></tr> </tr>
+    <tr> <td>cedric</td><td>104</td><td>3</td><td>3</td><td>3</td></tr> </tr>
+    <tr> <td>dave</td><td>104</td><td>4</td><td>3</td><td>3</td></tr> </tr>
+    <tr> <td>eric</td><td>108</td><td>5</td><td>5</td><td>4</td></tr> </tr>
+</table>
+
+<hr style="width:75%"/>
+
+<h2> Cume_dist &amp; Percent_rank </h2>
+<p>
+These 2 functions calculate the relative rank of a group of rows
+
+<ul>
+<li>
+percent_rank returns a number from 1 to 0. The highest being 1 and the lowest 0.
+</li>
+
+<li>
+cume_dist will return a number from 1 towards 0 but never 0.
+</li>
+
+Think of it this way: If there are 4 different values do you count down from 1
+in steps of 0.25 (percent_rank) or in steps of 0.2 ensuring that we never hit 0 (cume_dist)
+</ul>
+
+</p>
+
+<pre>
+ select name, time,
+ percent_rank() over (order by time),
+ cume_dist() over (order by time)
+ FROM runners order by time
+</pre>
+<table class="table table-striped table-bordered table-sm">
+    <tr><th>name</th><th>time</th><th>percent_rank</th><th>cume_dist</th></tr>
+    <tr> <td>andy</td><td>101</td><td>0</td><td>0.2</td><tr> </tr>
+    <tr> <td>bob</td><td>103</td><td>0.25</td><td>0.4</td></tr> </tr>
+    <tr> <td>cedric</td><td>104</td><td>0.5</td><td>0.8</td></tr> </tr>
+    <tr> <td>dave</td><td>104</td><td>0.5</td><td>0.8</td></tr> </tr>
+    <tr> <td>eric</td><td>108</td><td>1</td><td>1</td></tr> </tr>
+</table>
+
+
+</div>
+
+ {% endblock learn %}

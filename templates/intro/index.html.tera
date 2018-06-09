@@ -5,14 +5,13 @@
 {% endblock heading %}
 
  {% block blurb %}
+ <p>
  These questions test your core SQL that will be required before attempting the window function questions
  </p>
 
  <p>
  You will require
  <a href='https://www.w3schools.com/sql/sql_groupby.asp' target='_blank'rel="noopener">group by</a>,
- <a href='https://msdn.microsoft.com/en-us/azure/data-lake-analytics/u-sql/array-agg-u-sql' target='_blank' rel="noopener">array_agg</a>
- and <a href='https://modern-sql.com/feature/filter' target='_blank' rel="noopener">filter</a>
  If you are already comfortable with these then feel free to <a href='/questions/over/'>skip ahead</a>
  </p>
 
@@ -20,3 +19,42 @@
  All questions are based around a table containing imaginary cats.
 </p>
  {% endblock blurb %}
+
+ {% block learn %}
+<div class="container">
+ <hr style="width:75%"/>
+<h1>Read on to learn about Group By &amp; Having </h1>
+
+<h2>Group by &amp; Having </h2>
+<p>
+<ul><li>Group by allows us to group data for use in aggregate functions (like sum, count &amp; avg)</li>
+<li>Having allows us to filter data from aggregate functions</li></ul>
+</p>
+<p> Conside this table of runners </p>
+<table class="table-striped table-bordered table-sm">
+    <tr><th>name</th><th>weight</th><th>country</th></tr>
+    <tr><td>andy</td><td>50</td><td>UK</td></tr>
+    <tr><td>bob</td><td>100</td><td>UK</td></tr>
+    <tr><td>cedric</td><td>50</td><td>France</td></tr>
+    <tr><td>dave</td><td>70</td><td>Germany</td></tr> </tr>
+    <tr><td>eric</td><td>70</td><td>France</td></tr> </tr>
+</table>
+<p>
+Consider a query where we wanted to find the average weight of the runners grouped by country.
+This can be done like this:
+</p>
+<pre>
+select
+country,
+avg(weight)
+from runners group by country
+</pre>
+<table class="table-striped table-bordered table-sm">
+    <tr><th>country</th><th>avg_weight</th></tr>
+    <tr><td>UK</td><td>75</td></tr>
+    <tr><td>France</td><td>60</td></tr>
+    <tr><td>Germany</td><td>70</td></tr>
+</table>
+
+</div>
+ {% endblock learn %}

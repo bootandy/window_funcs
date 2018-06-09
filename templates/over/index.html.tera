@@ -4,12 +4,105 @@
       Limiting results
 {% endblock heading %}
 
-
  {% block blurb %}
  <p>
  These questions test your knowledge of the <a target="_blank" rel="noopener" href='https://docs.microsoft.com/en-us/sql/t-sql/queries/select-over-clause-transact-sql'>Over</a> Command.
- </p><p>
- Over is useful in limiting or tweaking the data returned from aggregate functions
  </p>
  {% endblock blurb %}
+
+ {% block learn %}
+ <div class="container">
+ <hr style="width:75%"/>
+
+ <h1> Read on to Learn about Over </h1>
+ <h2>Basic Over</h2>
+ <p>
+ Over is useful in limiting or tweaking the data returned from aggregate functions
+ </p>
+ <p>
+ Think of over as like a running total. For instance in our runners table, we have a query that selects name
+ and average weight of all the runners seen so far when ordered by name.
+ Here average_weight is recomputed on each 'step' of the SQL output
+ </p>
+<pre>
+select
+name, weight,
+avg(weight) over (order by name)
+from runners order by name
+limit 3
+</pre>
+<table class="table-striped table-bordered table-sm">
+    <tr><th>name</th><th>weight</th><th>avg_weight</th></tr>
+    <tr><td>andy</td><td>50</td><td>50</td></tr>
+    <tr><td>bob</td><td>100</td><td>75</td></tr>
+    <tr><td>cedric</td><td>50</td><td>63</td></tr>
+</table>
+
+<hr style='width:75%'/>
+
+<h2> Partition by</h2>
+<p>
+Partition by allows us to further subdivide the preceeding Over Command
+</p>
+<p>
+Here avg_weight is recomputed on every 'step' of the SQL like above
+BUT it is reset when the partition by field changes.
+</p>
+<p>
+In this case we partition by country (think of it as grouping
+by country). There is a different aggregate function for each country
+</p>
+<pre>
+select
+name, weight, country,
+avg(weight) over (partition by country order by name)
+from runners order by name
+</pre>
+
+<table class="table-striped table-bordered table-sm">
+    <tr><th>name</th><th>weight</th><th>country</th><th>avg_weight</th></tr>
+    <tr><td>andy</td><td>50</td><td>UK</td><td>50</td></tr>
+    <tr><td>bob</td><td>100</td><td>UK</td><td>75</td></tr>
+    <tr><td>cedric</td><td>50</td><td>France</td><td>50</td></tr>
+    <tr><td>dave</td><td>70</td><td>Germany</td><td>70</td></tr> </tr>
+    <tr><td>eric</td><td>70</td><td>France</td><td>60</td></tr> </tr>
+</table>
+
+
+<hr style='width:75%'/>
+<h2> Preceeding and Following </h2>
+
+<p>
+Preceeding and Following allow us to perform aggregate functions on the rows
+just before and after the current row.
+</p>
+<p>
+Here we will list the weight and the minimum weight of each runner
+and their neighbours just before and after them.
+<pre>
+min(andy) = min(50, 100)
+min(bob) = min(50, 100, 50)
+min(cedric) = min(100, 50, 70)
+min(dave) = min(50, 70, 70)
+min(eric) = min(70, 70)
+</pre>
+<pre>
+select
+name, weight,
+min(weight) over (order by name ROWS between 1 preceeding and 1 following)
+from runners order by name
+</pre>
+
+<table class="table-striped table-bordered table-sm">
+    <tr><th>name</th><th>weight</th><th>min</th></tr>
+    <tr><td>andy</td><td>50</td><td>50</td></tr>
+    <tr><td>bob</td><td>100</td><td>50</td></tr>
+    <tr><td>cedric</td><td>50</td><td>50</td></tr>
+    <tr><td>dave</td><td>70</td><td>50</td></tr>
+    <tr><td>eric</td><td>70</td><td>70</td></tr>
+</table>
+
+</div>
+
+ {% endblock learn %}
 

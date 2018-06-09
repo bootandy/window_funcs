@@ -6,6 +6,7 @@ Grouping the output
 
 
  {% block blurb %}
+ <p>
 These questions are all about grouping your data together.
 </p><p>
 To complete them you will need to know
@@ -16,3 +17,63 @@ The following commands:
 <a target="_blank" rel="noopener" href='https://docs.microsoft.com/en-us/sql/t-sql/functions/lead-transact-sql'>lead</a>,
 </p>
  {% endblock blurb %}
+
+ {% block learn %}
+ <div class="container">
+
+ <hr style="width:75%"/>
+ <h1> Read on to Learn about Grouping </h1>
+ <h2>Lag and Lead</h2>
+ <p> These functions allow you to examine the next or previous row. You may then compare this value
+ to the current row
+ </p>
+ <p>
+ Consider a race where we wanted to see the time of the person in front of us and the
+ amount of time we beat the person behind us by
+ </p>
+ <pre>
+ select name, time,
+ lag(time, 1) over (order by time) as time_of_person_infront_of_me,
+ lead(time, 1) over (order by time) - time as how_much_i_was_infront_of_ther_person_behind_me
+ FROM runners order by time
+ </pre>
+<table class="table table-striped table-bordered table-sm">
+    <tr><th>name</th><th>time</th><th>time_of_person_infront_of_me</th><th>how_much_i_was_infront_of_ther_person_behind_me</th></tr>
+    <tr><td>andy</td><td>101</td><td>None</td><td>2</td></tr> </tr>
+    <tr><td>bob</td><td>103</td><td>101</td><td>1</td></tr> </tr>
+    <tr><td>cedric</td><td>104</td><td>103</td><td>0</td></tr> </tr>
+    <tr><td>dave</td><td>104</td><td>104</td><td>4</td></tr> </tr>
+    <tr><td>eric</td><td>108</td><td>104</td><td>None</td></tr> </tr>
+</table>
+
+<hr style="width:75%"/>
+
+<h2>nth_value (&amp; first_value) and ntile</h2>
+<p> Unsurprisngly nth_value will return the nth_value, but if we do not specify a range it will return null
+if the current value is less than the nth. If we always want something displayed we need to specify a range
+</p>
+<p> ntile(n) divides the group into n equal partitions and denotes where partition each row is in.
+<p>
+Let us go back to our race and print how much faster a runner needs to go to finish on the podium (1st, 2nd or 3rd),
+the time of the second runner
+and finally we will use ntile(2) to determine if they are in the top half of runners
+</p>
+<pre>
+ select name, time,
+ nth_value(time, 3) over (order by time) - time as to_go_faster_to_make_podium,
+ nth_value(time, 2) over (order by time RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) as time_of_second_runner,
+ ntile(2) over (order by time) as which_half
+ FROM runners order by time;
+</pre>
+
+<table class="table table-striped table-bordered table-sm">
+    <tr><th>name</th><th>time</th><th>to_go_faster_to_make_podium</th><th>time_of_second_runner</th><th>which_half<th></tr>
+    <tr> <td>andy</td><td>101</td><td>None</td><td>103</td><td>1</td></tr> </tr>
+    <tr> <td>bob</td><td>103</td><td>None</td><td>103</td><td>1</td></tr> </tr>
+    <tr> <td>cedric</td><td>104</td><td>0</td><td>103</td><td>1</td></tr> </tr>
+    <tr> <td>dave</td><td>104</td><td>0</td><td>103</td><td>2</td></tr> </tr>
+    <tr> <td>eric</td><td>108</td><td>-4</td><td>103</td><td>2</td></tr> </tr>
+</table>
+</div>
+
+{% endblock learn %}

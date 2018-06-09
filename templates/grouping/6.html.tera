@@ -1,0 +1,22 @@
+{% extends "all_questions" %}
+
+
+{% block question %}
+
+</p><p>
+The cats want to show their weight by breed. The cats agree that they should show the
+second lightest cat's weight (so as not to make other cats feel bad)
+</p><p>
+Print a list of breeds, and the second lightest weight of that breed
+<hr/>
+Return: name, imagined_weight
+<br/>
+Order by: breed
+</p>
+
+{% endblock question %}
+
+{% block on_correct %}
+nth_value() allows us to select the an arbitrary position in a subgroup
+{% endblock on_correct %}
+
