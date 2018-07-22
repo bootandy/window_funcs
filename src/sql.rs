@@ -111,7 +111,7 @@ static GROUPINGS_5_HELP: &'static str =
 static GROUPINGS_6_SQL: &'static str = "
 select distinct(breed),
 nth_value(weight, 2) over (
-    partition by breed order by weight desc RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+    partition by breed order by weight RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
 ) as imagined_weight
 from cats order by breed;";
 static GROUPINGS_6_HELP: &'static str =
