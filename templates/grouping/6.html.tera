@@ -9,7 +9,7 @@ second lightest cat's weight (so as not to make other cats feel bad)
 </p><p>
 Print a list of breeds, and the second lightest weight of that breed
 <hr/>
-Return: name, imagined_weight
+Return: breed, imagined_weight
 <br/>
 Order by: breed
 </p>
