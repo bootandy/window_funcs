@@ -42,7 +42,7 @@ limit 3
 
 <h2> Partition by</h2>
 <p>
-Partition by allows us to further subdivide the preceeding Over Command
+Partition by allows us to further subdivide the preceding Over Command
 </p>
 <p>
 Here avg_weight is recomputed on every 'step' of the SQL like above
@@ -70,10 +70,10 @@ from runners order by name
 
 
 <hr style='width:75%'/>
-<h2> Preceeding and Following </h2>
+<h2> Preceding and Following </h2>
 
 <p>
-Preceeding and Following allow us to perform aggregate functions on the rows
+Preceding and Following allow us to perform aggregate functions on the rows
 just before and after the current row.
 </p>
 <p>
@@ -89,7 +89,7 @@ min(eric) = min(70, 70)
 <pre>
 select
 name, weight,
-min(weight) over (order by name ROWS between 1 preceeding and 1 following)
+min(weight) over (order by name ROWS between 1 preceding and 1 following)
 from runners order by name
 </pre>
 
