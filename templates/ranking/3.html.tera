@@ -4,7 +4,7 @@
 {% block question %}
 
 <p>
-Each cat would like to know what percentage of cats weight less than it
+Each cat would like to know what percentage of cats weigh less than it
 <hr/>
 Return: name, weight, percent
 <br/>
