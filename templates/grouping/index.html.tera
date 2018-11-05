@@ -52,7 +52,7 @@ The following commands:
 <p> Unsurprisngly nth_value will return the nth_value, but if we do not specify a range it will return null
 if the current value is less than the nth. If we always want something displayed we need to specify a range
 </p>
-<p> ntile(n) divides the group into n equal partitions and denotes where partition each row is in.
+<p> ntile(n) divides the group into n equal partitions and denotes which partition each row is in.
 <p>
 Let us go back to our race and print how much faster a runner needs to go to finish on the podium (1st, 2nd or 3rd),
 the time of the second runner
