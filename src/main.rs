@@ -1,10 +1,12 @@
-#![feature(plugin, decl_macro, custom_derive)]
+#![feature(plugin, decl_macro)]
+#![feature(proc_macro_hygiene)]
 #![feature(nll)]
-#![plugin(rocket_codegen)]
+// #![plugin(rocket_codegen)]
 
 extern crate r2d2;
 extern crate r2d2_postgres;
 extern crate regex;
+#[macro_use]
 extern crate rocket;
 extern crate rocket_contrib;
 #[macro_use]
@@ -14,7 +16,7 @@ extern crate tera;
 use std::cmp;
 use std::path::{Path, PathBuf};
 
-use rocket_contrib::Template;
+use rocket_contrib::templates::Template;
 use rocket::http::Status;
 use rocket::outcome::Outcome::*;
 use rocket::request::{Form, FromRequest, Outcome, Request};
@@ -29,7 +31,7 @@ macro_rules! regex {
 }
 
 //forms
-#[derive(Debug, FromForm)]
+#[derive(Debug)]
 struct FormInput {
     sql_to_run: String,
 }

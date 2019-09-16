@@ -1,8 +1,8 @@
 extern crate r2d2;
 extern crate r2d2_postgres;
-extern crate rocket;
-extern crate rocket_contrib;
+extern crate rocket_include_tera;
 extern crate serde_json;
+extern crate rocket;
 
 use std::ops::Deref;
 
