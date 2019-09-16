@@ -114,8 +114,8 @@ impl TemplateDetails {
 impl<'a, 'r> FromRequest<'a, 'r> for TemplateDetails {
     type Error = ();
     fn from_request(request: &'a Request<'r>) -> Outcome<Self, ()> {
-        let template_category = request.get_param::<String>(0).unwrap_or_else(|_| "".into());
-        let template_id = request.get_param::<String>(1).unwrap_or_else(|_| "".into());
+        let template_category = request.get_param::<String>(0).and_then(|r| r.ok()).unwrap_or("".into());
+        let template_id = request.get_param::<String>(1).and_then(|r| r.ok()).unwrap_or("".into());
 
         match sql::get_sql_for_q(template_category.as_ref(), template_id.as_ref()) {
             Some((sql, help_link, title, keywords)) => Success(TemplateDetails {
@@ -246,16 +246,12 @@ fn post_db(
     _question: String,
     template: TemplateDetails,
     conn: db::DbConn,
-    sink: Result<Form<FormInput>, Option<String>>,
+    sink: Form<FormInput>
 ) -> Template {
-    let (sql_command, result) = match sink {
-        Ok(form) => {
-            let sql_command = form.get().sql_to_run.to_string();
-            let result = _verify_then_run_sql(sql_command.as_ref(), &conn);
-            (sql_command, result)
-        }
-        Err(Some(f)) => ("".into(), vec![vec![f.to_string()]]),
-        Err(None) => ("".into(), vec![vec!["".to_string()]]),
+    let (sql_command, result) = {
+        let sql_command = sink.sql_to_run.to_string();
+        let result = _verify_then_run_sql(sql_command.as_ref(), &conn);
+        (sql_command, result)
     };
 
     // log sql to stdout so we can see how people break it.
