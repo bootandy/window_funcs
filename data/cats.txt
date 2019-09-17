@@ -1,3 +1,6 @@
+# First create user: database rusty
+# After running set password for user named rusty
+
 create schema windowfunctions;
 
 create table windowfunctions.cats (name varchar, breed varchar, weight float, color varchar, age int);

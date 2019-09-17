@@ -18,7 +18,6 @@ use std::path::{Path, PathBuf};
 
 use rocket_contrib::templates::Template;
 use rocket::http::Status;
-use rocket::outcome::Outcome::*;
 use rocket::request::{Form, FromRequest, Outcome, Request};
 use rocket::response::NamedFile;
 use tera::Context;
@@ -31,7 +30,7 @@ macro_rules! regex {
 }
 
 //forms
-#[derive(Debug)]
+#[derive(Debug, FromForm)]
 struct FormInput {
     sql_to_run: String,
 }
@@ -113,12 +112,12 @@ impl TemplateDetails {
 
 impl<'a, 'r> FromRequest<'a, 'r> for TemplateDetails {
     type Error = ();
-    fn from_request(request: &'a Request<'r>) -> Outcome<Self, ()> {
-        let template_category = request.get_param::<String>(0).and_then(|r| r.ok()).unwrap_or("".into());
-        let template_id = request.get_param::<String>(1).and_then(|r| r.ok()).unwrap_or("".into());
+    fn from_request(request: &'a Request<'r>) -> Outcome<TemplateDetails, ()> {
+        let template_category = request.get_param::<String>(1).and_then(|r| r.ok()).unwrap_or("".into());
+        let template_id = request.get_param::<String>(2).and_then(|r| r.ok()).unwrap_or("".into());
 
         match sql::get_sql_for_q(template_category.as_ref(), template_id.as_ref()) {
-            Some((sql, help_link, title, keywords)) => Success(TemplateDetails {
+            Some((sql, help_link, title, keywords)) => Outcome::Success(TemplateDetails {
                 id: template_id.to_string(),
                 category: template_category.to_string(), //idea: move these to str s
                 sql: sql.to_string(),
@@ -126,7 +125,7 @@ impl<'a, 'r> FromRequest<'a, 'r> for TemplateDetails {
                 title: title.to_string(),
                 keywords: keywords.into_iter().map(|s| s.to_string()).collect(),
             }),
-            None => Failure((Status::BadRequest, ())),
+            None => Outcome::Failure((Status::BadRequest, ())),
         }
     }
 }
@@ -281,8 +280,8 @@ fn old_question_link(category: String) -> Template {
     let (prev_q, next_q) = _get_next_and_prev(real_cat, "");
     let context = TemplateContextHeading {
         titles,
-        next_q: next_q,
-        prev_q: prev_q,
+        next_q,
+        prev_q,
         category: real_cat.to_string(),
     };
     Template::render(real_cat.to_string() + "/index", context)

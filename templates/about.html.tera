@@ -44,6 +44,16 @@
     </ul>
     </p>
 
+    <h3>Links to learn more about Postgres</h3>
+    <ul>
+      <li>
+        <a href="https://www.guru99.com/introduction-postgresql.html">Introduction to Postgres</a>
+      </li><li>
+        <a href="https://pgexercises.com/">PG Exercises </a>
+      </li>
+    </ul>
+    </p>
+
     <a href="#db"> </a>
     <h3>Does my database support window functions?</h3>
     <p>
