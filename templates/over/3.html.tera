@@ -3,7 +3,7 @@
 
 {% block question %}
 <p>
-The cats must by ordered by weight descending and will enter an elevator one by one.
+The cats must be ordered by weight descending and will enter an elevator one by one.
 We would like to know what the running total weight is.
 </p><p>
 If two cats have the same weight they must enter separately
