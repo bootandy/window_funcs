@@ -3,7 +3,7 @@
 
 {% block question %}
 <p>
-The cats must by ordered by name and will enter an elevator one by one.
+The cats must be ordered by name and will enter an elevator one by one.
 We would like to know what the running total weight is.
 <hr/>
 Return: name, running total weight
