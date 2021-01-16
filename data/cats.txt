@@ -1,6 +1,8 @@
 # First create user: database rusty
 # After running set password for user named rusty
 
+###### Very imporant you run the below as the ROOT user not as rusty. ########
+
 create schema windowfunctions;
 
 create table windowfunctions.cats (name varchar, breed varchar, weight float, color varchar, age int);
@@ -23,9 +25,9 @@ REVOKE ALL ON schema pg_catalog, public, information_schema from public;
 
 create user rusty;
 GRANT USAGE ON SCHEMA windowfunctions TO rusty;
+REVOKE ALL  ON ALL TABLES IN SCHEMA windowfunctions FROM rusty;
 GRANT SELECT ON ALL TABLES IN SCHEMA windowfunctions TO rusty;
 ALTER user rusty set search_path TO windowfunctions;
 
 GRANT USAGE ON SCHEMA pg_catalog to rusty;
 GRANT SELECT ON pg_catalog.pg_cast TO rusty;
-
