@@ -4,22 +4,21 @@ extern crate rocket_include_tera;
 extern crate serde_json;
 extern crate rocket;
 
-use std::ops::Deref;
-
 use rocket::request::{self, FromRequest, Request, State};
 use rocket::outcome::Outcome::*;
 
 use rocket::http::Status;
-use r2d2_postgres::{PostgresConnectionManager, TlsMode};
+use r2d2_postgres::{postgres::NoTls, PostgresConnectionManager};
 use r2d2::PooledConnection;
 
-type Pool = r2d2::Pool<PostgresConnectionManager>;
+type Pool = r2d2::Pool<PostgresConnectionManager<NoTls>>;
 
 pub fn init_pool() -> Pool {
-    let manager = PostgresConnectionManager::new("rusty://rusty:rusty@localhost", TlsMode::None).unwrap();
+    let config = "host=localhost user=rusty password=rusty".parse().unwrap();
+    let manager = PostgresConnectionManager::new(config, NoTls);
     r2d2::Pool::new(manager).unwrap()
 }
-pub struct DbConn(pub PooledConnection<PostgresConnectionManager>);
+pub struct DbConn(pub PooledConnection<PostgresConnectionManager<NoTls>>);
 
 /// Attempts to retrieve a single connection from the managed database pool. If
 /// no pool is currently managed, fails with an `InternalServerError` status. If
@@ -33,14 +32,5 @@ impl<'a, 'r> FromRequest<'a, 'r> for DbConn {
             Ok(conn) => Success(DbConn(conn)),
             Err(_) => Failure((Status::ServiceUnavailable, ())),
         }
-    }
-}
-
-// For the convenience of using an &DbConn as an &Connection. So we dont have to do conn.0
-impl Deref for DbConn {
-    type Target = PooledConnection<PostgresConnectionManager>;
-
-    fn deref(&self) -> &Self::Target {
-        &self.0
     }
 }

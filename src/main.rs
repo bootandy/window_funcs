@@ -21,6 +21,8 @@ use rocket::http::Status;
 use rocket::request::{Form, FromRequest, Outcome, Request};
 use rocket::response::NamedFile;
 
+use std::collections::HashMap;
+
 mod db;
 mod sql;
 
@@ -130,14 +132,20 @@ impl<'a, 'r> FromRequest<'a, 'r> for TemplateDetails {
 }
 
 fn _context_builder(
-    conn: &db::DbConn,
+    conn: db::DbConn,
     t: &TemplateDetails,
     sql_result: Vec<Vec<String>>,
     sql_to_run: String,
 ) -> TemplateContext {
-    let sql_correct_result = _run_sql(conn, t.sql.as_ref());
+    let (_, sql_correct_result ) = _run_sql(conn, t.sql.as_ref());
     let (prev_q, next_q) = _get_next_and_prev(t.category.as_ref(), t.id.as_ref());
-    let is_correct = sql_result[1..] == sql_correct_result[1..];
+    let is_correct =
+    if sql_result.len() > 0 {
+        sql_result[1..] == sql_correct_result[1..]
+    }
+    else{
+        false
+    };
     let used_correct_word = t.keywords
         .iter()
         .any(|k| sql_to_run.to_lowercase().contains(k));
@@ -165,57 +173,65 @@ fn _format_type<T: ToString>(t: Option<T>) -> String {
     }
 }
 
-fn _run_sql(conn: &db::DbConn, sql_command: &str) -> Vec<Vec<String>> {
+fn _run_sql(mut conn: db::DbConn, sql_command: &str) -> (db::DbConn, Vec<Vec<String>>) {
     let mut result = vec![];
-    let query_result = conn.query(sql_command, &[]);
+    let query_result = conn.0.query(sql_command, &[]);
     match query_result {
         Ok(query_results) => {
-            result.push(
-                query_results
-                    .columns()
-                    .into_iter()
-                    .map(|c| c.name().to_string())
-                    .collect(),
-            );
+            match query_results.first() {
+                Some(row) => {
+                    let cols = row.columns().into_iter();
+                    result.push(
+                        cols
+                            .map(|c| c.name().to_string())
+                            .collect(),
+                    );
 
-            for row in &query_results {
-                let result_row = row.columns()
-                    .into_iter()
-                    .enumerate()
-                    .map(|(i, col)| match col.type_().name() {
-                        "int8" => {
-                            let temp: Option<i64> = row.get(i);
-                            _format_type(temp)
-                        }
-                        "int4" => {
-                            let temp: Option<i32> = row.get(i);
-                            _format_type(temp)
-                        }
-                        "float8" => {
-                            let temp: Option<f64> = row.get(i);
-                            match temp {
-                                None => "Null".to_string(),
-                                Some(x) => format!("{:.1}", x),
-                            }
-                        }
-                        "varchar" | "text" => {
-                            let temp: Option<String> = row.get(i);
-                            _format_type(temp)
-                        }
-                        "_varchar" => {
-                            let temp: Option<Vec<String>> = row.get(i);
-                            match temp {
-                                None => "Null".to_string(),
-                                Some(x) => x.join(","),
-                            }
-                        }
-                        x => {
-                            println!("Got unknown type: {:?}", x);
-                            format!("Add conversion for {:?}", x)
-                        }
-                    })
-                    .collect();
-                result.push(result_row);
+                    for row in &query_results {
+                        let result_row = row.columns()
+                            .into_iter()
+                            .enumerate()
+                            .map(|(i, col)| match col.type_().name() {
+                                "int8" => {
+                                    let temp: Option<i64> = row.get(i);
+                                    _format_type(temp)
+                                }
+                                "int4" => {
+                                    let temp: Option<i32> = row.get(i);
+                                    _format_type(temp)
+                                }
+                                "float8" => {
+                                    let temp: Option<f64> = row.get(i);
+                                    match temp {
+                                        None => "Null".to_string(),
+                                        Some(x) => format!("{:.1}", x),
+                                    }
+                                }
+                                "varchar" | "text" => {
+                                    let temp: Option<String> = row.get(i);
+                                    _format_type(temp)
+                                }
+                                "_varchar" => {
+                                    let temp: Option<Vec<String>> = row.get(i);
+                                    match temp {
+                                        None => "Null".to_string(),
+                                        Some(x) => x.join(","),
+                                    }
+                                }
+                                x => {
+                                    println!("Got unknown type: {:?}", x);
+                                    format!("Add conversion for {:?}", x)
+                                }
+                            })
+                            .collect();
+                        result.push(result_row);
+                    }
+
+                },
+                None => {
+
+                }
+
             }
         }
         Err(error) => {
@@ -223,16 +239,16 @@ fn _run_sql(conn: &db::DbConn, sql_command: &str) -> Vec<Vec<String>> {
             result.push(vec![error.to_string()])
         }
     }
-    result
+    (conn, result)
 }
 
-fn _verify_then_run_sql<'a>(s: &'a str, conn: &db::DbConn) -> Vec<Vec<String>> {
+fn _verify_then_run_sql<'a>(s: &'a str, conn: db::DbConn) -> (db::DbConn, Vec<Vec<String>>) {
     if regex!(r###"[^\w]pg_"###).is_match(s) {
-        vec![vec!["Do not use pg_".into()]]
+        (conn, vec![vec!["Do not use pg_".into()]])
     } else if regex!(r###"[^\w]statement_timeout"###).is_match(s) {
-        vec![vec!["Do not use statement_timeout".into()]]
+        (conn, vec![vec!["Do not use statement_timeout".into()]])
     } else if regex!(r###"[^\w]version[^\w]"###).is_match(s) {
-        vec![vec!["Do not use version".into()]]
+        (conn, vec![vec!["Do not use version".into()]])
     } else {
         _run_sql(conn, s)
     }
@@ -246,16 +262,19 @@ fn post_db(
     conn: db::DbConn,
     sink: Form<FormInput>
 ) -> Template {
-    let (sql_command, result) = {
+    let (sql_command, result, conn2) = {
         let sql_command = sink.sql_to_run.to_string();
-        let result = _verify_then_run_sql(sql_command.as_ref(), &conn);
-        (sql_command, result)
+        let (conn2, result) = _verify_then_run_sql(sql_command.as_ref(), conn);
+        (sql_command, result, conn2)
     };
 
     // log sql to stdout so we can see how people break it.
     println!("query: {:?}", sql_command.replace("\r\n", " "));
-    let c = &_context_builder(&conn, &template, result, sql_command);
+    let c = &_context_builder(conn2, &template, result, sql_command);
     Template::render(template.get_path(), &c)
+
+    // let c: HashMap<String, String> = HashMap::new();
+    // Template::render(template.get_path(), &c)
 }
 
 #[get("/questions/<_type>/<_question>")]
@@ -268,7 +287,7 @@ fn get_db(
     let sql = "select \n*\n from cats ";
     // Forcing an empty result encourages people to click run the first time to help engagement.
     let result = vec![vec![]];
-    let c = _context_builder(&conn, &template, result, sql.to_string());
+    let c = _context_builder(conn, &template, result, sql.to_string());
     Template::render(template.get_path(), &c)
 }
 
@@ -300,8 +319,6 @@ fn get_robots() -> Option<NamedFile> {
 fn static_files(file: PathBuf) -> Option<NamedFile> {
     NamedFile::open(Path::new("static/").join(file)).ok()
 }
-
-use std::collections::HashMap;
 
 #[get("/about")]
 fn get_about() -> Template {
