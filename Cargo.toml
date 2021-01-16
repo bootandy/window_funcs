@@ -4,17 +4,17 @@ version = "0.1.0"
 authors = ["bootandy <bootandy@gmail.com>"]
 
 [dependencies]
-rocket-include-tera = "0.4.4"
-rocket = "0.4.2"
-rocket_codegen = "0.4.2"
+rocket-include-tera = "0.4.20"
+rocket = "0.4.6"
+rocket_codegen = "0.4.6"
 r2d2 = "^0.8"
 r2d2_postgres = "^0.14"
 postgres = "^0.15"
 serde = "^1.0"
 serde_derive = "^1.0"
 serde_json = "^1.0"
-tera = "^0.11"
-regex = "^0.2"
+tera = "1.6"
+regex = "1.4"
 
 [dependencies.rocket_contrib]
 version = "0.4.2"

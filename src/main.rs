@@ -20,7 +20,6 @@ use rocket_contrib::templates::Template;
 use rocket::http::Status;
 use rocket::request::{Form, FromRequest, Outcome, Request};
 use rocket::response::NamedFile;
-use tera::Context;
 
 mod db;
 mod sql;
@@ -302,14 +301,18 @@ fn static_files(file: PathBuf) -> Option<NamedFile> {
     NamedFile::open(Path::new("static/").join(file)).ok()
 }
 
+use std::collections::HashMap;
+
 #[get("/about")]
 fn get_about() -> Template {
-    Template::render("about", Context::new())
+    let context: HashMap<String, String> = HashMap::new();
+    Template::render("about", context)
 }
 
 #[get("/")]
 fn get_home() -> Template {
-    Template::render("home", Context::new())
+    let context: HashMap<String, String> = HashMap::new();
+    Template::render("home",context)
 }
 
 fn rocket() -> rocket::Rocket {
