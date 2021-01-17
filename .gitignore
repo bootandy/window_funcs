@@ -6,3 +6,5 @@
 *.swp
 
 Cargo.lock
+
+.idea/
