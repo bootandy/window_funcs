@@ -7,5 +7,5 @@ export ROCKET_ENV="prod"
 echo "path is: $PATH"
 #exec cargo run --release .
 
-# Important: Copy new binary from ./releases/target/window_funcs to . when rebuilding
+# Important: Copy new binary from ./target/releases/window_funcs to . when rebuilding
 ./window_funcs --release
