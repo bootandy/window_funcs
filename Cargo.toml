@@ -6,15 +6,15 @@ authors = ["bootandy <bootandy@gmail.com>"]
 [dependencies]
 rocket-include-tera = "0.4.20"
 rocket = "0.4.6"
-rocket_codegen = "0.4.6"
+rocket_codegen = "0.4"
 r2d2 = "^0.8"
 r2d2_postgres = "0.18"
 postgres = "0.19"
 serde = "^1.0"
 serde_derive = "^1.0"
 serde_json = "^1.0"
-tera = "1.6"
-regex = "1.4"
+tera = "1.11"
+regex = "1.5"
 
 [dependencies.rocket_contrib]
 version = "0.4.2"
