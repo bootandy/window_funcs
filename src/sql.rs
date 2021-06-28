@@ -1,123 +1,123 @@
-static INTRO_0_SQL: &'static str = "
+static INTRO_0_SQL: &str = "
 select
  age, sum(weight) as total_weight
 from cats group by age having sum(weight) > 12 order by age";
-static INTRO_0_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-sql/queries/select-group-by-transact-sql#d-use-a-group-by-clause-with-a-having-clause";
+static INTRO_0_HELP: &str = "https://docs.microsoft.com/en-us/sql/t-sql/queries/select-group-by-transact-sql#d-use-a-group-by-clause-with-a-having-clause";
 
-static OVER_0_SQL: &'static str = "select name, sum(weight)
+static OVER_0_SQL: &str = "select name, sum(weight)
 over (order by name) as running_total_weight
 from cats order by name";
-static OVER_0_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-sql/queries/select-over-clause-transact-sql#b-using-the-over-clause-with-aggregate-functions";
+static OVER_0_HELP: &str = "https://docs.microsoft.com/en-us/sql/t-sql/queries/select-over-clause-transact-sql#b-using-the-over-clause-with-aggregate-functions";
 
-static OVER_1_SQL: &'static str = "
+static OVER_1_SQL: &str = "
 select name, breed,
 sum(weight) over (partition by breed order by name) as running_total_weight
 from cats ";
-static OVER_1_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-sql/queries/select-over-clause-transact-sql#b-using-the-over-clause-with-aggregate-functions";
+static OVER_1_HELP: &str = "https://docs.microsoft.com/en-us/sql/t-sql/queries/select-over-clause-transact-sql#b-using-the-over-clause-with-aggregate-functions";
 
-static OVER_2_SQL: &'static str = "
+static OVER_2_SQL: &str = "
 select name, weight,
 avg(weight) over (order by weight ROWS between 1 preceding and 1 following) as average_weight
 from cats order by weight";
-static OVER_2_HELP: &'static str =
+static OVER_2_HELP: &str =
     "https://docs.microsoft.com/en-us/sql/t-sql/queries/select-over-clause-transact-sql#arguments";
 
-static OVER_3_SQL: &'static str = "
+static OVER_3_SQL: &str = "
 select name,
 sum(weight) over (order by weight DESC ROWS between unbounded preceding and current row) as running_total_weight
 from cats order by running_total_weight";
-static OVER_3_HELP: &'static str =
+static OVER_3_HELP: &str =
     "https://docs.microsoft.com/en-us/sql/t-sql/queries/select-over-clause-transact-sql#arguments";
 
-static RANKINGS_0_SQL: &'static str = "
+static RANKINGS_0_SQL: &str = "
 select row_number() over (order by color,name) as unique_number,
 name, color
 from cats";
-static RANKINGS_0_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-sql/functions/row-number-transact-sql#b-returning-the-row-number-for-salespeople";
+static RANKINGS_0_HELP: &str = "https://docs.microsoft.com/en-us/sql/t-sql/functions/row-number-transact-sql#b-returning-the-row-number-for-salespeople";
 
-static RANKINGS_1_SQL: &'static str = "
+static RANKINGS_1_SQL: &str = "
 select
 rank() over (order by weight desc) as ranking,
 weight, name
  from cats
  order by ranking, name";
-static RANKINGS_1_HELP: &'static str = "https://docs.microsoft.com/en-us/sql/t-sql/functions/rank-transact-sql#a-ranking-rows-within-a-partition";
+static RANKINGS_1_HELP: &str = "https://docs.microsoft.com/en-us/sql/t-sql/functions/rank-transact-sql#a-ranking-rows-within-a-partition";
 
-static RANKINGS_2_SQL: &'static str = "
+static RANKINGS_2_SQL: &str = "
 select
 dense_rank() over (order by age DESC) as r, name,age
  from cats order by r, name";
-static RANKINGS_2_HELP: &'static str =
+static RANKINGS_2_HELP: &str =
     "https://docs.microsoft.com/en-us/sql/t-sql/functions/dense-rank-transact-sql#examples";
 
-static RANKINGS_3_SQL: &'static str = "
+static RANKINGS_3_SQL: &str = "
 select name, weight,
 percent_rank() over (order by weight) * 100 as percent
 from cats order by weight";
-static RANKINGS_3_HELP: &'static str =
+static RANKINGS_3_HELP: &str =
     "https://docs.microsoft.com/en-us/sql/t-sql/functions/percent-rank-transact-sql";
 
-static RANKINGS_4_SQL: &'static str = "
+static RANKINGS_4_SQL: &str = "
 select name, weight,
 cast(cume_dist() over (order by weight) * 100 as integer) as percent
 from cats order by weight";
-static RANKINGS_4_HELP: &'static str =
+static RANKINGS_4_HELP: &str =
     "https://docs.microsoft.com/en-us/sql/t-sql/functions/cume-dist-transact-sql";
 
-static GROUPINGS_0_SQL: &'static str = "
+static GROUPINGS_0_SQL: &str = "
 select
  name, weight, ntile(4) over ( order by weight) as weight_quartile
 from  cats
 order by weight
 ";
-static GROUPINGS_0_HELP: &'static str =
+static GROUPINGS_0_HELP: &str =
     "https://docs.microsoft.com/en-us/sql/t-sql/functions/ntile-transact-sql#examples";
 
-static GROUPINGS_1_SQL: &'static str = "
+static GROUPINGS_1_SQL: &str = "
 select name, weight,
    coalesce(weight - lag(weight, 1) over (order by weight), 0) as weight_to_lose
 FROM cats order by weight";
-static GROUPINGS_1_HELP: &'static str =
+static GROUPINGS_1_HELP: &str =
     "https://docs.microsoft.com/en-us/sql/t-sql/functions/lag-transact-sql#examples";
 
-static GROUPINGS_2_SQL: &'static str = "
+static GROUPINGS_2_SQL: &str = "
     select name, breed, weight,
 coalesce(weight - lag(weight, 1) over (partition by breed order by weight), 0) as weight_to_lose
 from cats order by weight, name ";
-static GROUPINGS_2_HELP: &'static str =
+static GROUPINGS_2_HELP: &str =
     "https://docs.microsoft.com/en-us/sql/t-sql/functions/lag-transact-sql#examples";
 
-static GROUPINGS_3_SQL: &'static str = "
+static GROUPINGS_3_SQL: &str = "
 select name, color,
 first_value(weight) over (partition by color order by weight) as weight_by_color
 from cats order by color, name";
-static GROUPINGS_3_HELP: &'static str =
+static GROUPINGS_3_HELP: &str =
     "https://docs.microsoft.com/en-us/sql/t-sql/functions/first-value-transact-sql#examples";
 
-static GROUPINGS_4_SQL: &'static str = "
+static GROUPINGS_4_SQL: &str = "
 select name, weight, breed,
 coalesce(cast(lead(weight, 1) over (partition by breed order by weight) as varchar), 'fattest cat') as next_heaviest
 from cats order by weight";
-static GROUPINGS_4_HELP: &'static str =
+static GROUPINGS_4_HELP: &str =
     "https://docs.microsoft.com/en-us/sql/t-sql/functions/lead-transact-sql#examples";
 
-static GROUPINGS_5_SQL: &'static str = "
+static GROUPINGS_5_SQL: &str = "
 select name, weight,
 coalesce(nth_value(weight, 4) over (order by weight), 99.9) as imagined_weight
 from cats order by weight";
-static GROUPINGS_5_HELP: &'static str =
+static GROUPINGS_5_HELP: &str =
     "https://docs.oracle.com/cloud/latest/db112/SQLRF/functions114.htm#SQLRF30031";
 
-static GROUPINGS_6_SQL: &'static str = "
+static GROUPINGS_6_SQL: &str = "
 select distinct(breed),
 nth_value(weight, 2) over (
     partition by breed order by weight RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
 ) as imagined_weight
 from cats order by breed;";
-static GROUPINGS_6_HELP: &'static str =
+static GROUPINGS_6_HELP: &str =
     "https://docs.oracle.com/cloud/latest/db112/SQLRF/functions114.htm#SQLRF30031";
 
-static OTHER_0_SQL: &'static str = "
+static OTHER_0_SQL: &str = "
 select name, weight,
        ntile(2) over ntile_window as by_half,
        ntile(3) over ntile_window as thirds,
@@ -126,45 +126,43 @@ select name, weight,
               window ntile_window AS
                        ( ORDER BY weight)
      order by weight, name";
-static OTHER_0_HELP: &'static str = "http://dcx.sap.com/1200/en/dbreference/window-statement.html";
+static OTHER_0_HELP: &str = "http://dcx.sap.com/1200/en/dbreference/window-statement.html";
 
-static OTHER_1_SQL: &'static str = "
+static OTHER_1_SQL: &str = "
 select color,
 array_agg(name) as names
 from cats group by color
 order by color desc";
-static OTHER_1_HELP: &'static str =
+static OTHER_1_HELP: &str =
     "https://lorenstewart.me/2017/12/03/postgresqls-array_agg-function/";
 
-static OTHER_2_SQL: &'static str = "
+static OTHER_2_SQL: &str = "
 select breed,
 avg(weight) as average_weight,
 avg(weight) filter (where age > 1) average_old_weight
 from cats group by breed order by breed";
-static OTHER_2_HELP: &'static str = "https://modern-sql.com/feature/filter";
+static OTHER_2_HELP: &str = "https://modern-sql.com/feature/filter";
 
-
-static INTRO_0_TITLE: &'static str = "Refresher on Aggregates";
-static OVER_0_TITLE: &'static str = "Running Totals";
-static OVER_1_TITLE: &'static str = "Partitioned Running Totals";
-static OVER_2_TITLE: &'static str = "Examining nearby rows";
-static OVER_3_TITLE: &'static str = "Correct Running Total";
-static RANKINGS_0_TITLE: &'static str = "Unique Numbers";
-static RANKINGS_1_TITLE: &'static str = "Ordering";
-static RANKINGS_2_TITLE: &'static str = "Further Ordering";
-static RANKINGS_3_TITLE: &'static str = "Percentages";
-static RANKINGS_4_TITLE: &'static str = "Percentiles";
-static GROUPINGS_0_TITLE: &'static str = "Quartiles";
-static GROUPINGS_1_TITLE: &'static str = "Compare to Row";
-static GROUPINGS_2_TITLE: &'static str = "Compare to Row Part 2";
-static GROUPINGS_3_TITLE: &'static str = "First of each Group";
-static GROUPINGS_4_TITLE: &'static str = "More Row Comparisons";
-static GROUPINGS_5_TITLE: &'static str = "Special Case Grouping";
-static GROUPINGS_6_TITLE: &'static str = "More Grouping";
-static OTHER_0_TITLE: &'static str = "Using Window Clause";
-static OTHER_1_TITLE: &'static str = "Aggregating data";
-static OTHER_2_TITLE: &'static str = "Limiting Large Results";
-
+static INTRO_0_TITLE: &str = "Refresher on Aggregates";
+static OVER_0_TITLE: &str = "Running Totals";
+static OVER_1_TITLE: &str = "Partitioned Running Totals";
+static OVER_2_TITLE: &str = "Examining nearby rows";
+static OVER_3_TITLE: &str = "Correct Running Total";
+static RANKINGS_0_TITLE: &str = "Unique Numbers";
+static RANKINGS_1_TITLE: &str = "Ordering";
+static RANKINGS_2_TITLE: &str = "Further Ordering";
+static RANKINGS_3_TITLE: &str = "Percentages";
+static RANKINGS_4_TITLE: &str = "Percentiles";
+static GROUPINGS_0_TITLE: &str = "Quartiles";
+static GROUPINGS_1_TITLE: &str = "Compare to Row";
+static GROUPINGS_2_TITLE: &str = "Compare to Row Part 2";
+static GROUPINGS_3_TITLE: &str = "First of each Group";
+static GROUPINGS_4_TITLE: &str = "More Row Comparisons";
+static GROUPINGS_5_TITLE: &str = "Special Case Grouping";
+static GROUPINGS_6_TITLE: &str = "More Grouping";
+static OTHER_0_TITLE: &str = "Using Window Clause";
+static OTHER_1_TITLE: &str = "Aggregating data";
+static OTHER_2_TITLE: &str = "Limiting Large Results";
 
 pub fn get_sql_for_q<'a>(
     folder: &'a str,
@@ -256,7 +254,7 @@ pub fn get_sql_for_q<'a>(
             GROUPINGS_6_SQL,
             GROUPINGS_6_HELP,
             GROUPINGS_6_TITLE,
-            vec!["nth_value" ],
+            vec!["nth_value"],
         )),
         ("other", "0") => Some((OTHER_0_SQL, OTHER_0_HELP, OTHER_0_TITLE, vec!["window"])),
         ("other", "1") => Some((OTHER_1_SQL, OTHER_1_HELP, OTHER_1_TITLE, vec!["array_agg"])),
@@ -265,7 +263,7 @@ pub fn get_sql_for_q<'a>(
     }
 }
 
-static CATEGORIES: &'static [&'static str] = &["intro", "over", "ranking", "grouping", "other"];
+static CATEGORIES: & [&str] = &["intro", "over", "ranking", "grouping", "other"];
 
 pub fn get_prev(s: &str) -> &str {
     _get_next_or_prev(s, -1)
@@ -306,7 +304,8 @@ pub fn get_titles_for(s: &str) -> Vec<&str> {
             RANKINGS_2_TITLE,
             RANKINGS_3_TITLE,
             RANKINGS_4_TITLE,
-        ].to_vec(),
+        ]
+        .to_vec(),
         "grouping" => [
             GROUPINGS_0_TITLE,
             GROUPINGS_1_TITLE,
@@ -314,7 +313,8 @@ pub fn get_titles_for(s: &str) -> Vec<&str> {
             GROUPINGS_3_TITLE,
             GROUPINGS_4_TITLE,
             GROUPINGS_5_TITLE,
-        ].to_vec(),
+        ]
+        .to_vec(),
         "other" => [OTHER_0_TITLE, OTHER_1_TITLE, OVER_2_TITLE].to_vec(),
         _ => [].to_vec(),
     }

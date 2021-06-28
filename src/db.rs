@@ -1,15 +1,15 @@
 extern crate r2d2;
 extern crate r2d2_postgres;
+extern crate rocket;
 extern crate rocket_include_tera;
 extern crate serde_json;
-extern crate rocket;
 
-use rocket::request::{self, FromRequest, Request, State};
 use rocket::outcome::Outcome::*;
+use rocket::request::{self, FromRequest, Request, State};
 
-use rocket::http::Status;
-use r2d2_postgres::{postgres::NoTls, PostgresConnectionManager};
 use r2d2::PooledConnection;
+use r2d2_postgres::{postgres::NoTls, PostgresConnectionManager};
+use rocket::http::Status;
 
 type Pool = r2d2::Pool<PostgresConnectionManager<NoTls>>;
 

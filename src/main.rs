@@ -16,10 +16,10 @@ extern crate tera;
 use std::cmp;
 use std::path::{Path, PathBuf};
 
-use rocket_contrib::templates::Template;
 use rocket::http::Status;
 use rocket::request::{Form, FromRequest, Outcome, Request};
 use rocket::response::NamedFile;
+use rocket_contrib::templates::Template;
 
 use std::collections::HashMap;
 
@@ -27,7 +27,9 @@ mod db;
 mod sql;
 
 macro_rules! regex {
-     ($e:expr) => (regex::Regex::new($e).unwrap())
+    ($e:expr) => {
+        regex::Regex::new($e).unwrap()
+    };
 }
 
 //forms
@@ -45,7 +47,7 @@ fn _get_next_and_prev(cat: &str, id: &str) -> (String, String) {
             cat.to_string() + "/"
         } else if i == -1 {
             let prev_cat = sql::get_prev(cat);
-            if prev_cat == "" {
+            if prev_cat.is_empty()  {
                 "".to_string()
             } else {
                 format!(
@@ -114,8 +116,14 @@ impl TemplateDetails {
 impl<'a, 'r> FromRequest<'a, 'r> for TemplateDetails {
     type Error = ();
     fn from_request(request: &'a Request<'r>) -> Outcome<TemplateDetails, ()> {
-        let template_category = request.get_param::<String>(1).and_then(|r| r.ok()).unwrap_or("".into());
-        let template_id = request.get_param::<String>(2).and_then(|r| r.ok()).unwrap_or("".into());
+        let template_category = request
+            .get_param::<String>(1)
+            .and_then(|r| r.ok())
+            .unwrap_or_else(|| "".into());
+        let template_id = request
+            .get_param::<String>(2)
+            .and_then(|r| r.ok())
+            .unwrap_or_else(|| "".into());
 
         match sql::get_sql_for_q(template_category.as_ref(), template_id.as_ref()) {
             Some((sql, help_link, title, keywords)) => Outcome::Success(TemplateDetails {
@@ -137,16 +145,15 @@ fn _context_builder(
     sql_result: Vec<Vec<String>>,
     sql_to_run: String,
 ) -> TemplateContext {
-    let (_, sql_correct_result ) = _run_sql(conn, t.sql.as_ref());
+    let (_, sql_correct_result) = _run_sql(conn, t.sql.as_ref());
     let (prev_q, next_q) = _get_next_and_prev(t.category.as_ref(), t.id.as_ref());
-    let is_correct =
-    if sql_result.len() > 0 {
+    let is_correct = if !sql_result.is_empty() {
         sql_result[1..] == sql_correct_result[1..]
-    }
-    else{
+    } else {
         false
     };
-    let used_correct_word = t.keywords
+    let used_correct_word = t
+        .keywords
         .iter()
         .any(|k| sql_to_run.to_lowercase().contains(k));
 
@@ -176,64 +183,53 @@ fn _format_type<T: ToString>(t: Option<T>) -> String {
 fn _run_sql(mut conn: db::DbConn, sql_command: &str) -> (db::DbConn, Vec<Vec<String>>) {
     let mut result = vec![];
     let query_result = conn.0.query(sql_command, &[]);
+    
     match query_result {
-        Ok(query_results) => {
-            match query_results.first() {
-                Some(row) => {
-                    let cols = row.columns().into_iter();
-                    result.push(
-                        cols
-                            .map(|c| c.name().to_string())
-                            .collect(),
-                    );
+        Ok(query_results) => if let Some(row) = query_results.first() {
+                let cols = row.columns().iter();
+                result.push(cols.map(|c| c.name().to_string()).collect());
 
-                    for row in &query_results {
-                        let result_row = row.columns()
-                            .into_iter()
-                            .enumerate()
-                            .map(|(i, col)| match col.type_().name() {
-                                "int8" => {
-                                    let temp: Option<i64> = row.get(i);
-                                    _format_type(temp)
+                for row in &query_results {
+                    let result_row = row
+                        .columns()
+                        .iter()
+                        .enumerate()
+                        .map(|(i, col)| match col.type_().name() {
+                            "int8" => {
+                                let temp: Option<i64> = row.get(i);
+                                _format_type(temp)
+                            }
+                            "int4" => {
+                                let temp: Option<i32> = row.get(i);
+                                _format_type(temp)
+                            }
+                            "float8" => {
+                                let temp: Option<f64> = row.get(i);
+                                match temp {
+                                    None => "Null".to_string(),
+                                    Some(x) => format!("{:.1}", x),
                                 }
-                                "int4" => {
-                                    let temp: Option<i32> = row.get(i);
-                                    _format_type(temp)
+                            }
+                            "varchar" | "text" => {
+                                let temp: Option<String> = row.get(i);
+                                _format_type(temp)
+                            }
+                            "_varchar" => {
+                                let temp: Option<Vec<String>> = row.get(i);
+                                match temp {
+                                    None => "Null".to_string(),
+                                    Some(x) => x.join(","),
                                 }
-                                "float8" => {
-                                    let temp: Option<f64> = row.get(i);
-                                    match temp {
-                                        None => "Null".to_string(),
-                                        Some(x) => format!("{:.1}", x),
-                                    }
-                                }
-                                "varchar" | "text" => {
-                                    let temp: Option<String> = row.get(i);
-                                    _format_type(temp)
-                                }
-                                "_varchar" => {
-                                    let temp: Option<Vec<String>> = row.get(i);
-                                    match temp {
-                                        None => "Null".to_string(),
-                                        Some(x) => x.join(","),
-                                    }
-                                }
-                                x => {
-                                    println!("Got unknown type: {:?}", x);
-                                    format!("Add conversion for {:?}", x)
-                                }
-                            })
-                            .collect();
-                        result.push(result_row);
-                    }
-
-                },
-                None => {
-
+                            }
+                            x => {
+                                println!("Got unknown type: {:?}", x);
+                                format!("Add conversion for {:?}", x)
+                            }
+                        })
+                        .collect();
+                    result.push(result_row);
                 }
-
-            }
-        }
+        },
         Err(error) => {
             println!(">>> {:?}", error);
             result.push(vec![error.to_string()])
@@ -242,7 +238,7 @@ fn _run_sql(mut conn: db::DbConn, sql_command: &str) -> (db::DbConn, Vec<Vec<Str
     (conn, result)
 }
 
-fn _verify_then_run_sql<'a>(s: &'a str, conn: db::DbConn) -> (db::DbConn, Vec<Vec<String>>) {
+fn _verify_then_run_sql(s: &str, conn: db::DbConn) -> (db::DbConn, Vec<Vec<String>>) {
     if regex!(r###"[^\w]pg_"###).is_match(s) {
         (conn, vec![vec!["Do not use pg_".into()]])
     } else if regex!(r###"[^\w]statement_timeout"###).is_match(s) {
@@ -260,7 +256,7 @@ fn post_db(
     _question: String,
     template: TemplateDetails,
     conn: db::DbConn,
-    sink: Form<FormInput>
+    sink: Form<FormInput>,
 ) -> Template {
     let (sql_command, result, conn2) = {
         let sql_command = sink.sql_to_run.to_string();
@@ -329,7 +325,7 @@ fn get_about() -> Template {
 #[get("/")]
 fn get_home() -> Template {
     let context: HashMap<String, String> = HashMap::new();
-    Template::render("home",context)
+    Template::render("home", context)
 }
 
 fn rocket() -> rocket::Rocket {
