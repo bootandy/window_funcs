@@ -8,12 +8,14 @@ transparent_navbar
 {% endblock special_header_class %}
 
 {% block containers %}
-  <div class="b-hero">
-    <div class="container">
-      <h3> Think you Know SQL?</h3>
-      <h2> Modern SQL Window Function Questions</h2>
+  <a class="no-underline" href="/questions/over/0">
+    <div class="b-hero">
+      <div class="container">
+        <h3> Think you Know SQL?</h3>
+        <h2> Modern SQL Window Function Questions</h2>
+      </div>
     </div>
-  </div>
+  </a>
 
   <div class="container py-2">
     <div class="col-12">
