@@ -1,4 +1,4 @@
-{% extends "all_questions" %}
+{% extends "all_questions.html.tera" %}
 
 
 {% block question %}
@@ -6,7 +6,7 @@
 <p>
 Cats are vain. Each cat would like to pretend it has the lowest weight for its color.
 </p><p>
-Print cat name, color and the minimum weight of cats with that color. 
+Print cat name, color and the minimum weight of cats with that color.
 <hr/>
 Return: name, color, lowest_weight_by_color
 <br/>

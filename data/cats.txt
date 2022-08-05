@@ -1,6 +1,10 @@
 # First create user: database rusty
 # After running set password for user named rusty
 
+# .env file:
+# Contains PG connection information, create in root
+# See step 5 here: https://github.com/actix/examples/tree/master/databases/postgres#note
+
 ###### Very imporant you run the below as the ROOT user not as rusty. ########
 
 create schema windowfunctions;

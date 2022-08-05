@@ -1,6 +1,6 @@
 Rust webapp to teach people SQL Window functions
 
-Uses Rocket & Tera
+Uses Actix & Tera
 
 [Live Site]
 

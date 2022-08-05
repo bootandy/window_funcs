@@ -1,4 +1,4 @@
-{% extends "base" %}
+{% extends "base.html.tera" %}
 
 {% block headers %}
 <script src="/static/all_questions.js"></script>

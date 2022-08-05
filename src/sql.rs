@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 static INTRO_0_SQL: &str = "
 select
  age, sum(weight) as total_weight
@@ -133,8 +135,7 @@ select color,
 array_agg(name) as names
 from cats group by color
 order by color desc";
-static OTHER_1_HELP: &str =
-    "https://lorenstewart.me/2017/12/03/postgresqls-array_agg-function/";
+static OTHER_1_HELP: &str = "https://lorenstewart.me/2017/12/03/postgresqls-array_agg-function/";
 
 static OTHER_2_SQL: &str = "
 select breed,
@@ -164,176 +165,229 @@ static OTHER_0_TITLE: &str = "Using Window Clause";
 static OTHER_1_TITLE: &str = "Aggregating data";
 static OTHER_2_TITLE: &str = "Limiting Large Results";
 
+// Concept:
+// pub struct QuestionData {
+//     sql: &'static str,
+//     help: &'static str,
+//     title: &'static str,
+//     keywords: Vec<&'static str>,
+// }
+
+pub fn get_question_data_map(
+) -> HashMap<&'static str, Vec<(&'static str, &'static str, &'static str, Vec<&'static str>)>> {
+    HashMap::from([
+        (
+            "intro",
+            vec![(INTRO_0_SQL, INTRO_0_HELP, INTRO_0_TITLE, vec!["group by"])],
+        ),
+        (
+            "over",
+            vec![
+                (OVER_0_SQL, OVER_0_HELP, OVER_0_TITLE, vec!["over"]),
+                (OVER_1_SQL, OVER_1_HELP, OVER_1_TITLE, vec!["partition by"]),
+                (
+                    OVER_2_SQL,
+                    OVER_2_HELP,
+                    OVER_2_TITLE,
+                    vec!["preceding", "following"],
+                ),
+                (
+                    OVER_3_SQL,
+                    OVER_3_HELP,
+                    OVER_3_TITLE,
+                    vec!["unbounded preceding"],
+                ),
+            ],
+        ),
+        (
+            "ranking",
+            vec![
+                (
+                    RANKINGS_0_SQL,
+                    RANKINGS_0_HELP,
+                    RANKINGS_0_TITLE,
+                    vec!["row_number"],
+                ),
+                (
+                    RANKINGS_1_SQL,
+                    RANKINGS_1_HELP,
+                    RANKINGS_1_TITLE,
+                    vec!["rank"],
+                ),
+                (
+                    RANKINGS_2_SQL,
+                    RANKINGS_2_HELP,
+                    RANKINGS_2_TITLE,
+                    vec!["dense_rank"],
+                ),
+                (
+                    RANKINGS_3_SQL,
+                    RANKINGS_3_HELP,
+                    RANKINGS_3_TITLE,
+                    vec!["percent_rank"],
+                ),
+                (
+                    RANKINGS_4_SQL,
+                    RANKINGS_4_HELP,
+                    RANKINGS_4_TITLE,
+                    vec!["cume_dist"],
+                ),
+            ],
+        ),
+        (
+            "grouping",
+            vec![
+                (
+                    GROUPINGS_0_SQL,
+                    GROUPINGS_0_HELP,
+                    GROUPINGS_0_TITLE,
+                    vec!["ntile"],
+                ),
+                (
+                    GROUPINGS_1_SQL,
+                    GROUPINGS_1_HELP,
+                    GROUPINGS_1_TITLE,
+                    vec!["lag", "lead", "min"],
+                ),
+                (
+                    GROUPINGS_2_SQL,
+                    GROUPINGS_2_HELP,
+                    GROUPINGS_2_TITLE,
+                    vec!["lag", "lead", "min"],
+                ),
+                (
+                    GROUPINGS_3_SQL,
+                    GROUPINGS_3_HELP,
+                    GROUPINGS_3_TITLE,
+                    vec!["first_value", "nth_value", "min"],
+                ),
+                (
+                    GROUPINGS_4_SQL,
+                    GROUPINGS_4_HELP,
+                    GROUPINGS_4_TITLE,
+                    vec!["lead"],
+                ),
+                (
+                    GROUPINGS_5_SQL,
+                    GROUPINGS_5_HELP,
+                    GROUPINGS_5_TITLE,
+                    vec!["nth_value"],
+                ),
+                (
+                    GROUPINGS_6_SQL,
+                    GROUPINGS_6_HELP,
+                    GROUPINGS_6_TITLE,
+                    vec!["nth_value"],
+                ),
+            ],
+        ),
+        (
+            "other",
+            vec![
+                (OTHER_0_SQL, OTHER_0_HELP, OTHER_0_TITLE, vec!["window"]),
+                (OTHER_1_SQL, OTHER_1_HELP, OTHER_1_TITLE, vec!["array_agg"]),
+                (OTHER_2_SQL, OTHER_2_HELP, OTHER_2_TITLE, vec!["filter"]),
+            ],
+        ),
+    ])
+}
+
+static CATEGORY_ORDER: &[&str] = &["intro", "over", "ranking", "grouping", "other"];
+
 pub fn get_sql_for_q<'a>(
-    folder: &'a str,
-    q: &'a str,
-) -> Option<(&'a str, &'a str, &'a str, Vec<&'a str>)> {
-    match (folder, q) {
-        ("intro", "0") => Some((INTRO_0_SQL, INTRO_0_HELP, INTRO_0_TITLE, vec!["group by"])),
-        ("over", "0") => Some((OVER_0_SQL, OVER_0_HELP, OVER_0_TITLE, vec!["over"])),
-        ("over", "1") => Some((OVER_1_SQL, OVER_1_HELP, OVER_1_TITLE, vec!["partition by"])),
-        ("over", "2") => Some((
-            OVER_2_SQL,
-            OVER_2_HELP,
-            OVER_2_TITLE,
-            vec!["preceding", "following"],
-        )),
-        ("over", "3") => Some((
-            OVER_3_SQL,
-            OVER_3_HELP,
-            OVER_3_TITLE,
-            vec!["unbounded preceding"],
-        )),
-        ("ranking", "0") => Some((
-            RANKINGS_0_SQL,
-            RANKINGS_0_HELP,
-            RANKINGS_0_TITLE,
-            vec!["row_number"],
-        )),
-        ("ranking", "1") => Some((
-            RANKINGS_1_SQL,
-            RANKINGS_1_HELP,
-            RANKINGS_1_TITLE,
-            vec!["rank"],
-        )),
-        ("ranking", "2") => Some((
-            RANKINGS_2_SQL,
-            RANKINGS_2_HELP,
-            RANKINGS_2_TITLE,
-            vec!["dense_rank"],
-        )),
-        ("ranking", "3") => Some((
-            RANKINGS_3_SQL,
-            RANKINGS_3_HELP,
-            RANKINGS_3_TITLE,
-            vec!["percent_rank"],
-        )),
-        ("ranking", "4") => Some((
-            RANKINGS_4_SQL,
-            RANKINGS_4_HELP,
-            RANKINGS_4_TITLE,
-            vec!["cume_dist"],
-        )),
-        ("grouping", "0") => Some((
-            GROUPINGS_0_SQL,
-            GROUPINGS_0_HELP,
-            GROUPINGS_0_TITLE,
-            vec!["ntile"],
-        )),
-        ("grouping", "1") => Some((
-            GROUPINGS_1_SQL,
-            GROUPINGS_1_HELP,
-            GROUPINGS_1_TITLE,
-            vec!["lag", "lead", "min"],
-        )),
-        ("grouping", "2") => Some((
-            GROUPINGS_2_SQL,
-            GROUPINGS_2_HELP,
-            GROUPINGS_2_TITLE,
-            vec!["lag", "lead", "min"],
-        )),
-        ("grouping", "3") => Some((
-            GROUPINGS_3_SQL,
-            GROUPINGS_3_HELP,
-            GROUPINGS_3_TITLE,
-            vec!["first_value", "nth_value", "min"],
-        )),
-        ("grouping", "4") => Some((
-            GROUPINGS_4_SQL,
-            GROUPINGS_4_HELP,
-            GROUPINGS_4_TITLE,
-            vec!["lead"],
-        )),
-        ("grouping", "5") => Some((
-            GROUPINGS_5_SQL,
-            GROUPINGS_5_HELP,
-            GROUPINGS_5_TITLE,
-            vec!["nth_value"],
-        )),
-        ("grouping", "6") => Some((
-            GROUPINGS_6_SQL,
-            GROUPINGS_6_HELP,
-            GROUPINGS_6_TITLE,
-            vec!["nth_value"],
-        )),
-        ("other", "0") => Some((OTHER_0_SQL, OTHER_0_HELP, OTHER_0_TITLE, vec!["window"])),
-        ("other", "1") => Some((OTHER_1_SQL, OTHER_1_HELP, OTHER_1_TITLE, vec!["array_agg"])),
-        ("other", "2") => Some((OTHER_2_SQL, OTHER_2_HELP, OTHER_2_TITLE, vec!["filter"])),
-        (_, _) => None,
-    }
-}
-
-static CATEGORIES: & [&str] = &["intro", "over", "ranking", "grouping", "other"];
-
-pub fn get_prev(s: &str) -> &str {
-    _get_next_or_prev(s, -1)
-}
-pub fn get_next(s: &str) -> &str {
-    _get_next_or_prev(s, 1)
-}
-fn _get_next_or_prev(s: &str, index: i32) -> &str {
-    match CATEGORIES.iter().position(|&a| a == s) {
-        Some(i) => {
-            let ii = i as i32 + index;
-            if ii < 0 {
-                ""
+    data_mp: &'a HashMap<&str, Vec<(&str, &str, &str, Vec<&str>)>>,
+    category: &str,
+    number: &str,
+) -> Option<&'a (&'a str, &'a str, &'a str, Vec<&'a str>)> {
+    let questions_by_type = data_mp.get(category);
+    match questions_by_type {
+        Some(q_list) => {
+            let tmp = number.parse::<usize>().unwrap_or(0);
+            if tmp >= q_list.len() {
+                None
             } else {
-                let res = CATEGORIES.get(ii as usize);
-                res.unwrap_or_else(|| &CATEGORIES[0])
+                Some(&q_list[tmp])
             }
         }
-        None => CATEGORIES[0],
+        None => None,
     }
 }
 
-pub fn check_category(s: &str) -> &str {
-    if CATEGORIES.contains(&s) {
-        s
+pub fn get_next_page(
+    data_mp: &HashMap<&str, Vec<(&str, &str, &str, Vec<&str>)>>,
+    category: &str,
+    sid: &str,
+) -> String {
+    let id = (sid.parse::<i32>().unwrap_or(-1) + 1).to_string();
+
+    if get_sql_for_q(data_mp, category, &id).is_some() {
+        format!("{}/{}", category, id)
     } else {
-        CATEGORIES[0]
+        let idx = CATEGORY_ORDER.iter().position(|&a| a == category);
+        match idx {
+            Some(i) => {
+                // Handles case of the last page
+                if i + 1 >= CATEGORY_ORDER.len() {
+                    "".to_string()
+                } else {
+                    CATEGORY_ORDER.get(i + 1).unwrap_or(&"intro").to_string() + "/"
+                }
+            }
+            None => CATEGORY_ORDER[0].to_string() + "/",
+        }
     }
 }
 
-pub fn get_titles_for(s: &str) -> Vec<&str> {
-    match s {
-        "intro" => [INTRO_0_TITLE].to_vec(),
-        "over" => [OVER_0_TITLE, OVER_1_TITLE, OVER_2_TITLE, OVER_3_TITLE].to_vec(),
-        "ranking" => [
-            RANKINGS_0_TITLE,
-            RANKINGS_1_TITLE,
-            RANKINGS_2_TITLE,
-            RANKINGS_3_TITLE,
-            RANKINGS_4_TITLE,
-        ]
-        .to_vec(),
-        "grouping" => [
-            GROUPINGS_0_TITLE,
-            GROUPINGS_1_TITLE,
-            GROUPINGS_2_TITLE,
-            GROUPINGS_3_TITLE,
-            GROUPINGS_4_TITLE,
-            GROUPINGS_5_TITLE,
-        ]
-        .to_vec(),
-        "other" => [OTHER_0_TITLE, OTHER_1_TITLE, OVER_2_TITLE].to_vec(),
-        _ => [].to_vec(),
+pub fn get_prev_page(
+    data_mp: &HashMap<&str, Vec<(&str, &str, &str, Vec<&str>)>>,
+    category: &str,
+    sid: &str,
+) -> String {
+    let id = sid.parse::<i32>().unwrap_or(-1) - 1;
+
+    // If there was no number -> Then the previous page will be the largest of the
+    // previous category
+    if id == -2 {
+        let idx = CATEGORY_ORDER
+            .iter()
+            .position(|&a| a == category)
+            .unwrap_or(1);
+        match idx {
+            // Handles the case of the first page
+            0 => "".to_owned(),
+            _ => {
+                let prev_cat = CATEGORY_ORDER[idx - 1];
+                let max_id = data_mp.get(prev_cat).unwrap_or(&vec![]).len() - 1;
+                prev_cat.to_string() + "/" + &max_id.to_string()
+            }
+        }
+    } else if id > 0 && get_sql_for_q(data_mp, category, &id.to_string()).is_some() {
+        format!("{}/{}", category, id)
+    // If the number was 0 the previous will be the category instructions page
+    } else {
+        let c = if CATEGORY_ORDER.contains(&category) {
+            category
+        } else {
+            CATEGORY_ORDER[0]
+        };
+        c.to_string() + "/"
     }
 }
 
 #[test]
 fn test_get_prev() {
-    assert_eq!(get_prev("grouping"), "ranking");
-    assert_eq!(get_prev("rubbish"), "intro");
+    let mp = &get_question_data_map();
+    assert_eq!(get_prev_page(mp, "grouping", "6"), "grouping/5");
+    assert_eq!(get_prev_page(mp, "grouping", ""), "ranking/4");
+    assert_eq!(get_prev_page(mp, "grouping", "0"), "grouping/");
+    assert_eq!(get_prev_page(mp, "rubbish", "0"), "intro/");
 }
 
 #[test]
 fn test_get_next() {
-    assert_eq!(get_next("grouping"), "other");
-    assert_eq!(get_next("rubbish"), "intro");
-}
-
-#[test]
-fn test_check_category() {
-    assert_eq!(check_category("grouping"), "grouping");
-    assert_eq!(check_category("rubbish"), "intro");
+    let mp = &get_question_data_map();
+    assert_eq!(get_next_page(mp, "grouping", "2"), "grouping/3");
+    assert_eq!(get_next_page(mp, "grouping", "6"), "other/");
+    assert_eq!(get_next_page(mp, "grouping", ""), "grouping/0");
+    assert_eq!(get_next_page(mp, "rubbish", "0"), "intro/");
 }

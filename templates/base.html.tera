@@ -1,4 +1,4 @@
-{% import "macros" as macros %}
+{% import "macros.html.tera" as macros %}
 
 <html>
   <head>
