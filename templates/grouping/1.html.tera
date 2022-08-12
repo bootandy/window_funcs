@@ -1,4 +1,4 @@
-{% extends "all_questions" %}
+{% extends "all_questions.html.tera" %}
 
 
 {% block question %}
@@ -21,6 +21,6 @@ It is useful for looking for strange step ups/downs in data
 <br/>
 Fun Fact: Lag
 <a target="_blank" rel="noopener" href="https://www.postgresql.org/docs/current/static/functions-window.html">can take a default</a>.
-But it must be the <em>same type</em>. For doubles this means explicitly casting it as double precision. 
+But it must be the <em>same type</em>. For doubles this means explicitly casting it as double precision.
 
 {% endblock on_correct %}

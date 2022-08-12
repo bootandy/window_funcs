@@ -1,4 +1,4 @@
-{% extends "base" %}
+{% extends "base.html.tera" %}
 
 {% block containers %}
 <div class="container py-2">
@@ -25,7 +25,7 @@
     <h3> What technologies did you use?</h3>
     <p> Rust &amp; Postgres. </p>
     <p>The code is on <a href="https://github.com/bootandy/window_funcs">github</a>
-    It is written in Rust and uses Rocket, Tera. I wrote it partially to learn Rust.
+    It is written in Rust and uses Actix (formally Rocket), Tera. I wrote it partially to learn Rust.
     </p>
 
     <a href="#win_func"> </a>

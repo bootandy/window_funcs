@@ -1,4 +1,4 @@
-{% extends "all_questions" %}
+{% extends "all_questions.html.tera" %}
 
 
 {% block question %}

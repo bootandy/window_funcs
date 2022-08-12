@@ -1,4 +1,4 @@
-{% extends "init" %}
+{% extends "init.html.tera" %}
 
 {% block heading %}
 Grouping the output

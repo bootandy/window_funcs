@@ -1,10 +1,10 @@
-{% extends "all_questions" %}
+{% extends "all_questions.html.tera" %}
 
 
 {% block question %}
 
 <p>
-For cats age means seniority, we would like to rank the cats by age (oldest first). 
+For cats age means seniority, we would like to rank the cats by age (oldest first).
 </p><p>
 However we would like their ranking to be sequentially increasing.
 <hr/>

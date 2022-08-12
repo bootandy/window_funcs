@@ -1,4 +1,4 @@
-{% extends "init" %}
+{% extends "init.html.tera" %}
 
 {% block heading %}
       Refreshers on pure SQL

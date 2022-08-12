@@ -1,4 +1,4 @@
-{% extends "all_questions" %}
+{% extends "all_questions.html.tera" %}
 
 
 {% block question %}
@@ -6,7 +6,7 @@
 </p><p>
 The cats now want to lose weight according to their breed. Each cat would like to lose weight to be the equivalent weight of the cat in the same breed weighing just less than it.
 </p><p>
-Print a list of cats, their breeds, weights and the weight difference between them and the nearest lighter cat of the same breed. 
+Print a list of cats, their breeds, weights and the weight difference between them and the nearest lighter cat of the same breed.
 <hr/>
 Return: name, breed, weight, weight_to_lose
 <br/>

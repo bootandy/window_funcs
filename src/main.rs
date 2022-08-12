@@ -1,375 +1,230 @@
-#![feature(plugin, decl_macro)]
-#![feature(proc_macro_hygiene)]
-#![feature(nll)]
-// #![plugin(rocket_codegen)]
-
-extern crate r2d2;
-extern crate r2d2_postgres;
-extern crate regex;
-#[macro_use]
-extern crate rocket;
-extern crate rocket_contrib;
-#[macro_use]
-extern crate serde_derive;
-extern crate tera;
-
-use std::cmp;
-use std::path::{Path, PathBuf};
-
-use rocket::http::Status;
-use rocket::request::{Form, FromRequest, Outcome, Request};
-use rocket::response::NamedFile;
-use rocket_contrib::templates::Template;
-
-use std::collections::HashMap;
-
-mod db;
-mod sql;
-
-macro_rules! regex {
-    ($e:expr) => {
-        regex::Regex::new($e).unwrap()
-    };
+mod config {
+    use serde::Deserialize;
+    #[derive(Debug, Default, Deserialize)]
+    pub struct ExampleConfig {
+        pub server_addr: String,
+        pub pg: deadpool_postgres::Config,
+    }
 }
 
-//forms
-#[derive(Debug, FromForm)]
+use deadpool_postgres::Pool;
+use sql::{get_next_page, get_prev_page, get_question_data_map, get_sql_for_q};
+use std::{collections::HashMap, path::Path};
+
+use crate::config::ExampleConfig;
+use ::config::Config;
+use actix_files::NamedFile;
+use actix_web::{
+    error, get, middleware,
+    web::{self},
+    App, Error, HttpResponse, HttpServer,
+};
+use dotenv::dotenv;
+use postgres::NoTls;
+use serde::Deserialize;
+use tera::Tera;
+
+mod db;
+mod errors;
+mod sql;
+
+use db::{run_sql, verify_then_run_sql};
+use errors::MyError;
+
+#[derive(Debug, Deserialize)]
 struct FormInput {
     sql_to_run: String,
 }
 
-fn _get_next_and_prev(cat: &str, id: &str) -> (String, String) {
-    let i = id.parse::<i32>().unwrap_or(-1);
-    let prev = {
-        if i > 0 {
-            format!("{}/{}", cat, cmp::max(i - 1, 0))
-        } else if i == 0 {
-            cat.to_string() + "/"
-        } else if i == -1 {
-            let prev_cat = sql::get_prev(cat);
-            if prev_cat.is_empty()  {
-                "".to_string()
+fn _build_simple_context(
+    data_mp: &web::Data<HashMap<&str, Vec<(&str, &str, &str, Vec<&str>)>>>,
+    type_as_str: &str,
+    num_as_str: &str,
+) -> tera::Context {
+    let mut ctx = tera::Context::new();
+    ctx.insert("prev_q", &get_prev_page(data_mp, type_as_str, num_as_str));
+    ctx.insert("next_q", &get_next_page(data_mp, type_as_str, num_as_str));
+    ctx.insert("category", &type_as_str);
+    ctx
+}
+
+async fn build_full_context(
+    db_pool: &web::Data<Pool>,
+    data_mp: &web::Data<HashMap<&str, Vec<(&str, &str, &str, Vec<&str>)>>>,
+    sql_from_user: &str,
+    type_as_str: &str,
+    num_as_str: &str,
+) -> Result<tera::Context, MyError> {
+    let client = db_pool.get().await.map_err(|x| MyError::DBPoolError(x))?;
+
+    let mut ctx = _build_simple_context(data_mp, type_as_str, num_as_str);
+
+    let sql_user_result = verify_then_run_sql(&client, sql_from_user.as_ref()).await;
+
+    let data = get_sql_for_q(data_mp, type_as_str, num_as_str);
+    match data {
+        Some((sql, help_link, title, keywords)) => {
+            let keys: String = keywords.iter().map(|s| s.to_string()).collect();
+            ctx.insert("sql_correct", sql);
+            ctx.insert("heading", title);
+            ctx.insert("keyword_help_link", help_link);
+            ctx.insert("keyword", &keys);
+            let used_correct_word = keywords
+                .iter()
+                .any(|k| sql_from_user.to_lowercase().contains(k));
+            ctx.insert("used_correct_word", &used_correct_word);
+            let sql_correct_result = run_sql(&client, sql.as_ref()).await;
+            ctx.insert("sql_correct_result", &sql_correct_result);
+
+            let is_correct = if !sql_user_result.is_empty() {
+                sql_user_result[1..] == sql_correct_result[1..]
             } else {
-                format!(
-                    "{}/{:?}",
-                    prev_cat.to_string(),
-                    sql::get_titles_for(prev_cat).len() - 1
-                )
-            }
-        } else {
-            panic!("Impossible number given {}", i);
+                false
+            };
+            ctx.insert("is_correct", &is_correct);
         }
-    };
-    let next = {
-        let next_id = (i + 1).to_string();
-        // Nasty hack: Indicates we are at the end of our questions:
-        if cat == "other" && i == 2 {
-            "".to_string()
-        } else if sql::get_sql_for_q(cat, next_id.as_ref()).is_some() {
-            format!("{}/{}", cat, next_id)
-        } else {
-            format!("{}/", sql::get_next(cat))
-        }
-    };
-    (prev, next)
-}
-
-#[derive(Serialize)]
-struct TemplateContext {
-    keyword: String,
-    keyword_help_link: String,
-    heading: String,
-    sql_correct: String,
-    sql_to_run: String,
-    sql_correct_result: Vec<Vec<String>>,
-    sql_to_run_result: Vec<Vec<String>>,
-    next_q: String,
-    prev_q: String,
-    category: String,
-    is_correct: bool,
-    used_correct_word: bool,
-}
-
-struct TemplateDetails {
-    id: String,
-    category: String,
-    sql: String,
-    help_link: String,
-    title: String,
-    keywords: Vec<String>,
-}
-
-#[derive(Serialize)]
-struct TemplateContextHeading<'a> {
-    titles: Vec<&'a str>,
-    next_q: String,
-    prev_q: String,
-    category: String,
-}
-
-impl TemplateDetails {
-    fn get_path(&self) -> String {
-        self.category.to_string() + "/" + self.id.as_ref()
-    }
-}
-
-impl<'a, 'r> FromRequest<'a, 'r> for TemplateDetails {
-    type Error = ();
-    fn from_request(request: &'a Request<'r>) -> Outcome<TemplateDetails, ()> {
-        let template_category = request
-            .get_param::<String>(1)
-            .and_then(|r| r.ok())
-            .unwrap_or_else(|| "".into());
-        let template_id = request
-            .get_param::<String>(2)
-            .and_then(|r| r.ok())
-            .unwrap_or_else(|| "".into());
-
-        match sql::get_sql_for_q(template_category.as_ref(), template_id.as_ref()) {
-            Some((sql, help_link, title, keywords)) => Outcome::Success(TemplateDetails {
-                id: template_id.to_string(),
-                category: template_category.to_string(), //idea: move these to str s
-                sql: sql.to_string(),
-                help_link: help_link.to_string(),
-                title: title.to_string(),
-                keywords: keywords.into_iter().map(|s| s.to_string()).collect(),
-            }),
-            None => Outcome::Failure((Status::BadRequest, ())),
+        None => {
+            return Err(MyError::BadPath);
         }
     }
+    ctx.insert("sql_to_run", &sql_from_user);
+    ctx.insert("sql_to_run_result", &sql_user_result);
+    Ok(ctx)
 }
 
-fn _context_builder(
-    conn: db::DbConn,
-    t: &TemplateDetails,
-    sql_result: Vec<Vec<String>>,
-    sql_to_run: String,
-) -> TemplateContext {
-    let (_, sql_correct_result) = _run_sql(conn, t.sql.as_ref());
-    let (prev_q, next_q) = _get_next_and_prev(t.category.as_ref(), t.id.as_ref());
-    let is_correct = if !sql_result.is_empty() {
-        sql_result[1..] == sql_correct_result[1..]
-    } else {
-        false
-    };
-    let used_correct_word = t
-        .keywords
-        .iter()
-        .any(|k| sql_to_run.to_lowercase().contains(k));
+async fn question_page_get(
+    db_pool: web::Data<Pool>,
+    params: web::Path<(String, String)>,
+    template: web::Data<tera::Tera>,
+    data_mp: web::Data<HashMap<&str, Vec<(&str, &str, &str, Vec<&str>)>>>,
+) -> Result<HttpResponse, Error> {
+    let sql_from_user = "select \n*\n from cats ";
+    let type_as_str = params.0.to_owned();
+    let num_as_str = params.1.to_owned();
 
-    TemplateContext {
-        keyword: t.keywords[0].to_string(),
-        keyword_help_link: t.help_link.to_string(),
-        sql_correct: t.sql.to_string(),
-        sql_to_run,
-        sql_correct_result,
-        sql_to_run_result: sql_result,
-        heading: t.title.to_string(),
-        next_q,
-        prev_q,
-        category: t.category.to_string(),
-        is_correct,
-        used_correct_word,
-    }
-}
-
-fn _format_type<T: ToString>(t: Option<T>) -> String {
-    match t {
-        None => "Null".to_string(),
-        Some(x) => x.to_string(),
-    }
-}
-
-fn _run_sql(mut conn: db::DbConn, sql_command: &str) -> (db::DbConn, Vec<Vec<String>>) {
-    let mut result = vec![];
-    let query_result = conn.0.query(sql_command, &[]);
-    
-    match query_result {
-        Ok(query_results) => if let Some(row) = query_results.first() {
-                let cols = row.columns().iter();
-                result.push(cols.map(|c| c.name().to_string()).collect());
-
-                for row in &query_results {
-                    let result_row = row
-                        .columns()
-                        .iter()
-                        .enumerate()
-                        .map(|(i, col)| match col.type_().name() {
-                            "int8" => {
-                                let temp: Option<i64> = row.get(i);
-                                _format_type(temp)
-                            }
-                            "int4" => {
-                                let temp: Option<i32> = row.get(i);
-                                _format_type(temp)
-                            }
-                            "float8" => {
-                                let temp: Option<f64> = row.get(i);
-                                match temp {
-                                    None => "Null".to_string(),
-                                    Some(x) => format!("{:.1}", x),
-                                }
-                            }
-                            "varchar" | "text" => {
-                                let temp: Option<String> = row.get(i);
-                                _format_type(temp)
-                            }
-                            "_varchar" => {
-                                let temp: Option<Vec<String>> = row.get(i);
-                                match temp {
-                                    None => "Null".to_string(),
-                                    Some(x) => x.join(","),
-                                }
-                            }
-                            x => {
-                                println!("Got unknown type: {:?}", x);
-                                format!("Add conversion for {:?}", x)
-                            }
-                        })
-                        .collect();
-                    result.push(result_row);
-                }
-        },
-        Err(error) => {
-            println!(">>> {:?}", error);
-            result.push(vec![error.to_string()])
-        }
-    }
-    (conn, result)
-}
-
-fn _verify_then_run_sql(s: &str, conn: db::DbConn) -> (db::DbConn, Vec<Vec<String>>) {
-    if regex!(r###"[^\w]pg_"###).is_match(s) {
-        (conn, vec![vec!["Do not use pg_".into()]])
-    } else if regex!(r###"[^\w]statement_timeout"###).is_match(s) {
-        (conn, vec![vec!["Do not use statement_timeout".into()]])
-    } else if regex!(r###"[^\w]version[^\w]"###).is_match(s) {
-        (conn, vec![vec!["Do not use version".into()]])
-    } else {
-        _run_sql(conn, s)
-    }
-}
-
-#[post("/questions/<_type>/<_question>", data = "<sink>")]
-fn post_db(
-    _type: String,
-    _question: String,
-    template: TemplateDetails,
-    conn: db::DbConn,
-    sink: Form<FormInput>,
-) -> Template {
-    let (sql_command, result, conn2) = {
-        let sql_command = sink.sql_to_run.to_string();
-        let (conn2, result) = _verify_then_run_sql(sql_command.as_ref(), conn);
-        (sql_command, result, conn2)
-    };
-
-    // log sql to stdout so we can see how people break it.
-    println!("query: {:?}", sql_command.replace("\r\n", " "));
-    let c = &_context_builder(conn2, &template, result, sql_command);
-    Template::render(template.get_path(), &c)
-
-    // let c: HashMap<String, String> = HashMap::new();
-    // Template::render(template.get_path(), &c)
-}
-
-#[get("/questions/<_type>/<_question>")]
-fn get_db(
-    _type: String,
-    _question: String,
-    template: TemplateDetails,
-    conn: db::DbConn,
-) -> Template {
-    let sql = "select \n*\n from cats ";
+    let mut ctx =
+        build_full_context(&db_pool, &data_mp, sql_from_user, &type_as_str, &num_as_str).await?;
     // Forcing an empty result encourages people to click run the first time to help engagement.
-    let result = vec![vec![]];
-    let c = _context_builder(conn, &template, result, sql.to_string());
-    Template::render(template.get_path(), &c)
+    let empty: Vec<Vec<String>> = vec![vec![]];
+    ctx.insert("sql_to_run_result", &empty);
+
+    let path = type_as_str + "/" + &num_as_str + ".html.tera";
+    _render_template(path, ctx, template)
 }
 
-#[get("/questions/<category>")]
-fn old_question_link(category: String) -> Template {
-    let real_cat = sql::check_category(category.as_ref());
-    let titles = sql::get_titles_for(real_cat);
-    let (prev_q, next_q) = _get_next_and_prev(real_cat, "");
-    let context = TemplateContextHeading {
-        titles,
-        next_q,
-        prev_q,
-        category: real_cat.to_string(),
-    };
-    Template::render(real_cat.to_string() + "/index", context)
+async fn question_page_post(
+    db_pool: web::Data<Pool>,
+    form: web::Form<FormInput>,
+    params: web::Path<(String, String)>,
+    template: web::Data<tera::Tera>,
+    data_mp: web::Data<HashMap<&str, Vec<(&str, &str, &str, Vec<&str>)>>>,
+) -> Result<HttpResponse, Error> {
+    let sql_from_user = &form.sql_to_run;
+    let type_as_str = params.0.to_owned();
+    let num_as_str = params.1.to_owned();
+
+    println!("SQL: {}/{}:\n{}", type_as_str, num_as_str, sql_from_user);
+    let ctx =
+        build_full_context(&db_pool, &data_mp, sql_from_user, &type_as_str, &num_as_str).await?;
+
+    let path = type_as_str + "/" + &num_as_str + ".html.tera";
+    _render_template(path, ctx, template)
+}
+
+async fn get_intro_page(
+    _type: web::Path<(String,)>,
+    template: web::Data<tera::Tera>,
+    data_mp: web::Data<HashMap<&str, Vec<(&str, &str, &str, Vec<&str>)>>>,
+) -> Result<HttpResponse, Error> {
+    let type_as_str = _type.0.to_owned();
+    let ctx = _build_simple_context(&data_mp, &type_as_str, "");
+    let path = type_as_str + "/index.html.tera";
+    _render_template(path, ctx, template)
+}
+
+fn _render_template(
+    path: String,
+    ctx: tera::Context,
+    template: web::Data<tera::Tera>,
+) -> Result<HttpResponse, Error> {
+    // TODO: if template invalid return a 301 ?
+
+    let built_template = template
+        .render(&path, &ctx)
+        .map_err(|e| error::ErrorInternalServerError(format!("Template error {path} {e}")))?;
+    Ok(HttpResponse::Ok()
+        .content_type("text/html")
+        .body(built_template))
 }
 
 #[get("/favicon.ico")]
-fn get_favicon() -> Option<NamedFile> {
+async fn get_favicon() -> Option<NamedFile> {
     NamedFile::open(Path::new("static/favicon.ico")).ok()
 }
 
 #[get("/robots.txt")]
-fn get_robots() -> Option<NamedFile> {
+async fn get_robots() -> Option<NamedFile> {
     NamedFile::open(Path::new("static/robots.txt")).ok()
 }
 
-#[get("/static/<file..>")]
-fn static_files(file: PathBuf) -> Option<NamedFile> {
-    NamedFile::open(Path::new("static/").join(file)).ok()
+#[get("/static/{file}")]
+async fn static_files(filename: web::Path<(String,)>) -> Option<NamedFile> {
+    let p: String = "static/".to_string() + &filename.into_inner().0;
+    NamedFile::open(Path::new(&p)).ok()
 }
 
-#[get("/about")]
-fn get_about() -> Template {
-    let context: HashMap<String, String> = HashMap::new();
-    Template::render("about", context)
+async fn home(tmpl: web::Data<tera::Tera>) -> Result<HttpResponse, Error> {
+    let s = tmpl
+        .render("home.html.tera", &tera::Context::new())
+        .map_err(|e| error::ErrorInternalServerError(format!("Template error Home {e}")))?;
+    Ok(HttpResponse::Ok().content_type("text/html").body(s))
 }
 
-#[get("/")]
-fn get_home() -> Template {
-    let context: HashMap<String, String> = HashMap::new();
-    Template::render("home", context)
+async fn about(tmpl: web::Data<tera::Tera>) -> Result<HttpResponse, Error> {
+    let s = tmpl
+        .render("about.html.tera", &tera::Context::new())
+        .map_err(|e| error::ErrorInternalServerError(format!("Template error About {e}")))?;
+    Ok(HttpResponse::Ok().content_type("text/html").body(s))
 }
 
-fn rocket() -> rocket::Rocket {
-    rocket::ignite()
-        .manage(db::init_pool())
-        .mount(
-            "/",
-            routes![
-                static_files,
-                get_favicon,
-                get_robots,
-                get_home,
-                get_about,
-                post_db,
-                get_db,
-                old_question_link,
-            ],
-        )
-        .attach(Template::fairing())
-}
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    dotenv().ok();
+    let config_ = Config::builder()
+        .add_source(::config::Environment::default())
+        .build()
+        .unwrap();
 
-fn main() {
-    rocket().launch();
-}
+    std::env::set_var("RUST_LOG", "actix_web=warn");
+    env_logger::init();
 
-#[test]
-fn test_get_next_and_prev() {
-    assert_eq!(
-        _get_next_and_prev("grouping", "1"),
-        (String::from("grouping/0"), String::from("grouping/2"))
-    );
-    assert_eq!(
-        _get_next_and_prev("over", "0"),
-        (String::from("over/"), String::from("over/1"))
-    );
-    assert_eq!(
-        _get_next_and_prev("intro", "0"),
-        (String::from("intro/"), String::from("over/"))
-    );
-    assert_eq!(
-        _get_next_and_prev("over", ""),
-        (String::from("intro/0"), String::from("over/0"))
-    );
-    // check it doesn't crash
-    _get_next_and_prev("qa", "");
-    _get_next_and_prev("", "3");
+    let config: ExampleConfig = config_.try_deserialize().unwrap();
+
+    let pool = config.pg.create_pool(None, NoTls).unwrap();
+
+    HttpServer::new(move || {
+        let path = concat!(env!("CARGO_MANIFEST_DIR"), "/templates/**");
+        let tera = Tera::new(path).unwrap();
+        let mp = get_question_data_map();
+
+        App::new()
+            .app_data(web::Data::new(tera))
+            .app_data(web::Data::new(pool.clone()))
+            .app_data(web::Data::new(mp))
+            .wrap(middleware::Logger::default()) // enable logger
+            .service(get_favicon)
+            .service(get_robots)
+            .service(static_files)
+            .service(web::resource("/").route(web::get().to(home)))
+            .service(web::resource("/about").route(web::get().to(about)))
+            .service(
+                web::resource("/questions/{cat}/{num}")
+                    .route(web::get().to(question_page_get))
+                    .route(web::post().to(question_page_post)),
+            )
+            .service(web::resource("/questions/{cat}/").route(web::get().to(get_intro_page)))
+    })
+    .bind(("127.0.0.1", 8080))?
+    .run()
+    .await
 }

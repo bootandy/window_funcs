@@ -1,22 +1,25 @@
 [package]
 name = "window_funcs"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["bootandy <bootandy@gmail.com>"]
 
+edition = "2021"
+
 [dependencies]
-rocket-include-tera = "0.4.20"
-rocket = "0.4.6"
-rocket_codegen = "0.4"
-r2d2 = "^0.8"
-r2d2_postgres = "0.18"
+actix-web = "4"
+actix-files = "0.6"
+config = "0.13.1"
+dotenv = "0.15.0"
+deadpool-postgres = { version = "0.10.2", features = ["serde"] }
+tokio-pg-mapper = "0.2.0"
+tokio-pg-mapper-derive = "0.2.0"
+tokio-postgres = "*"
+derive_more = "*"
 postgres = "0.19"
 serde = "^1.0"
 serde_derive = "^1.0"
 serde_json = "^1.0"
 tera = "1.11"
 regex = "1.5"
-
-[dependencies.rocket_contrib]
-version = "0.4.2"
-default-features = false
-features = ["tera_templates"]
+env_logger = "0.9"
+log = "0.4"
