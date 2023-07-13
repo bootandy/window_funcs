@@ -17,6 +17,6 @@ Order by: breed
 {% endblock question %}
 
 {% block on_correct %}
-nth_value() allows us to select the an arbitrary position in a subgroup
+nth_value() allows us to select an arbitrary position in a subgroup
 {% endblock on_correct %}
 
